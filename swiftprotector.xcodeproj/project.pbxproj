@@ -12,6 +12,7 @@
 		FD0B10A21E2F8C7600AED458 /* SwiftFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0B10A11E2F8C7600AED458 /* SwiftFile.swift */; };
 		FD0B10A41E2F8E7100AED458 /* Protector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0B10A31E2F8E7100AED458 /* Protector.swift */; };
 		FD0B10C91E2FA39800AED458 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0B10C81E2FA39800AED458 /* String.swift */; };
+		FD52CC501E300819006FD20C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD52CC4F1E300818006FD20C /* Logger.swift */; };
 		FD758FCE1E2FC338007942DE /* ForbiddenZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD758FCD1E2FC338007942DE /* ForbiddenZone.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,7 @@
 		FD0B10A11E2F8C7600AED458 /* SwiftFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftFile.swift; sourceTree = "<group>"; };
 		FD0B10A31E2F8E7100AED458 /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protector.swift; sourceTree = "<group>"; };
 		FD0B10C81E2FA39800AED458 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		FD52CC4F1E300818006FD20C /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		FD758FCD1E2FC338007942DE /* ForbiddenZone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForbiddenZone.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,14 +69,15 @@
 		FD0B10961E2F8ACD00AED458 /* swiftprotector */ = {
 			isa = PBXGroup;
 			children = (
-				FD0B109E1E2F8C0500AED458 /* Helpers */,
+				FD52CC4E1E30080D006FD20C /* Log */,
+				FD0B109E1E2F8C0500AED458 /* Protector */,
 				FD0B10971E2F8ACD00AED458 /* main.swift */,
 				FD0B10A11E2F8C7600AED458 /* SwiftFile.swift */,
 			);
 			path = swiftprotector;
 			sourceTree = "<group>";
 		};
-		FD0B109E1E2F8C0500AED458 /* Helpers */ = {
+		FD0B109E1E2F8C0500AED458 /* Protector */ = {
 			isa = PBXGroup;
 			children = (
 				FD0B109F1E2F8C1C00AED458 /* SwiftFinder.swift */,
@@ -82,7 +85,15 @@
 				FD758FCD1E2FC338007942DE /* ForbiddenZone.swift */,
 				FD0B10C81E2FA39800AED458 /* String.swift */,
 			);
-			name = Helpers;
+			name = Protector;
+			sourceTree = "<group>";
+		};
+		FD52CC4E1E30080D006FD20C /* Log */ = {
+			isa = PBXGroup;
+			children = (
+				FD52CC4F1E300818006FD20C /* Logger.swift */,
+			);
+			name = Log;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,6 +157,7 @@
 			files = (
 				FD0B10981E2F8ACD00AED458 /* main.swift in Sources */,
 				FD0B10A41E2F8E7100AED458 /* Protector.swift in Sources */,
+				FD52CC501E300819006FD20C /* Logger.swift in Sources */,
 				FD0B10A01E2F8C1C00AED458 /* SwiftFinder.swift in Sources */,
 				FD758FCE1E2FC338007942DE /* ForbiddenZone.swift in Sources */,
 				FD0B10A21E2F8C7600AED458 /* SwiftFile.swift in Sources */,

@@ -10,7 +10,7 @@ import Foundation
 
 class Protector {
     private typealias ProtectedClassHash = [String:String]
-    private let regex = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)|[a-zA-Z0-9]{1,99}|[:{}(),._>/`?!@#$%&*+-^|=; \n" + "\\]\\[\\-\"\'" + "]"
+    private let regex = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)|[a-zA-Z0-9]{1,99}|[:{}(),.<_>/`?!@#$%&*+-^|=; \n" + "\\]\\[\\-\"\'" + "]"
     private let files : [SwiftFile]
     
     init(files: [SwiftFile]) {
@@ -25,19 +25,17 @@ class Protector {
         guard classHash.isEmpty == false else {
             return
         }
-       // protectClassReferences(hash: classHash)
+        protectClassReferences(hash: classHash)
         return
     }
     
     private func generateClassHash(from files: [SwiftFile]) -> ProtectedClassHash {
-        
-        print("Scanning class declarations")
+        Logger.log("Scanning class declarations")
         
         guard files.isEmpty == false else {
             return [:]
         }
         var classes: ProtectedClassHash = [:]
-        let protectedClassNameSize = 15
         
         var shouldProtectNextWord = false
         var forbiddenZone: ForbiddenZone? = nil
@@ -72,45 +70,77 @@ class Protector {
                         return ""
                     }
                     shouldProtectNextWord = false
-                    return word.isNotUsingClassAsAParameterNameOrProtocol && word.isNotScopeIdentifier ? word : ""
+                    guard word.isNotUsingClassAsAParameterNameOrProtocol && word.isNotScopeIdentifier else {
+                        return ""
+                    }
+                    return word
                 }
             }
         }
         
         for file in swiftFiles {
-            print("--- Checking \(file.name) ---")
-            let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-            let newClasses = data.matchRegex(regex: regex, mappingClosure: regexMapClosure(fromData: data as NSString)).filter { word in
-                return word != ""
+            Logger.log("--- Checking \(file.name) ---")
+            do {
+                let data = try String(contentsOfFile: file.path, encoding: .utf8)
+                let newClasses = data.matchRegex(regex: regex, mappingClosure: regexMapClosure(fromData: data as NSString)).filter { word in
+                    return word != ""
+                }
+                newClasses.forEach {
+                    let protectedClassName = String.random(length: protectedClassNameSize)
+                    classes[$0] = protectedClassName
+                    Logger.log("\($0) -> \(protectedClassName)", verbose: true)
+                }
+                shouldProtectNextWord = false
+                previousWord = ""
+                forbiddenZone = nil
+            } catch {
+                Logger.log("FATAL: \(error.localizedDescription)")
+                exit(-1)
             }
-            newClasses.forEach {
-                let protectedClassName = String.random(length: protectedClassNameSize)
-                classes[$0] = protectedClassName
-                print("\($0) -> \(protectedClassName)")
-            }
-            shouldProtectNextWord = false
         }
         return classes
     }
     
     private func protectClassReferences(hash: ProtectedClassHash) {
+        Logger.log("--- Overwriting files ---")
+        var forbiddenZone: ForbiddenZone? = nil
+        var previousWord = ""
+        
+        func isAClassReference(_ word: String) -> Bool {
+             return previousWord != "import"
+        }
+        
         func regexMapClosure(fromData nsString: NSString) -> ((NSTextCheckingResult) -> String) {
             return { result in
                 let word = nsString.substring(with: result.rangeAt(0))
-                guard let protectedWord = hash[word] else {
+                defer {
+                    if word != "" && word != " " && word != "\n" {
+                        previousWord = word
+                    }
+                }
+                guard forbiddenZone == nil else {
+                    if word == forbiddenZone?.zoneEnd {
+                        forbiddenZone = nil
+                    }
+                    return word
+                }
+                guard isAClassReference(word), let protectedWord = hash[word] else {
+                    forbiddenZone = ForbiddenZone(rawValue: word)
                     return word
                 }
                 return protectedWord
             }
         }
         for file in swiftFiles {
-            print("--- Protecting \(file.name) ---")
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)
             let protectedClassData = data.matchRegex(regex: regex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
             do {
-                try protectedClassData.write(toFile: file.path, atomically: true, encoding: String.Encoding.utf8)
+                Logger.log("--- Overwriting \(file.name) ---")
+                try protectedClassData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
+                previousWord = ""
+                forbiddenZone = nil
             } catch {
-                print("FATAL: \(error.localizedDescription)")
+                Logger.log("FATAL: \(error.localizedDescription)")
                 exit(-1)
             }
         }

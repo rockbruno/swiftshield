@@ -41,7 +41,7 @@ extension String {
     }
     
     func matchRegex(regex: String, mappingClosure: ((NSTextCheckingResult) -> String)) -> [String] {
-        guard let regex = try? NSRegularExpression(pattern: regex, options: []) else { return [] }
+        let regex = try! NSRegularExpression(pattern: regex, options: [])
         let nsString = self as NSString
         let results = regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
         return results.map(mappingClosure)

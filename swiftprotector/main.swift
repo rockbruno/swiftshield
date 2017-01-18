@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  swiftprotector
+//  swiftprotector/Users/bruno.rocha/Desktop/Personal Codes/swiftprotector/SwiftProtectorExample/SwiftProtectorExample/ViewController.swift
 //
 //  Created by Bruno Rocha on 1/18/17.
 //  Copyright © 2017 Bruno Rocha. All rights reserved.
@@ -13,13 +13,16 @@ if CommandLine.arguments.count < 2 {
     exit(1)
 }*/
 
+let verbose = CommandLine.arguments.contains("-v")
+
 print("Swift Protector 0.1")
 
-let argument = "/Users/bruno.rocha/Desktop/Personal Codes/vivo-learning-ios-protect-test"
-print("Base path: \(argument)")
+let basePath = "/Users/bruno.rocha/Desktop/Personal Codes/swiftprotector/SwiftProtectorExample/SwiftProtectorExample/Toscrew/here"
+let protectedClassNameSize = 15
+
 var filePaths:[String] = []
 let swiftSuffix = ".swift"
-if let s = findSwiftFiles(rootPath: argument, suffix: swiftSuffix) {
+if let s = findSwiftFiles(rootPath: basePath, suffix: swiftSuffix) {
     filePaths = s
 }
 

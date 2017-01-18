@@ -15,14 +15,10 @@ class SwiftFile {
     var name: String {
         return (path as NSString).lastPathComponent
     }
-   // let storyboardName: String
-   // let storyboard: Storyboard
     
     init(filePath: String) throws {
         let url = URL(fileURLWithPath: filePath)
         self.data = try Data(contentsOf: url)
         self.path = filePath
-        //self.storyboardName = ((filePath as NSString).lastPathComponent as NSString).deletingPathExtension
-        //self.storyboard = Storyboard(xml:SWXMLHash.parse(self.data))
     }
 }
