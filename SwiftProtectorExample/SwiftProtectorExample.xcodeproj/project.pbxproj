@@ -146,7 +146,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PROTECTOR_PATH=\"$SRCROOT/swiftprotector\"\n\nif [ -f $PROTECTOR_PATH ]; then\nBASE_PATH=\"$PROJECT_DIR/$PROJECT_NAME\"\n\"$PROTECTOR_PATH\" \"$BASE_PATH\"\n\nfi\n\n";
+			shellScript = "PROTECTOR_PATH=\"$SRCROOT/swiftprotector\"\nBASE_PATH=\"$PROJECT_DIR/$PROJECT_NAME\"\n\"$PROTECTOR_PATH\" \"$BASE_PATH\"\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

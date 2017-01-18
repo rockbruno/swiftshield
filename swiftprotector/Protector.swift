@@ -10,7 +10,7 @@ import Foundation
 
 class Protector {
     private typealias ProtectedClassHash = [String:String]
-    private let regex = "[a-zA-Z0-9]{1,99}|[:@{#}(),._\\->?!=; \n]"
+    private let regex = "[a-zA-Z0-9]{1,99}|[:{}(),._>/?!@#$%&*+-^|=; \n" + "\\]\\[\\-\"\'" + "]"
     private let files : [SwiftFile]
     
     init(files: [SwiftFile]) {
