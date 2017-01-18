@@ -7,15 +7,15 @@
 //
 
 import Foundation
-
+/*
 if CommandLine.arguments.count < 2 {
     print("Missing path to source files.")
     exit(1)
-}
+}*/
 
 print("Swift Protector 0.1")
 
-let argument = CommandLine.arguments[1]
+let argument = "/Users/bruno.rocha/Desktop/Personal Codes/vivo-learning-ios-protect-test"
 print("Base path: \(argument)")
 var filePaths:[String] = []
 let swiftSuffix = ".swift"

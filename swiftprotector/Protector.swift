@@ -10,7 +10,7 @@ import Foundation
 
 class Protector {
     private typealias ProtectedClassHash = [String:String]
-    private let regex = "[a-zA-Z0-9]{1,99}|[:{}(),._>/?!@#$%&*+-^|=; \n" + "\\]\\[\\-\"\'" + "]"
+    private let regex = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)|[a-zA-Z0-9]{1,99}|[:{}(),._>/`?!@#$%&*+-^|=; \n" + "\\]\\[\\-\"\'" + "]"
     private let files : [SwiftFile]
     
     init(files: [SwiftFile]) {
@@ -25,7 +25,7 @@ class Protector {
         guard classHash.isEmpty == false else {
             return
         }
-        protectClassReferences(hash: classHash)
+       // protectClassReferences(hash: classHash)
         return
     }
     
@@ -40,6 +40,8 @@ class Protector {
         let protectedClassNameSize = 15
         
         var shouldProtectNextWord = false
+        var forbiddenZone: ForbiddenZone? = nil
+        var previousWord = ""
         
         func regexMapClosure(fromData nsString: NSString) -> ((NSTextCheckingResult) -> String) {
             return { result in
@@ -47,17 +49,30 @@ class Protector {
                     return ""
                 }
                 let word = nsString.substring(with: result.rangeAt(0))
+                defer {
+                    previousWord = word
+                }
+                guard forbiddenZone == nil else {
+                    if word == forbiddenZone?.zoneEnd {
+                        forbiddenZone = nil
+                    }
+                    return ""
+                }
                 if shouldProtectNextWord == false {
                     if word == "class" {
-                        shouldProtectNextWord = true
+                        if previousWord != "." && forbiddenZone == nil {
+                            shouldProtectNextWord = true
+                        }
+                    } else {
+                        forbiddenZone = ForbiddenZone(rawValue: word)
                     }
                     return ""
                 } else {
-                    if word.isNotAnEmptyCharacter {
-                        shouldProtectNextWord = false
-                        return word
+                    guard word.isNotAnEmptyCharacter else {
+                        return ""
                     }
-                    return ""
+                    shouldProtectNextWord = false
+                    return word.isNotUsingClassAsAParameterNameOrProtocol && word.isNotScopeIdentifier ? word : ""
                 }
             }
         }
@@ -73,6 +88,7 @@ class Protector {
                 classes[$0] = protectedClassName
                 print("\($0) -> \(protectedClassName)")
             }
+            shouldProtectNextWord = false
         }
         return classes
     }

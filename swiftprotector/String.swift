@@ -14,6 +14,14 @@ extension String {
         return self != " " && self != "\n"
     }
     
+    var isNotUsingClassAsAParameterNameOrProtocol: Bool {
+        return self != "`" && self != "{" && self != ":" && self != "_"
+    }
+    
+    var isNotScopeIdentifier: Bool {
+        return self != "public" && self != "open" && self != "private" && self != "dynamic" && self != "internal" && self != "var" && self != "let" && self != "final" && self != "func"
+    }
+    
     static func random(length: Int) -> String {
         
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
