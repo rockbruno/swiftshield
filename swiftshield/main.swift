@@ -7,7 +7,7 @@
 
 import Foundation
 
-let basePath = UserDefaults.standard.string(forKey: "p") ?? "/Users/bruno.rocha/Desktop/Personal Codes/swiftshield/test"
+let basePath = UserDefaults.standard.string(forKey: "p") ?? ""
 
 guard basePath.isEmpty == false else {
     Logger.log("Bad arguments. Syntax: 'swiftshield -p (project root) -s (encrypted class name length) -v (verbose mode, optional)'", verbose: true)
