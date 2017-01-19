@@ -1,5 +1,5 @@
 //
-//  SwiftFinder.swift
+//  FileFinder.swift
 //  swiftprotector
 //
 //  Created by Bruno Rocha on 1/18/17.

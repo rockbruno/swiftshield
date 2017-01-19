@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FD53F6E21E3029E800E94CDA /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6E11E3029E800E94CDA /* Logger.swift */; };
-		FD53F6E71E3029F700E94CDA /* ForbiddenZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6E31E3029F700E94CDA /* ForbiddenZone.swift */; };
-		FD53F6E81E3029F700E94CDA /* Protector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6E41E3029F700E94CDA /* Protector.swift */; };
-		FD53F6E91E3029F700E94CDA /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6E51E3029F700E94CDA /* String.swift */; };
-		FD53F6EA1E3029F700E94CDA /* SwiftFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6E61E3029F700E94CDA /* SwiftFinder.swift */; };
-		FD53F6ED1E3029FF00E94CDA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6EB1E3029FF00E94CDA /* main.swift */; };
-		FD53F6EE1E3029FF00E94CDA /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6EC1E3029FF00E94CDA /* File.swift */; };
-		FD53F6F41E3043AD00E94CDA /* SwiftFileScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6F31E3043AD00E94CDA /* SwiftFileScanData.swift */; };
-		FD895ACC1E310D7600A753FB /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACB1E310D7600A753FB /* Array.swift */; };
-		FD895ACE1E3112E500A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACD1E3112E500A753FB /* Storyboard.swift */; };
+		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
+		FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD11E31140C00A753FB /* Storyboard.swift */; };
+		FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */; };
+		FD895AD61E31141100A753FB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD51E31141100A753FB /* Logger.swift */; };
+		FD895AD81E31141500A753FB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD71E31141500A753FB /* main.swift */; };
+		FD895ADE1E31142400A753FB /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD91E31142400A753FB /* Array.swift */; };
+		FD895ADF1E31142400A753FB /* ForbiddenZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADA1E31142400A753FB /* ForbiddenZone.swift */; };
+		FD895AE01E31142400A753FB /* Protector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADB1E31142400A753FB /* Protector.swift */; };
+		FD895AE11E31142400A753FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADC1E31142400A753FB /* String.swift */; };
+		FD895AE21E31142400A753FB /* FileFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADD1E31142400A753FB /* FileFinder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,16 +33,16 @@
 
 /* Begin PBXFileReference section */
 		FD0B10941E2F8ACD00AED458 /* swiftshield */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = swiftshield; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD53F6E11E3029E800E94CDA /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = swiftshield/Logger.swift; sourceTree = SOURCE_ROOT; };
-		FD53F6E31E3029F700E94CDA /* ForbiddenZone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ForbiddenZone.swift; path = swiftshield/ForbiddenZone.swift; sourceTree = SOURCE_ROOT; };
-		FD53F6E41E3029F700E94CDA /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protector.swift; path = swiftshield/Protector.swift; sourceTree = SOURCE_ROOT; };
-		FD53F6E51E3029F700E94CDA /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = swiftshield/String.swift; sourceTree = SOURCE_ROOT; };
-		FD53F6E61E3029F700E94CDA /* SwiftFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftFinder.swift; path = swiftshield/SwiftFinder.swift; sourceTree = SOURCE_ROOT; };
-		FD53F6EB1E3029FF00E94CDA /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = swiftshield/main.swift; sourceTree = SOURCE_ROOT; };
-		FD53F6EC1E3029FF00E94CDA /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = swiftshield/File.swift; sourceTree = SOURCE_ROOT; };
-		FD53F6F31E3043AD00E94CDA /* SwiftFileScanData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftFileScanData.swift; path = swiftshield/SwiftFileScanData.swift; sourceTree = SOURCE_ROOT; };
-		FD895ACB1E310D7600A753FB /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = swiftshield/Array.swift; sourceTree = SOURCE_ROOT; };
-		FD895ACD1E3112E500A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storyboard.swift; sourceTree = SOURCE_ROOT; };
+		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
+		FD895AD11E31140C00A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = "swiftshield-Sources/Storyboard.swift"; sourceTree = SOURCE_ROOT; };
+		FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftFileScanData.swift; path = "swiftshield-Sources/SwiftFileScanData.swift"; sourceTree = SOURCE_ROOT; };
+		FD895AD51E31141100A753FB /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = "swiftshield-Sources/Logger.swift"; sourceTree = SOURCE_ROOT; };
+		FD895AD71E31141500A753FB /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = "swiftshield-Sources/main.swift"; sourceTree = SOURCE_ROOT; };
+		FD895AD91E31142400A753FB /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = "swiftshield-Sources/Array.swift"; sourceTree = SOURCE_ROOT; };
+		FD895ADA1E31142400A753FB /* ForbiddenZone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ForbiddenZone.swift; path = "swiftshield-Sources/ForbiddenZone.swift"; sourceTree = SOURCE_ROOT; };
+		FD895ADB1E31142400A753FB /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protector.swift; path = "swiftshield-Sources/Protector.swift"; sourceTree = SOURCE_ROOT; };
+		FD895ADC1E31142400A753FB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = "swiftshield-Sources/String.swift"; sourceTree = SOURCE_ROOT; };
+		FD895ADD1E31142400A753FB /* FileFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileFinder.swift; path = "swiftshield-Sources/FileFinder.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				FD53F6EF1E302E5D00E94CDA /* Model */,
-				FD53F6EB1E3029FF00E94CDA /* main.swift */,
+				FD895AD71E31141500A753FB /* main.swift */,
 			);
 			name = swiftshield;
 			path = swiftprotector;
@@ -85,11 +85,11 @@
 		FD0B109E1E2F8C0500AED458 /* Protector */ = {
 			isa = PBXGroup;
 			children = (
-				FD53F6E31E3029F700E94CDA /* ForbiddenZone.swift */,
-				FD53F6E41E3029F700E94CDA /* Protector.swift */,
-				FD53F6E51E3029F700E94CDA /* String.swift */,
-				FD895ACB1E310D7600A753FB /* Array.swift */,
-				FD53F6E61E3029F700E94CDA /* SwiftFinder.swift */,
+				FD895AD91E31142400A753FB /* Array.swift */,
+				FD895ADA1E31142400A753FB /* ForbiddenZone.swift */,
+				FD895ADB1E31142400A753FB /* Protector.swift */,
+				FD895ADC1E31142400A753FB /* String.swift */,
+				FD895ADD1E31142400A753FB /* FileFinder.swift */,
 			);
 			name = Protector;
 			sourceTree = "<group>";
@@ -99,7 +99,7 @@
 			children = (
 				FD53F6F21E303BF300E94CDA /* File */,
 				FD0B109E1E2F8C0500AED458 /* Protector */,
-				FD53F6E11E3029E800E94CDA /* Logger.swift */,
+				FD895AD51E31141100A753FB /* Logger.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -107,9 +107,9 @@
 		FD53F6F21E303BF300E94CDA /* File */ = {
 			isa = PBXGroup;
 			children = (
-				FD53F6EC1E3029FF00E94CDA /* File.swift */,
-				FD53F6F31E3043AD00E94CDA /* SwiftFileScanData.swift */,
-				FD895ACD1E3112E500A753FB /* Storyboard.swift */,
+				FD895ACF1E3113FA00A753FB /* File.swift */,
+				FD895AD11E31140C00A753FB /* Storyboard.swift */,
+				FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */,
 			);
 			name = File;
 			sourceTree = "<group>";
@@ -173,16 +173,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD895ACC1E310D7600A753FB /* Array.swift in Sources */,
-				FD53F6F41E3043AD00E94CDA /* SwiftFileScanData.swift in Sources */,
-				FD53F6ED1E3029FF00E94CDA /* main.swift in Sources */,
-				FD53F6E91E3029F700E94CDA /* String.swift in Sources */,
-				FD53F6EA1E3029F700E94CDA /* SwiftFinder.swift in Sources */,
-				FD53F6E81E3029F700E94CDA /* Protector.swift in Sources */,
-				FD895ACE1E3112E500A753FB /* Storyboard.swift in Sources */,
-				FD53F6EE1E3029FF00E94CDA /* File.swift in Sources */,
-				FD53F6E21E3029E800E94CDA /* Logger.swift in Sources */,
-				FD53F6E71E3029F700E94CDA /* ForbiddenZone.swift in Sources */,
+				FD895AE11E31142400A753FB /* String.swift in Sources */,
+				FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */,
+				FD895ADE1E31142400A753FB /* Array.swift in Sources */,
+				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,
+				FD895AE21E31142400A753FB /* FileFinder.swift in Sources */,
+				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
+				FD895ADF1E31142400A753FB /* ForbiddenZone.swift in Sources */,
+				FD895AD81E31141500A753FB /* main.swift in Sources */,
+				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
+				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
