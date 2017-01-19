@@ -102,7 +102,7 @@ class Protector {
                 }
                 guard scanData.shouldIgnoreCurrentWord == false else {
                     scanData.stopIgnoringWordsIfNeeded()
-                    return nil
+                    return scanData.currentWord
                 }
                 guard scanData.currentWordIsNotAParameterNameOrFramework, let protectedWord = hash[scanData.currentWord] else {
                     scanData.startIgnoringWordsIfNeeded()
