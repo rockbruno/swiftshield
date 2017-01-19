@@ -11,12 +11,19 @@ import Foundation
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var label: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let importantStruct = ImportantStruct()
         //Properties stay intact as they should
         let aenum = AEnum.class
         let `class` = ViewController()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        label.text = "Class name: \(String(describing: type(of: self)))"
     }
     
 }
