@@ -24,7 +24,7 @@ class djjck3KDxjs04tgbvb {
 
 ## Can my project run SwiftShield?
 
-Your project must be in Swift 3 and must not sure Storyboards/Xibs (for now).
+Your project must be in Swift 3 and must not use Storyboards/Xibs (for now).
 
 
 ## How do I deal with crash logs / analytics if my project uses SwiftShield?
