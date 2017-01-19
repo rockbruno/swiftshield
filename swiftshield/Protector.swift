@@ -143,7 +143,7 @@ class Protector {
                     continue
                 }
                 Logger.log("\(`class`) -> \(protectedClass)", verbose: true)
-                overwrittenData = overwrittenData.replacingOccurrences(of: `class`, with: protectedClass)
+                overwrittenData = overwrittenData.replacingOccurrences(of: Storyboard.customClass(class: `class`), with: Storyboard.customClass(class: protectedClass))
             }
             guard overwrittenData != data else {
                 Logger.log("--- \(file.name) was not modified, continuing ---", verbose: true)

@@ -16,6 +16,7 @@
 		FD53F6EE1E3029FF00E94CDA /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6EC1E3029FF00E94CDA /* File.swift */; };
 		FD53F6F41E3043AD00E94CDA /* SwiftFileScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD53F6F31E3043AD00E94CDA /* SwiftFileScanData.swift */; };
 		FD895ACC1E310D7600A753FB /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACB1E310D7600A753FB /* Array.swift */; };
+		FD895ACE1E3112E500A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACD1E3112E500A753FB /* Storyboard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +42,7 @@
 		FD53F6EC1E3029FF00E94CDA /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = swiftshield/File.swift; sourceTree = SOURCE_ROOT; };
 		FD53F6F31E3043AD00E94CDA /* SwiftFileScanData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftFileScanData.swift; path = swiftshield/SwiftFileScanData.swift; sourceTree = SOURCE_ROOT; };
 		FD895ACB1E310D7600A753FB /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = swiftshield/Array.swift; sourceTree = SOURCE_ROOT; };
+		FD895ACD1E3112E500A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storyboard.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			children = (
 				FD53F6EC1E3029FF00E94CDA /* File.swift */,
 				FD53F6F31E3043AD00E94CDA /* SwiftFileScanData.swift */,
+				FD895ACD1E3112E500A753FB /* Storyboard.swift */,
 			);
 			name = File;
 			sourceTree = "<group>";
@@ -176,6 +179,7 @@
 				FD53F6E91E3029F700E94CDA /* String.swift in Sources */,
 				FD53F6EA1E3029F700E94CDA /* SwiftFinder.swift in Sources */,
 				FD53F6E81E3029F700E94CDA /* Protector.swift in Sources */,
+				FD895ACE1E3112E500A753FB /* Storyboard.swift in Sources */,
 				FD53F6EE1E3029FF00E94CDA /* File.swift in Sources */,
 				FD53F6E21E3029E800E94CDA /* Logger.swift in Sources */,
 				FD53F6E71E3029F700E94CDA /* ForbiddenZone.swift in Sources */,
