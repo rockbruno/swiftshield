@@ -13,15 +13,21 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let importantStruct = ImportantStruct()
+        //Properties stay intact as they should
+        let aenum = AEnum.class
+        let `class` = UIViewController()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+}
+
+
+struct ImportantStruct {
+    //Only actual classes and structs will be modified
+    var thing = "class ViewController"
+    var string = "struct ImportantStruct"
+}
+
+enum AEnum {
+    case `class`
 }

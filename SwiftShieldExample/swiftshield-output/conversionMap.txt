@@ -5,6 +5,5 @@
 
 Classes:
 
-SuperStruct ===> hJWNWtkodYCaCjP
-ViewController ===> gtNheVhjISyzUbL
-AppDelegate ===> RrtWkPLGdcTrhMP
+ViewController ===> ewAbTfWoisGwzhG
+AppDelegate ===> SjyJyCwnuZnrtWY
