@@ -18,7 +18,7 @@ let verbose = CommandLine.arguments.contains("-v")
 let providedSize = UserDefaults.standard.integer(forKey: "s")
 let protectedClassNameSize = providedSize > 0 ? providedSize : 15
 
-Logger.log("Swift Protector 0.1")
+Logger.log("Swift Protector 0.2")
 Logger.log("Verbose Mode", verbose: verbose)
 Logger.log("Path: \(basePath)", verbose: verbose)
 Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: verbose)
