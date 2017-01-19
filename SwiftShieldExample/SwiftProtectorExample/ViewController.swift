@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         let importantStruct = ImportantStruct()
         //Properties stay intact as they should
         let aenum = AEnum.class
-        let `class` = UIViewController()
+        let `class` = ViewController()
     }
     
 }
