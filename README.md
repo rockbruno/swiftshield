@@ -1,7 +1,7 @@
 <img src="http://i.imgur.com/0ksj7Gh.png" alt="SwiftShield logo" height="140" >
-# (WIP) Swift Class Obfuscator
+# Swift Class Obfuscator
 
-SwiftShield is a tool that generates irreversible, encrypted names for your Swift project classes (including your Pods) in order to protect your app from tools that reverse engineer iOS/macOS apps, such as [class-dump](http://stevenygard.com/projects/class-dump/).
+SwiftShield is a tool that generates irreversible, encrypted names for your Swift project classes (including your Pods and Storyboards) in order to protect your app from tools that reverse engineer iOS/macOS apps, such as [class-dump](http://stevenygard.com/projects/class-dump/).
 For example, after running SwiftShield, the following class:
 ```swift
 class EncryptedVideoPlayer {
@@ -20,11 +20,6 @@ class djjck3KDxjs04tgbvb {
   }
 }
 ```
-
-
-## Can my project run SwiftShield?
-
-Your project must be in Swift 3 and must not use Storyboards/Xibs (for now).
 
 
 ## How do I deal with crash logs / analytics if my project uses SwiftShield?
