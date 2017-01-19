@@ -1,5 +1,5 @@
 //
-//  SwiftFile.swift
+//  File.swift
 //  swiftprotector
 //
 //  Created by Bruno Rocha on 1/18/17.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SwiftFile {
+class File {
     let data: Data
     let path: String
     var name: String {

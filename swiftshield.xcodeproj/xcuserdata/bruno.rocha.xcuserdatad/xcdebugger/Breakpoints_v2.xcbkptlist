@@ -79,7 +79,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "78"
             endingLineNumber = "78"
-            landmarkName = "generateClassHash(from:)"
+            landmarkName = "generateClassHash()"
             landmarkType = "7">
             <Locations>
                <Location

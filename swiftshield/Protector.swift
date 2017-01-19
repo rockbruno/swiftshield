@@ -13,33 +13,37 @@ private let words = "[a-zA-Z0-9]{1,99}"
 private let quotes = "\\]\\[\\-\"\'"
 private let swiftSymbols = "[" + ":{}(),.<_>/`?!@#$%&*+-^|=; \n" + quotes + "]"
 
-private let regex = comments + "|" + words + "|" + swiftSymbols
+private let swiftRegex = comments + "|" + words + "|" + swiftSymbols
+private let storyboardClassNameRegex = "(?<=customClass=\").*?(?=\")"
 
 class Protector {
     private typealias ProtectedClassHash = [String:String]
-    private let files : [SwiftFile]
+    private let swiftFiles : [File]
+    private let storyboardFiles: [File]
     
-    init(files: [SwiftFile]) {
-        self.files = files
+    init(swiftFiles: [File], storyboardFiles: [File]) {
+        self.swiftFiles = swiftFiles
+        self.storyboardFiles = storyboardFiles
     }
     
     func protect() {
         defer {
             exit(0)
         }
-        let classHash = generateClassHash(from: files)
+        let classHash = generateClassHash()
         guard classHash.isEmpty == false else {
             Logger.log("No class files to obfuscate.")
             return
         }
         protectClassReferences(hash: classHash)
+        protectStoryboards(hash: classHash)
         writeToFile(hash: classHash)
         return
     }
     
-    private func generateClassHash(from files: [SwiftFile]) -> ProtectedClassHash {
+    private func generateClassHash() -> ProtectedClassHash {
         Logger.log("Scanning class declarations")
-        guard files.isEmpty == false else {
+        guard swiftFiles.isEmpty == false else {
             return [:]
         }
         var classes: ProtectedClassHash = [:]
@@ -75,7 +79,7 @@ class Protector {
             Logger.log("--- Checking \(file.name) ---")
             do {
                 let data = try String(contentsOfFile: file.path, encoding: .utf8)
-                let newClasses = data.matchRegex(regex: regex, mappingClosure: regexMapClosure(fromData: data as NSString))
+                let newClasses = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString))
                 newClasses.forEach {
                     let protectedClassName = String.random(length: protectedClassNameSize)
                     classes[$0] = protectedClassName
@@ -91,7 +95,7 @@ class Protector {
     }
     
     private func protectClassReferences(hash: ProtectedClassHash) {
-        Logger.log("--- Overwriting files ---")
+        Logger.log("--- Overwriting .swift files ---")
         var scanData = SwiftFileScanData(phase: .overwriting)
         
         func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
@@ -113,11 +117,41 @@ class Protector {
         }
         for file in swiftFiles {
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-            let protectedClassData = data.matchRegex(regex: regex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
+            let protectedClassData = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
             do {
                 Logger.log("--- Overwriting \(file.name) ---")
                 try protectedClassData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
                 scanData.prepareForNextFile()
+            } catch {
+                Logger.log("FATAL: \(error.localizedDescription)")
+                exit(-1)
+            }
+        }
+    }
+    
+    private func protectStoryboards(hash: ProtectedClassHash) {
+        Logger.log("--- Overwriting Storyboards ---")
+        for file in storyboardFiles {
+            Logger.log("--- Checking \(file.name) ---", verbose: true)
+            let data = try! String(contentsOfFile: file.path, encoding: .utf8)
+            let retrievedClasses = data.matchRegex(regex: storyboardClassNameRegex) { result in
+                (data as NSString).substring(with: result.rangeAt(0))
+            }.removeDuplicates()
+            var overwrittenData = data
+            for `class` in retrievedClasses {
+                guard let protectedClass = hash[`class`] else {
+                    continue
+                }
+                Logger.log("\(`class`) -> \(protectedClass)", verbose: true)
+                overwrittenData = overwrittenData.replacingOccurrences(of: `class`, with: protectedClass)
+            }
+            guard overwrittenData != data else {
+                Logger.log("--- \(file.name) was not modified, continuing ---", verbose: true)
+                continue
+            }
+            Logger.log("--- Saving \(file.name) ---", verbose: true)
+            do {
+                try overwrittenData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 Logger.log("FATAL: \(error.localizedDescription)")
                 exit(-1)

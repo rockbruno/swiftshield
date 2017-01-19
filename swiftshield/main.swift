@@ -23,12 +23,11 @@ Logger.log("Verbose Mode", verbose: verbose)
 Logger.log("Path: \(basePath)", verbose: verbose)
 Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: verbose)
 
-var filePaths:[String] = []
-let swiftSuffix = ".swift"
-if let s = findSwiftFiles(rootPath: basePath, suffix: swiftSuffix) {
-    filePaths = s
-}
+var swiftFilePaths = findFiles(rootPath: basePath, suffix: ".swift") ?? []
+var storyboardFilePaths = findFiles(rootPath: basePath, suffix: ".storyboard") ?? []
 
-let swiftFiles = filePaths.flatMap { try? SwiftFile(filePath: $0) }
-let protector = Protector(files: swiftFiles)
+let swiftFiles = swiftFilePaths.flatMap { try? File(filePath: $0) }
+let storyboardFiles = storyboardFilePaths.flatMap{ try? File(filePath: $0) }
+
+let protector = Protector(swiftFiles: swiftFiles, storyboardFiles: storyboardFiles)
 protector.protect()

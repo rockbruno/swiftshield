@@ -8,7 +8,7 @@
 
 import Foundation
 
-func findSwiftFiles(rootPath: String, suffix: String) -> [String]? {
+func findFiles(rootPath: String, suffix: String) -> [String]? {
     var result = Array<String>()
     let fileManager = FileManager.default
     if let paths = fileManager.subpaths(atPath: rootPath) {
