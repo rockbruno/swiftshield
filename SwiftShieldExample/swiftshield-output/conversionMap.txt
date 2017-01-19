@@ -5,6 +5,6 @@
 
 Classes:
 
-AToaXZffAxksrKU ===> BBtvKHVkMTtsOHw
-SmwXpXiedTSMTjK ===> gFdwVxIuQKAEdCE
-tkFvpQicuJtamRG ===> HcBwBxgSeEitgMT
+SuperStruct ===> hJWNWtkodYCaCjP
+ViewController ===> gtNheVhjISyzUbL
+AppDelegate ===> RrtWkPLGdcTrhMP
