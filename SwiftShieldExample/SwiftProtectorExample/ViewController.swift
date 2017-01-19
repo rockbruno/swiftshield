@@ -1,3 +1,7 @@
 class ViewController {
     
 }
+
+struct SuperStruct {
+    
+}
