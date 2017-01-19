@@ -24,7 +24,7 @@ Logger.log("Path: \(basePath)", verbose: verbose)
 Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: verbose)
 
 var swiftFilePaths = findFiles(rootPath: basePath, suffix: ".swift") ?? []
-var storyboardFilePaths = findFiles(rootPath: basePath, suffix: ".storyboard") ?? []
+var storyboardFilePaths = (findFiles(rootPath: basePath, suffix: ".storyboard") ?? []) + (findFiles(rootPath: basePath, suffix: ".xib") ?? [])
 
 let swiftFiles = swiftFilePaths.flatMap { try? File(filePath: $0) }
 let storyboardFiles = storyboardFilePaths.flatMap{ try? File(filePath: $0) }
