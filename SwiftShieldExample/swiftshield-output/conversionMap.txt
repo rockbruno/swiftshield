@@ -1,9 +1,0 @@
-//
-//  SwiftShield
-//  Conversion Map
-//
-
-Classes:
-
-ViewController ===> ewAbTfWoisGwzhG
-AppDelegate ===> SjyJyCwnuZnrtWY
