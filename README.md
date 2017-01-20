@@ -1,5 +1,5 @@
 <img src="http://i.imgur.com/0ksj7Gh.png" alt="SwiftShield logo" height="140" >
-# Swift Class Obfuscator
+# (Broken) Swift Class Obfuscator
 
 SwiftShield is a tool that generates irreversible, encrypted names for your Swift project classes (including your Pods and Storyboards) in order to protect your app from tools that reverse engineer iOS/macOS apps, such as [class-dump](http://stevenygard.com/projects/class-dump/).
 For example, after running SwiftShield, the following class:
@@ -43,7 +43,7 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 **Warning:** SwiftShield irreversibly overwrites all your .swift files. Ideally, you should make sure it runs only on your CI server.
 
-After adding the SwiftShield binary to your project root, create a **New Run Script Phase** on your Build Phases tab, position it **right before** the Compile Sources phase and add the following script: **(don't forget to change "Release" to something that is only executed by your CI server)**
+After adding the SwiftShield binary to your project root, create a **New Run Script Phase** on your Build Phases tab, position it before the Compile Sources phase and add the following script: **(don't forget to change "Release" to something that is only executed by your CI server)**
 
 ````
 if [ "${CONFIGURATION}" = "Release" ]; then
@@ -56,6 +56,7 @@ fi
 
 `-v` is optional, and prints additional info about the encrypting proccess.
 
+If your project uses Cocoapods, make sure that your machine have the permissions to edit the Pods folder's contents. If it doesn't, SwiftShield will crash.
 
 ## License
 

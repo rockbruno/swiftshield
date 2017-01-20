@@ -19,9 +19,29 @@ class SwiftFileScanData {
     var shouldProtectNextWord = false
     var forbiddenZone: ForbiddenZone? = nil
     var previousWord = ""
+    var previousPreviousWord = ""
     
-    var currentWordIsNotAParameterNameOrFramework: Bool {
-        return previousWord != "." && previousWord != "import"
+    var currentWordIsNotAParameterName: Bool {
+        return previousWord != "."
+    }
+    
+    var currentWordIsNotAGenericParameter: Bool {
+        return previousWord != ","
+    }
+    
+    var currentWordIsNotAFramework: Bool {
+        return previousWord != "import"
+    }
+    
+    var currentWordIsNotAStandardSwiftClass: Bool {
+        switch previousWord {
+        case ".":
+            return previousPreviousWord != "Swift"
+        case "where":
+            return currentWord != "Key" && currentWord != "Value" && currentWord != "Element"
+        default:
+            return true
+        }
     }
     
     var shouldIgnoreCurrentWord: Bool {
@@ -43,7 +63,7 @@ class SwiftFileScanData {
     }
     
     func protectNextWordIfNeeded() {
-        guard (currentWord == "class" || currentWord == "struct") && currentWordIsNotAParameterNameOrFramework else {
+        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
             return
         }
         shouldProtectNextWord = true
@@ -58,6 +78,7 @@ class SwiftFileScanData {
             previousWord = currentWord
         } else {
             if currentWord != "" && currentWord != " " && currentWord != "\n" {
+                previousPreviousWord = previousWord
                 previousWord = currentWord
             }
         }
@@ -68,5 +89,6 @@ class SwiftFileScanData {
         shouldProtectNextWord = false
         forbiddenZone = nil
         previousWord = ""
+        previousPreviousWord = ""
     }
 }

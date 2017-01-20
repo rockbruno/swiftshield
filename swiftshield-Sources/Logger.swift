@@ -9,7 +9,9 @@
 import Foundation
 
 class Logger {
-    static func log(_ text: String, verbose: Bool = false) {
-        print(text)
+    static func log(_ text: String, verbose v: Bool = false) {
+        if (v && verbose) || !v {
+            print(text)
+        }
     }
 }
