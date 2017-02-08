@@ -86,7 +86,7 @@ class Protector {
                     newClasses.forEach {
                         let protectedClassName = String.random(length: protectedClassNameSize)
                         classes[$0] = protectedClassName
-                        Logger.log("\($0) -> \(protectedClassName)", verbose: true)
+                        Logger.log("\($0) -> \(protectedClassName)")
                     }
                     scanData = SwiftFileScanData(phase: .reading)
                 } catch {
@@ -112,7 +112,7 @@ class Protector {
                     scanData.stopIgnoringWordsIfNeeded()
                     return scanData.currentWord
                 }
-                guard scanData.currentWordIsNotAFramework && scanData.currentWordIsNotAStandardSwiftClass && scanData.currentWordIsNotAGenericParameter, let protectedWord = hash.hash[scanData.currentWord] else {
+                guard scanData.currentWordIsNotAFramework && scanData.currentWordIsNotAStandardSwiftClass, let protectedWord = hash.hash[scanData.currentWord] else {
                     scanData.startIgnoringWordsIfNeeded()
                     return scanData.currentWord
                 }

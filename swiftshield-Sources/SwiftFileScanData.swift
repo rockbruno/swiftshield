@@ -32,7 +32,7 @@ class SwiftFileScanData {
     var currentWordIsNotAStandardSwiftClass: Bool {
         switch previousWord {
         case ".":
-            return previousPreviousWord != "Swift"
+            return previousPreviousWord != "Swift" && previousPreviousWord.isNotASwiftStandardClass
         default:
             return true
         }
@@ -44,10 +44,6 @@ class SwiftFileScanData {
     
     var wordSuccedingClassStringIsActuallyAClass: Bool {
         return currentWord.isNotUsingClassAsAParameterNameOrProtocol && currentWord.isNotScopeIdentifier
-    }
-    
-    var currentWordIsNotAGenericParameter: Bool {
-        return previousWord != "," && previousWord != "<"
     }
     
     var classDeclaractionFollowsSwiftNamingConventions: Bool {
@@ -68,6 +64,10 @@ class SwiftFileScanData {
     
     func stopIgnoringWordsIfNeeded() {
         if currentWord == forbiddenZone?.zoneEnd {
+            //Dont end the zone if it's an escaped quote
+            if forbiddenZone == .quote || forbiddenZone == .doubleQuote && previousWord == "\\" {
+                return
+            }
             forbiddenZone = nil
         }
     }
