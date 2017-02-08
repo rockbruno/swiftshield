@@ -20,6 +20,7 @@ class SwiftFileScanData {
     var forbiddenZone: ForbiddenZone? = nil
     var previousWord = ""
     var previousPreviousWord = ""
+    var previousPreviousPreviousWord = ""
     let interpolatedStringZone = InterpolatedStringZone()
     
     var currentWordIsNotAParameterName: Bool {
@@ -33,7 +34,11 @@ class SwiftFileScanData {
     var currentWordIsNotAStandardSwiftClass: Bool {
         switch previousWord {
         case ".":
-            return previousPreviousWord != "Swift" && previousPreviousWord.isNotASwiftStandardClass
+            if previousPreviousWord != "Swift" && previousPreviousWord.isNotASwiftStandardClass {
+                return true
+            } else {
+                return previousPreviousPreviousWord == "."
+            }
         default:
             return true
         }
@@ -111,6 +116,7 @@ class SwiftFileScanData {
             previousWord = currentWord
         } else {
             if currentWord != "" && currentWord != " " && currentWord != "\n" {
+                previousPreviousPreviousWord = previousPreviousWord
                 previousPreviousWord = previousWord
                 previousWord = currentWord
             }
