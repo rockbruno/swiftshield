@@ -9,5 +9,6 @@
 import Cocoa
 
 class InterpolatedStringZone {
+    var depth = 0
     var storedForbiddenZones: [ForbiddenZone] = []
 }
