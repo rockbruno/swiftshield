@@ -20,6 +20,7 @@ class SwiftFileScanData {
     var forbiddenZone: ForbiddenZone? = nil
     var previousWord = ""
     var previousPreviousWord = ""
+    let interpolatedStringZone = InterpolatedStringZone()
     
     var currentWordIsNotAParameterName: Bool {
         return previousWord != "."
@@ -58,6 +59,15 @@ class SwiftFileScanData {
         return currentWord.isNotASwiftStandardClass
     }
     
+    var beginOfInterpolatedZone: Bool {
+        if (forbiddenZone == .quote || forbiddenZone == .doubleQuote) && previousWord == "(" && previousPreviousWord == "\\" {
+            interpolatedStringZone.storedForbiddenZones.append(forbiddenZone!)
+            forbiddenZone = nil
+            return true
+        }
+        return false
+    }
+    
     init(phase: SwiftFileScanDataPhase) {
         self.phase = phase
     }
@@ -80,9 +90,16 @@ class SwiftFileScanData {
     }
     
     func startIgnoringWordsIfNeeded() {
-        forbiddenZone = ForbiddenZone(rawValue: currentWord)
+        let newZone = ForbiddenZone(rawValue: currentWord)
+        if interpolatedStringZone.storedForbiddenZones.count > 1 {
+            if currentWord == forbiddenZone?.zoneEnd && previousWord == ")" {
+                forbiddenZone = interpolatedStringZone.storedForbiddenZones.popLast()
+                return
+            }
+        }
+        forbiddenZone = newZone
     }
-    
+
     func prepareForNextWord() {
         if phase == .reading {
             previousWord = currentWord

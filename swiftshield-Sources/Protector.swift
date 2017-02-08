@@ -108,7 +108,7 @@ class Protector {
                 defer {
                     scanData.prepareForNextWord()
                 }
-                guard scanData.shouldIgnoreCurrentWord == false else {
+                guard scanData.shouldIgnoreCurrentWord == false || scanData.beginOfInterpolatedZone else {
                     scanData.stopIgnoringWordsIfNeeded()
                     return scanData.currentWord
                 }
