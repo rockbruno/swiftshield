@@ -69,7 +69,9 @@ class Protector {
                     return nil
                 }
                 scanData.shouldProtectNextWord = false
-                guard scanData.wordSuccedingClassStringIsActuallyAClass else {
+                guard scanData.wordSuccedingClassStringIsActuallyAClass &&
+                      scanData.classDeclaractionFollowsSwiftNamingConventions &&
+                      scanData.isNotASwiftStandardClass else {
                     return nil
                 }
                 return scanData.currentWord
@@ -86,7 +88,7 @@ class Protector {
                         classes[$0] = protectedClassName
                         Logger.log("\($0) -> \(protectedClassName)", verbose: true)
                     }
-                    scanData.prepareForNextFile()
+                    scanData = SwiftFileScanData(phase: .reading)
                 } catch {
                     Logger.log("FATAL: \(error.localizedDescription)")
                     exit(1)
@@ -124,7 +126,7 @@ class Protector {
                 do {
                     Logger.log("--- Overwriting \(file.name) ---")
                     try protectedClassData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
-                    scanData.prepareForNextFile()
+                    scanData = SwiftFileScanData(phase: .overwriting)
                 } catch {
                     Logger.log("FATAL: \(error.localizedDescription)")
                     exit(1)

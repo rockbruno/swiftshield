@@ -25,10 +25,6 @@ class SwiftFileScanData {
         return previousWord != "."
     }
     
-    var currentWordIsNotAGenericParameter: Bool {
-        return previousWord != ","
-    }
-    
     var currentWordIsNotAFramework: Bool {
         return previousWord != "import"
     }
@@ -37,8 +33,6 @@ class SwiftFileScanData {
         switch previousWord {
         case ".":
             return previousPreviousWord != "Swift"
-        case "where":
-            return currentWord != "Key" && currentWord != "Value" && currentWord != "Element"
         default:
             return true
         }
@@ -52,6 +46,22 @@ class SwiftFileScanData {
         return currentWord.isNotUsingClassAsAParameterNameOrProtocol && currentWord.isNotScopeIdentifier
     }
     
+    var currentWordIsNotAGenericParameter: Bool {
+        return previousWord != "," && previousWord != "<"
+    }
+    
+    var classDeclaractionFollowsSwiftNamingConventions: Bool {
+        guard let firstCharacter = currentWord.characters.first else {
+            return false
+        }
+        let firstLetter = String(describing: firstCharacter)
+        return firstLetter.uppercased() == firstLetter
+    }
+    
+    var isNotASwiftStandardClass: Bool {
+        return currentWord.isNotASwiftStandardClass
+    }
+    
     init(phase: SwiftFileScanDataPhase) {
         self.phase = phase
     }
@@ -63,7 +73,7 @@ class SwiftFileScanData {
     }
     
     func protectNextWordIfNeeded() {
-        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
+        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum" || currentWord == "protocol") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
             return
         }
         shouldProtectNextWord = true
@@ -82,13 +92,5 @@ class SwiftFileScanData {
                 previousWord = currentWord
             }
         }
-    }
-    
-    func prepareForNextFile() {
-        currentWord = ""
-        shouldProtectNextWord = false
-        forbiddenZone = nil
-        previousWord = ""
-        previousPreviousWord = ""
     }
 }
