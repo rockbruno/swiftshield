@@ -47,7 +47,7 @@ class SwiftFileScanData {
     }
     
     func protectNextWordIfNeeded() {
-        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum" || currentWord == "protocol") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
+        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum" || currentWord == "protocol" || currentWord == "associatedtype") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
             return
         }
         shouldProtectNextWord = true

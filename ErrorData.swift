@@ -29,12 +29,24 @@ struct ErrorData {
         self.line = line
         self.error = specificError
         self.fullError = fullError
+        
         switch error {
         case "cannot call value of non-function type":
             self.column = column - fullError.components(separatedBy: "module<")[1].components(separatedBy: ">")[0].characters.count
             self.target = fullError.components(separatedBy: "module<")[1].components(separatedBy: ">")[0]
-        case "no such module":
+        case "no such module", "could not build Objective-C module", "", "value of type", "cannot invoke initializer for type":
             return nil
+        case "type": //type 'nrjCKwImewhNjhC' has no member 'ScaleMode'
+            switch separatedError[2].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
+            case "has no member":
+                self.column = column + target.characters.count + 1
+                self.target = separatedError[3]
+            case "does not conform to protocol":
+                return nil
+            default:
+                self.column = column
+                self.target = target
+            }
         default:
             self.column = column
             self.target = target

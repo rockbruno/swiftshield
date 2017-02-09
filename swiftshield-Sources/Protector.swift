@@ -173,7 +173,6 @@ class Protector {
                 column = 1
                 let data = try! String(contentsOfFile: file.path, encoding: .utf8)
                 currentErrors = sortedData
-                print("Error list: \(sortedData)")
                 Logger.log("--- Overwriting \(file.name) ---")
                 let protectedClassData = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
                 do {
@@ -186,7 +185,26 @@ class Protector {
         }
     }
     
-    func runFakeBuild() -> String {
+    func getSchemes() -> [String] {
+        Logger.log("Getting schemes")
+        let path = "/usr/bin/xcodebuild"
+        let arguments: [String] = ["-list", "-workspace", basePath+workspaces[0]]
+        let task = Process()
+        task.launchPath = path
+        task.arguments = arguments
+        let outpipe: Pipe = Pipe()
+        task.standardOutput = outpipe
+        task.standardError = nil
+        task.launch()
+        let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
+        var output = String(data: outdata, encoding: .utf8)?.components(separatedBy: "Schemes:")
+        output?.remove(at: 0)
+        output = output![0].replacingOccurrences(of: "\n", with: "").components(separatedBy: "        ")
+        output?.remove(at: 0)
+        return output!
+    }
+    
+    func runFakeBuild(scheme: String) -> String {
         Logger.log("Performing fake build to detect class references. This can take a few minutes...")
         let path = "/usr/bin/xcodebuild"
         let arguments: [String] = ["-quiet", "-workspace", basePath+workspaces[0], "-scheme", scheme]
@@ -199,7 +217,7 @@ class Protector {
         task.launch()
         let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: outdata, encoding: .utf8)
-        print(output!)
+        //print(output!)
         return output!
     }
     
@@ -214,7 +232,7 @@ class Protector {
         let data = fakeBuildOutput.matchRegex(regex: errorRegex, mappingClosure: regexMapClosure(fromData: fakeBuildOutput as NSString))
         var errorDataHash: BuildOutput = BuildOutput()
         for error in data {
-            guard let errorData = ErrorData(fullError: error) else {
+            guard let errorData = ErrorData(fullError: error), errorData.file.name.contains(".swift") else {
                 continue
             }
             if let lastError = errorDataHash[errorData.file]?.last, errorData.line == lastError.line && errorData.column == lastError.column {

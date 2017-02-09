@@ -1,7 +1,7 @@
 import Foundation
 
 let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/"
-let scheme = UserDefaults.standard.string(forKey: "scheme") ?? "VivoMeditacao-AppStore"
+let scheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
 
 guard basePath.isEmpty == false else {
     Logger.log("Bad arguments. Syntax: 'swiftshield -projectroot (project root) -size (encrypted class name length, optional, default is 15) -scheme (scheme to build) -v (verbose mode, optional)")
@@ -41,12 +41,24 @@ if workspaces.count > 1 || (projects.count > 1 && workspaces.count > 1) || (proj
     Logger.log("Multiple projects (or multiple workspaces) found at the provided. Please make sure there's only one project (or workspace).")
 }
 
-let fakeBuildOutput: String = protector.runFakeBuild()
+var schemes = protector.getSchemes()
+let ignoredSchemes = ["VivoMeditacao","VivoMeditacao-CI","VivoMeditacao-AppStore"]
+schemes = schemes.filter{return ignoredSchemes.contains($0) == false}
+schemes.append(ignoredSchemes.last!)
 
-let parsedOutputHash = protector.parse(fakeBuildOutput: fakeBuildOutput)
+for scheme in schemes {
+    Logger.log("Obfuscating \(scheme)!")
+    
+    let fakeBuildOutput: String = protector.runFakeBuild(scheme: scheme)
+    var parsedOutputHash = protector.parse(fakeBuildOutput: fakeBuildOutput)
+    while parsedOutputHash.keys.isEmpty == false {
+        Logger.log("Collected errors. Running...")
+        protector.protectClassReferences(output: parsedOutputHash, protectedHash: protectionHash)
+        let fakeBuildOutput: String = protector.runFakeBuild(scheme: scheme)
+        parsedOutputHash = protector.parse(fakeBuildOutput: fakeBuildOutput)
+    }
+}
 
-protector.protectClassReferences(output: parsedOutputHash, protectedHash: protectionHash)
-
-//protector.writeToFile(hash: protectionHash)
-
+protector.writeToFile(hash: protectionHash)
+Logger.log("Finished.")
 exit(0)
