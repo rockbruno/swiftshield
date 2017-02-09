@@ -32,8 +32,8 @@ class SwiftFileScanData {
         return forbiddenZone != nil
     }
     
-    var wordSuccedingClassStringIsActuallyAClass: Bool {
-        return currentWord.isNotUsingClassAsAParameterNameOrProtocol && currentWord.isNotScopeIdentifier
+    var wordSuccedingClassStringIsActuallyAProtectableClass: Bool {
+        return currentWord.isNotUsingClassAsAParameterNameOrProtocol && currentWord.isNotScopeIdentifier && currentWord.isNotASwiftStandardClass
     }
     
     init(phase: SwiftFileScanDataPhase) {
@@ -47,7 +47,7 @@ class SwiftFileScanData {
     }
     
     func protectNextWordIfNeeded() {
-        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum" || currentWord == "protocol" || currentWord == "func") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
+        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum" || currentWord == "protocol") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
             return
         }
         shouldProtectNextWord = true

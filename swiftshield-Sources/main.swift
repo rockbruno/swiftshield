@@ -1,6 +1,6 @@
 import Foundation
 
-let basePath = UserDefaults.standard.string(forKey: "p") ?? "/Users/bruno.rocha/Desktop/testyTARGET"
+let basePath = UserDefaults.standard.string(forKey: "p") ?? "/Users/bruno.rocha/Desktop/pato-sdk-ios"
 
 guard basePath.isEmpty == false else {
     Logger.log("Bad arguments. Syntax: 'swiftshield -p (project root) -s (encrypted class name length, optional, default is 15) -v (verbose mode, optional)")
@@ -19,8 +19,8 @@ Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: true)
 let swiftFilePaths = findFiles(rootPath: basePath, suffix: ".swift") ?? []
 let storyboardFilePaths = (findFiles(rootPath: basePath, suffix: ".storyboard") ?? []) + (findFiles(rootPath: basePath, suffix: ".xib") ?? [])
 
-let swiftFiles = swiftFilePaths.flatMap { try? File(filePath: $0) }
-let storyboardFiles = storyboardFilePaths.flatMap{ try? File(filePath: $0) }
+let swiftFiles = swiftFilePaths.flatMap { File(filePath: $0) }
+let storyboardFiles = storyboardFilePaths.flatMap{ File(filePath: $0) }
 
 let protector = Protector(swiftFiles: swiftFiles, storyboardFiles: storyboardFiles)
 
@@ -31,6 +31,8 @@ guard protectionHash.isEmpty == false else {
     exit(0)
 }
 
+protector.protectStoryboards(hash: protectionHash)
+
 let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj", onlyAtRoot: true) ?? []
 let workspaces = findFiles(rootPath: basePath, suffix: ".xcworkspace", onlyAtRoot: true) ?? []
 
@@ -38,6 +40,12 @@ if workspaces.count > 1 || (projects.count > 1 && workspaces.count > 1) || (proj
     Logger.log("Multiple projects (or multiple workspaces) found at the provided. Please make sure there's only one project (or workspace).")
 }
 
-let fakeBuildOutput = protector.runFakeBuild()
+//let fakeBuildOutput: String = protector.runFakeBuild()
 
-let parsedOutputHash = protector.parse(fakeBuildOutput: fakeBuildOutput)
+//let parsedOutputHash = protector.parse(fakeBuildOutput: fakeBuildOutput)
+
+//protector.protectClassReferences(protectedHash: protectionHash)
+
+//protector.writeToFile(hash: protectionHash)
+
+exit(0)
