@@ -16,6 +16,8 @@ private let swiftSymbols = "[" + ":{}(),.<_>/`?!@#$%&*+-^|=; \n" + quotes + "]"
 private let swiftRegex = comments + "|" + words + "|" + swiftSymbols
 private let storyboardClassNameRegex = "(?<=customClass=\").*?(?=\")"
 
+typealias BuildOutput = [File:[ErrorData]]
+
 class Protector {
     private let swiftFiles : [File]
     private let storyboardFiles: [File]
@@ -125,7 +127,7 @@ class Protector {
         }
     }
     
-    func protectClassReferences(protectedHash: ProtectedClassHash) {
+    func protectClassReferences(output: BuildOutput, protectedHash: ProtectedClassHash) {
         Logger.log("--- Overwriting .swift class references ---")
         
         var line = 1
@@ -136,31 +138,42 @@ class Protector {
         func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
             return { result in
                 let word = nsString.substring(with: result.rangeAt(0))
-                if word == "\n" {
-                    line += 1
-                    column = 1
-                    return word
-                }
+                var wordToReturn = word/*
                 if currentErrors.isEmpty == false {
                     print("Current error at line \(currentErrors[0].line) and column \(currentErrors[0].column). File at line \(line) and column \(column). Error target is \(currentErrors[0].target) and retrieved word was \(word) Full error \(currentErrors[0].fullError).")
                 } else {
                     print("No more errors for this file")
-                }
+                }*/
                 if currentErrors.isEmpty == false && line == currentErrors[0].line && column == currentErrors[0].column {
-                    print("Reached line \(currentErrors[0].line) and column \(currentErrors[0].column). Error target is \(currentErrors[0].target) and retrieved word was \(word). Full error: \(currentErrors[0].fullError)")
+                    /*print("Reached line \(currentErrors[0].line) and column \(currentErrors[0].column). Error target is \(currentErrors[0].target) and retrieved word was \(word). Full error: \(currentErrors[0].fullError)")*/
                     currentErrors.remove(at: 0)
-                    return protectedHash.hash[word] ?? word
+                    wordToReturn = (protectedHash.hash[word] ?? word)
                 }
-                column += word.characters.count
-                return word
+                if word == "\n" {
+                    line += 1
+                    column = 1
+                    return wordToReturn
+                } else {
+                    column += word.characters.count
+                    return wordToReturn
+                }
             }
         }
-        for file in swiftFiles {
+        for (file,errorData) in output {
             autoreleasepool {
+                func lesserPosition(_ e1: ErrorData, _ e2: ErrorData) -> Bool {
+                    if e1.line != e2.line {
+                        return e1.line < e2.line
+                    } else {
+                        return e1.column < e2.column
+                    }
+                }
+                let sortedData = errorData.filterDuplicates { $0.line == $1.line && $0.column == $1.column }.sorted(by: lesserPosition)
                 line = 1
                 column = 1
                 let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-                currentErrors = parse(fakeBuildOutput: runFakeBuild(file: file))
+                currentErrors = sortedData
+                print("Error list: \(sortedData)")
                 Logger.log("--- Overwriting \(file.name) ---")
                 let protectedClassData = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
                 do {
@@ -173,18 +186,10 @@ class Protector {
         }
     }
     
-    func runFakeBuild(file: File) -> String {
-        Logger.log("Getting the location of classes and methods by performing a fake build. This can take a few minutes.")
+    func runFakeBuild() -> String {
+        Logger.log("Performing fake build to detect class references. This can take a few minutes...")
         let path = "/usr/bin/xcodebuild"
-        let arguments: [String] = {
-            var array: [String] = []
-            if workspaces.count == 1 {
-                array.append(contentsOf: ["-workspace",basePath+"/"+workspaces[0]])
-            } else {
-                array.append(contentsOf: ["-project",basePath+"/"+projects[0]])
-            }
-            return array
-        }()
+        let arguments: [String] = ["-quiet", "-workspace", basePath+workspaces[0], "-scheme", scheme]
         let task = Process()
         task.launchPath = path
         task.arguments = arguments
@@ -207,22 +212,15 @@ class Protector {
             }
         }
         let data = fakeBuildOutput.matchRegex(regex: errorRegex, mappingClosure: regexMapClosure(fromData: fakeBuildOutput as NSString))
-        var errorDataHash: [File:[ErrorData]] = [:]
+        var errorDataHash: BuildOutput = BuildOutput()
         for error in data {
-            let errorData = ErrorData(fullError: error)
-            if errorDataHash[errorData.file] == nil {
-                errorDataHash[errorData.file] = [errorData]
-            } else {
-                errorDataHash[errorData.file]!.append(errorData)
-                func lesserPosition(_ e1: ErrorData, _ e2: ErrorData) -> Bool {
-                    if e1.line != e2.line {
-                        return e1.line < e2.line
-                    } else {
-                        return e1.column < e2.column
-                    }
-                }
-                errorDataHash[errorData.file] = errorDataHash[errorData.file]!.sorted(by: lesserPosition)
+            guard let errorData = ErrorData(fullError: error) else {
+                continue
             }
+            if let lastError = errorDataHash[errorData.file]?.last, errorData.line == lastError.line && errorData.column == lastError.column {
+                continue
+            }
+            errorDataHash[errorData.file] == nil ? errorDataHash[errorData.file] = [errorData] : errorDataHash[errorData.file]!.append(errorData)
         }
         return errorDataHash
     }

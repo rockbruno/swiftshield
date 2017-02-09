@@ -16,7 +16,7 @@ struct ErrorData {
     let target: String
     let fullError: String
     
-    init(fullError: String) {
+    init?(fullError: String) {
         let separated = fullError.components(separatedBy: ":")
         let file = File(filePath: separated[0])
         let line = Int(separated[1])!
@@ -33,6 +33,8 @@ struct ErrorData {
         case "cannot call value of non-function type":
             self.column = column - fullError.components(separatedBy: "module<")[1].components(separatedBy: ">")[0].characters.count
             self.target = fullError.components(separatedBy: "module<")[1].components(separatedBy: ">")[0]
+        case "no such module":
+            return nil
         default:
             self.column = column
             self.target = target
