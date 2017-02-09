@@ -1,6 +1,6 @@
 import Foundation
 
-let basePath = UserDefaults.standard.string(forKey: "p") ?? ""
+let basePath = UserDefaults.standard.string(forKey: "p") ?? "/Users/bruno.rocha/Desktop/testyTARGET"
 
 guard basePath.isEmpty == false else {
     Logger.log("Bad arguments. Syntax: 'swiftshield -p (project root) -s (encrypted class name length, optional, default is 15) -v (verbose mode, optional)")
@@ -23,4 +23,21 @@ let swiftFiles = swiftFilePaths.flatMap { try? File(filePath: $0) }
 let storyboardFiles = storyboardFilePaths.flatMap{ try? File(filePath: $0) }
 
 let protector = Protector(swiftFiles: swiftFiles, storyboardFiles: storyboardFiles)
-protector.protect()
+
+let protectionHash = protector.getProtectionHash()
+
+guard protectionHash.isEmpty == false else {
+    Logger.log("No class/methods to obfuscate.")
+    exit(0)
+}
+
+let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj", onlyAtRoot: true) ?? []
+let workspaces = findFiles(rootPath: basePath, suffix: ".xcworkspace", onlyAtRoot: true) ?? []
+
+if workspaces.count > 1 || (projects.count > 1 && workspaces.count > 1) || (projects.count > 1 && workspaces.count == 0) {
+    Logger.log("Multiple projects (or multiple workspaces) found at the provided. Please make sure there's only one project (or workspace).")
+}
+
+let fakeBuildOutput = protector.runFakeBuild()
+
+let parsedOutputHash = protector.parse(fakeBuildOutput: fakeBuildOutput)

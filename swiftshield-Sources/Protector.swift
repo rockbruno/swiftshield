@@ -29,21 +29,21 @@ class Protector {
         defer {
             exit(0)
         }
-        let classHash = generateClassHash()
-        guard classHash.isEmpty == false else {
+       // let classHash = generateClassHash()
+       /* guard classHash.isEmpty == false else {
             Logger.log("No class files to obfuscate.")
             return
-        }
-        protectClassReferences(hash: classHash)
+        } */
+       /* protectClassReferences(hash: classHash)
         if storyboardFiles.isEmpty == false {
             protectStoryboards(hash: classHash)
         }
-        writeToFile(hash: classHash)
+        writeToFile(hash: classHash) */
         return
     }
     
-    private func generateClassHash() -> ProtectedClassHash {
-        Logger.log("Scanning class declarations")
+    func getProtectionHash() -> ProtectedClassHash {
+        Logger.log("Scanning class/method declarations")
         guard swiftFiles.isEmpty == false else {
             return ProtectedClassHash(hash: [:])
         }
@@ -58,23 +58,24 @@ class Protector {
                 }
                 guard scanData.shouldIgnoreCurrentWord == false else {
                     scanData.stopIgnoringWordsIfNeeded()
-                    return nil
+                    return scanData.currentWord
                 }
                 guard scanData.shouldProtectNextWord else {
                     scanData.protectNextWordIfNeeded()
                     scanData.startIgnoringWordsIfNeeded()
-                    return nil
+                    return scanData.currentWord
                 }
                 guard scanData.currentWord.isNotAnEmptyCharacter else {
-                    return nil
+                    return scanData.currentWord
                 }
                 scanData.shouldProtectNextWord = false
-                guard scanData.wordSuccedingClassStringIsActuallyAClass &&
-                      scanData.classDeclaractionFollowsSwiftNamingConventions &&
-                      scanData.isNotASwiftStandardClass else {
-                    return nil
+                guard scanData.wordSuccedingClassStringIsActuallyAClass else {
+                    return scanData.currentWord
                 }
-                return scanData.currentWord
+                let protectedClassName = (classes[scanData.currentWord] != nil ? classes[scanData.currentWord] : String.random(length: protectedClassNameSize))!
+                classes[scanData.currentWord] = protectedClassName
+                Logger.log("\(scanData.currentWord) -> \(protectedClassName)")
+                return protectedClassName
             }
         }
         for file in swiftFiles {
@@ -82,12 +83,8 @@ class Protector {
             autoreleasepool {
                 do {
                     let data = try String(contentsOfFile: file.path, encoding: .utf8)
-                    let newClasses = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString))
-                    newClasses.forEach {
-                        let protectedClassName = String.random(length: protectedClassNameSize)
-                        classes[$0] = protectedClassName
-                        Logger.log("\($0) -> \(protectedClassName)")
-                    }
+                    let newClasses = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
+                    try newClasses.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
                     scanData = SwiftFileScanData(phase: .reading)
                 } catch {
                     Logger.log("FATAL: \(error.localizedDescription)")
@@ -98,6 +95,59 @@ class Protector {
         return ProtectedClassHash(hash: classes)
     }
     
+    func runFakeBuild() -> String {
+        Logger.log("Getting the location of classes and methods by performing a fake build. This can take a few minutes.")
+        let path = "/usr/bin/xcodebuild"
+        let arguments: [String] = {
+            var array: [String] = []
+            if workspaces.count == 1 {
+                array.append(contentsOf: ["-workspace",basePath+"/"+workspaces[0]])
+            } else {
+                array.append(contentsOf: ["-project",basePath+"/"+projects[0]])
+            }
+            return array
+        }()
+        let task = Process()
+        task.launchPath = path
+        task.arguments = arguments
+        let outpipe: Pipe = Pipe()
+        task.standardOutput = outpipe
+        task.standardError = nil
+        task.launch()
+        let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: outdata, encoding: .utf8)
+        return output!
+    }
+    
+    func parse(fakeBuildOutput: String) -> [String:[ErrorData]] {
+        //TODO: Get all specific errors to prevent swapping things that have nothing to do with SwiftShield
+        let errorRegex = "/.* error:.*'.*'"
+        func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
+            return { result in
+                return nsString.substring(with: result.rangeAt(0))
+            }
+        }
+        let data = fakeBuildOutput.matchRegex(regex: errorRegex, mappingClosure: regexMapClosure(fromData: fakeBuildOutput as NSString))
+        var errorDataHash = [String:[ErrorData]]()
+        for error in data {
+            let separated = error.components(separatedBy: ":")
+            let file = separated[0]
+            let line = separated[1]
+            let padding = separated[2]
+            let separatedError = separated[4].components(separatedBy: "'")
+            let error = separatedError[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            let target = separatedError[1]
+            let errorData = ErrorData(file: file, line: Int(line)!, padding: Int(padding)!, error: error, target: target)
+            if errorDataHash[file] == nil {
+                errorDataHash[file] = [errorData]
+            } else {
+                errorDataHash[file]!.append(errorData)
+            }
+        }
+        return errorDataHash
+    }
+    
+    /*
     private func protectClassReferences(hash: ProtectedClassHash) {
         Logger.log("--- Overwriting .swift files ---")
         var scanData = SwiftFileScanData(phase: .overwriting)
@@ -186,5 +236,5 @@ class Protector {
             Logger.log("FATAL: Failed to generate conversion map: \(error.localizedDescription)")
         }
     }
-    
+    */
 }
