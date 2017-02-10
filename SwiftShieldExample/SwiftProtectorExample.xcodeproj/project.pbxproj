@@ -146,7 +146,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "ONLY_RUN_AT=\"Release\"\nMAIN_SCHEME=\"SwiftProtectorExample-AppStore\"\nIGNORED_SCHEMES=\"SwiftProtectorExample-CI,SwiftProtectorExample-Debug\"\n\nif [ \"$CONFIGURATION\" = \"$ONLY_RUN_AT\" ] && [ \"$ALREADY_RUNNING_SWIFTSHIELD\" != \"true\" ]; then\n    $SRCROOT/swiftshield -projectroot \"$SRCROOT\" -scheme \"$MAIN_SCHEME\" -ignoredschemes \"$IGNORED_SCHEMES -v\nfi";
+			shellScript = "ONLY_RUN_AT=\"Release\"\nMAIN_SCHEME=\"SwiftProtectorExample-AppStore\"\nIGNORED_SCHEMES=\"SwiftProtectorExample-CI,SwiftProtectorExample-Debug\"\n\nif [ \"$CONFIGURATION\" = \"$ONLY_RUN_AT\" ] && [ \"$ALREADY_RUNNING_SWIFTSHIELD\" = \"trdsdsdsue\" ]; then\n    \"$SRCROOT/swiftshield\" -projectroot \"$SRCROOT\" -scheme \"$MAIN_SCHEME\" -ignoredschemes \"$IGNORED_SCHEMES\" -v\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 

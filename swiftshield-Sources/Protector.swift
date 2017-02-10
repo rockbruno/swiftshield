@@ -189,7 +189,7 @@ class Protector {
         Logger.log("Getting schemes")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = ["-list", projectParameter, basePath+projectToBuild]
+        let arguments: [String] = ["-list", projectParameter, basePath+"/"+projectToBuild]
         let task = Process()
         task.launchPath = path
         task.arguments = arguments
@@ -209,7 +209,7 @@ class Protector {
         Logger.log("Performing fake build to detect class references. This can take a few minutes...")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = ["-quiet", projectParameter, basePath+projectToBuild, "-scheme", scheme, "ALREADY_RUNNING_SWIFTSHIELD=true"]
+        let arguments: [String] = ["-quiet", projectParameter, basePath+"/"+projectToBuild, "-scheme", scheme, "ALREADY_RUNNING_SWIFTSHIELD=true"]
         let task = Process()
         task.launchPath = path
         task.arguments = arguments

@@ -1,7 +1,7 @@
 import Foundation
 
 let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? ""
-let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
+let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? "SwiftProtectorExample-AppStore"
 
 guard basePath.isEmpty == false, mainScheme.isEmpty == false else {
     Logger.log("Bad arguments. Syntax: 'swiftshield [-projectroot PATH] [-scheme 'NAME']\nOptional parameters: [-ignoreschemes 'NAME1,NAME2,NAME3'] [-v]")
@@ -47,7 +47,7 @@ protector.protectStoryboards(hash: protectionHash)
 
 fileprivate var schemes = protector.getSchemes()
 var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? []
-ignoredSchemes.append(contentsOf: ["SwiftShield",mainScheme])
+ignoredSchemes.append(mainScheme)
 schemes = schemes.filter{return ignoredSchemes.contains($0) == false}
 schemes.append(mainScheme)
 
