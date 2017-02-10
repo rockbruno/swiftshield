@@ -173,7 +173,7 @@ class Protector {
                 column = 1
                 let data = try! String(contentsOfFile: file.path, encoding: .utf8)
                 currentErrors = sortedData
-                Logger.log("--- Overwriting \(file.name) ---")
+                Logger.log("--- Overwriting \(file.name) (\(errorData.count) changes) ---")
                 let protectedClassData = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
                 do {
                     try protectedClassData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
@@ -239,6 +239,9 @@ class Protector {
                 continue
             }
             errorDataHash[errorData.file] == nil ? errorDataHash[errorData.file] = [errorData] : errorDataHash[errorData.file]!.append(errorData)
+            if errorData.isModuleHasNoMemberError {
+                errorDataHash[errorData.file]?.append(ErrorData(file: errorData.file, line: errorData.line, column: errorData.column + errorData.target.characters.count + 1))
+            }
         }
         return errorDataHash
     }
