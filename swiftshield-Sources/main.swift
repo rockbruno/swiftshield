@@ -1,7 +1,7 @@
 import Foundation
 
 let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? ""
-let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? "SwiftProtectorExample-AppStore"
+let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
 
 guard basePath.isEmpty == false, mainScheme.isEmpty == false else {
     Logger.log("Bad arguments. Syntax: 'swiftshield [-projectroot PATH] [-scheme 'NAME']\nOptional parameters: [-ignoreschemes 'NAME1,NAME2,NAME3'] [-v]")
@@ -12,7 +12,7 @@ let verbose = CommandLine.arguments.contains("-v")
 let providedSize = UserDefaults.standard.integer(forKey: "size")
 let protectedClassNameSize = 25
 
-Logger.log("Swift Protector 1.0")
+Logger.log("Swift Protector 0.9.0")
 Logger.log("Verbose Mode", verbose: true)
 Logger.log("Path: \(basePath)", verbose: true)
 Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: true)
