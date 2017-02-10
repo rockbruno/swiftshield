@@ -1,13 +1,17 @@
 <img src="http://i.imgur.com/0ksj7Gh.png" alt="SwiftShield logo" height="140" >
-# Swift Class Obfuscator
+# Swift Obfuscator
+
+[![CocoaPods Version](https://cocoapod-badges.herokuapp.com/v/SwiftShield/badge.png)](http://cocoadocs.org/docsets/SwiftShield)
+[![GitHub release](https://img.shields.io/github/tag/rockbruno/swiftshield.svg)](https://github.com/rockbruno/swiftshield/releases)
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/rockbruno/swiftshield/master/LICENSE)
 
 SwiftShield is a tool that generates irreversible, encrypted names for your Swift project classes (including your Pods and Storyboards) in order to protect your app from tools that reverse engineer iOS/macOS apps, such as [class-dump](http://stevenygard.com/projects/class-dump/).
 For example, after running SwiftShield, the following class:
 ```swift
 class EncryptedVideoPlayer {
   func start() {
-    let controller = ImportantDecryptingController()
-    controller.start()
+    let vc = ImportantDecryptingController()
+    vc.start()
   }
 }
 ```
@@ -15,8 +19,8 @@ becomes:
 ```swift
 class djjck3KDxjs04tgbvb {
   func start() {
-    let controller = aAAAa2nc0dfmDssf()
-    controller.start()
+    let vc = aAAAa2nc0dfmDssf()
+    vc.start()
   }
 }
 ```
@@ -39,24 +43,18 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 ````
 
 
-## Installing
+## Installation
 
-**Warning:** SwiftShield irreversibly overwrites all your .swift files. Ideally, you should make sure it runs only on your CI server. It also takes a long time to build.
+**Warning:** SwiftShield **irreversibly overwrites** all of your .swift files and triples your build times. You should make sure it runs only on your CI server, and on release builds.
 
-After adding the SwiftShield binary to your project root, create a **New Run Script Phase** on your Build Phases tab, position it before the Compile Sources phase and add the following script: **(don't forget to change "Release" to something that is only executed by your CI server)**
+Using [CocoaPods](http://cocoapods.org/):
 
-````
-if [ "${CONFIGURATION}" = "Release" ]; then
-  "$SRCROOT/swiftshield" -p "$SRCROOT" -s 15 -v
-fi
-````
-`-p` is the path where SwiftShield should start looking for .swift files. Unless you're storing files outside your project's folders, $SRCROOT will do the trick.
+```ruby
+use_frameworks!
+pod 'SwiftShield'
+```
 
-`-s` is how long the encrypted names should be.
-
-`-v` is optional, and prints additional info about the encrypting proccess.
-
-If your project uses Cocoapods, make sure that your machine have the permissions to edit the Pods folder's contents. If it doesn't, SwiftShield will crash.
+[Click here](https://github.com/rockbruno/swiftshield/blob/master/CONFIGURATION.md) to see how to configure SwiftShield inside your project.
 
 
 ## Next steps
