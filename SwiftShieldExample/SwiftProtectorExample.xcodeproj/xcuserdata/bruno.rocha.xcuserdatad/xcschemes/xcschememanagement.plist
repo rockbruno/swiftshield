@@ -4,7 +4,17 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>SwiftProtectorExample.xcscheme</key>
+		<key>SwiftProtectorExample-AppStore.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>SwiftProtectorExample-Debug.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>SwiftProtectorExample=CI.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
