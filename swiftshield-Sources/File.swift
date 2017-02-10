@@ -8,16 +8,21 @@
 
 import Foundation
 
-class File {
-    let data: Data
+class File: Hashable {
     let path: String
     var name: String {
         return (path as NSString).lastPathComponent
     }
     
-    init(filePath: String) throws {
-        let url = URL(fileURLWithPath: filePath)
-        self.data = try Data(contentsOf: url)
+    var hashValue: Int {
+        return path.hashValue
+    }
+    
+    public static func ==(lhs: File, rhs: File) -> Bool {
+        return lhs.path == rhs.path
+    }
+    
+    init(filePath: String) {
         self.path = filePath
     }
 }

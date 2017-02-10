@@ -8,13 +8,18 @@
 
 import Foundation
 
-func findFiles(rootPath: String, suffix: String) -> [String]? {
+func findFiles(rootPath: String, suffix: String, onlyAtRoot: Bool = false) -> [String]? {
     var result = Array<String>()
     let fileManager = FileManager.default
-    if let paths = fileManager.subpaths(atPath: rootPath) {
-        let swiftPaths = paths.filter({ return $0.hasSuffix(suffix)})
-        for path in swiftPaths {
-            result.append((rootPath as NSString).appendingPathComponent(path))
+    if onlyAtRoot {
+        result.append(contentsOf: try! fileManager.contentsOfDirectory(atPath: rootPath).filter({ return $0.hasSuffix(suffix)}))
+    }
+    else {
+        if let paths = fileManager.subpaths(atPath: rootPath) {
+            let swiftPaths = paths.filter({ return $0.hasSuffix(suffix)})
+            for path in swiftPaths {
+                result.append((rootPath as NSString).appendingPathComponent(path))
+            }
         }
     }
     return result.count > 0 ? result : nil

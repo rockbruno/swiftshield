@@ -71,7 +71,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FD0B10C11E2F91FA00AED458 /* Build configuration list for PBXNativeTarget "SwiftProtectorExample" */;
 			buildPhases = (
-				FD0B10C51E2F928900AED458 /* protector */,
+				FD5F33DA1E4DF1F600BA07D3 /* SwiftShield */,
 				FD0B10AB1E2F91FA00AED458 /* Sources */,
 				FD0B10AC1E2F91FA00AED458 /* Frameworks */,
 				FD0B10AD1E2F91FA00AED458 /* Resources */,
@@ -134,19 +134,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		FD0B10C51E2F928900AED458 /* protector */ = {
+		FD5F33DA1E4DF1F600BA07D3 /* SwiftShield */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = protector;
+			name = SwiftShield;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\n\"$SRCROOT/swiftshield\" -p \"$SRCROOT\" -s 15 -v\nfi";
+			shellScript = "ONLY_RUN_AT=\"Release\"\nMAIN_SCHEME=\"SwiftProtectorExample-AppStore\"\nIGNORE_SCHEMES=\"SwiftProtectorExample-CI,SwiftProtectorExample-Debug\"\n\nif [ \"$CONFIGURATION\" = \"$ONLY_RUN_AT\" ] && [ \"$ALREADY_RUNNING_SWIFTSHIELD\" != \"true\" ]; then\n    \"$SRCROOT/swiftshield\" -projectroot \"$SRCROOT\" -scheme \"$MAIN_SCHEME\" -ignoreschemes \"$IGNORED_SCHEMES\" -v\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
