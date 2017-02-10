@@ -48,7 +48,7 @@ protector.protectStoryboards(hash: protectionHash)
 fileprivate var schemes = protector.getSchemes()
 var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? []
 ignoredSchemes.append(mainScheme)
-schemes = schemes.filter{return ignoredSchemes.contains($0) == false}
+schemes = schemes.filter{return ignoredSchemes.contains($0) == false && ignoredSchemes.contains("Pods-") == false}
 schemes.append(mainScheme)
 
 for scheme in schemes {
