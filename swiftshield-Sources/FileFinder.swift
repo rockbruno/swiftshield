@@ -18,7 +18,13 @@ func findFiles(rootPath: String, suffix: String, onlyAtRoot: Bool = false) -> [S
         if let paths = fileManager.subpaths(atPath: rootPath) {
             let swiftPaths = paths.filter({ return $0.hasSuffix(suffix)})
             for path in swiftPaths {
-                result.append((rootPath as NSString).appendingPathComponent(path))
+                var isDir : ObjCBool = false
+                let fullPath = (rootPath as NSString).appendingPathComponent(path)
+                if fileManager.fileExists(atPath: fullPath, isDirectory: &isDir) {
+                    if isDir.boolValue == false {
+                        result.append(fullPath)
+                    }
+                }
             }
         }
     }
