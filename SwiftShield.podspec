@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name = 'SwiftShield'
   s.module_name = 'SwiftShield'
-  s.version = '0.9.2'
+  s.version = '0.9.3'
   s.license = { type: 'MIT', file: 'LICENSE' }
   s.summary = 'A tool that protects Swift iOS apps against class-dump attacks.'
   s.homepage = 'https://github.com/rockbruno/swiftshield'
