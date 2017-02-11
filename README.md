@@ -47,6 +47,8 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 **Warning:** SwiftShield **irreversibly overwrites** all of your .swift files and triples your build times. You should make sure it runs only on your CI server, and on release builds.
 
+It is also currently under development, and will probably not work on it's first try. Check it out again in a week or two!
+
 Using [CocoaPods](http://cocoapods.org/):
 
 ```ruby
