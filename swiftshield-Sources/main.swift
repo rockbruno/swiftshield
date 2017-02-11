@@ -25,8 +25,8 @@ let storyboardFiles = storyboardFilePaths.flatMap{ File(filePath: $0) }
 
 let protector = Protector(swiftFiles: swiftFiles, storyboardFiles: storyboardFiles)
 
-fileprivate let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj", onlyAtRoot: true) ?? []
-fileprivate let workspaces = findFiles(rootPath: basePath, suffix: ".xcworkspace", onlyAtRoot: true) ?? []
+fileprivate let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj") ?? []
+fileprivate let workspaces = findFiles(rootPath: basePath, suffix: ".xcworkspace") ?? []
 
 if workspaces.count > 1 || (projects.count > 1 && workspaces.count > 1) || (projects.count > 1 && workspaces.count == 0) {
     Logger.log("Multiple projects (or multiple workspaces) found at the provided. Please make sure there's only one project (or workspace).")
@@ -36,7 +36,9 @@ if workspaces.count > 1 || (projects.count > 1 && workspaces.count > 1) || (proj
 let projectToBuild = workspaces.count == 1 ? workspaces[0] : projects[0]
 let isWorkspace = workspaces.count == 1
 
-let protectionHash = protector.getProtectionHash()
+fileprivate let protectionHash = protector.getProtectionHash()
+
+protector.protectModuleNames(hash: protectionHash, projectPaths: projects)
 
 guard protectionHash.isEmpty == false else {
     Logger.log("No class/methods to obfuscate.")
@@ -58,7 +60,6 @@ for scheme in schemes {
         Logger.log("Collected errors. Running...")
         protector.protectClassReferences(output: parsedOutputHash, protectedHash: protectionHash)
         parsedOutputHash = protector.parse(fakeBuildOutput: protector.runFakeBuild(scheme: scheme))
-
     }
 }
 

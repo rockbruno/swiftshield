@@ -24,10 +24,6 @@ class SwiftFileScanData {
         return previousWord != "."
     }
     
-    var currentWordIsNotAFramework: Bool {
-        return previousWord != "import"
-    }
-    
     var shouldIgnoreCurrentWord: Bool {
         return forbiddenZone != nil
     }
@@ -47,7 +43,7 @@ class SwiftFileScanData {
     }
     
     func protectNextWordIfNeeded() {
-        guard (currentWord == "class" || currentWord == "struct" || currentWord == "enum" || currentWord == "protocol" || currentWord == "associatedtype" || currentWord == "typealias") && currentWordIsNotAParameterName && currentWordIsNotAFramework else {
+        guard (currentWord == "class" || currentWord == "import") else {
             return
         }
         shouldProtectNextWord = true

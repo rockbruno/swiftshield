@@ -14,6 +14,7 @@ private let quotes = "\\]\\[\\-\"\'"
 private let swiftSymbols = "[" + ":{}(),.<_>/`?!@#$%&*+-^|=; \n" + quotes + "]"
 
 private let swiftRegex = comments + "|" + words + "|" + swiftSymbols
+
 private let storyboardClassNameRegex = "(?<=customClass=\").*?(?=\")"
 
 typealias BuildOutput = [File:[ErrorData]]
@@ -95,6 +96,90 @@ class Protector {
             }
         }
         return ProtectedClassHash(hash: classes)
+    }
+    
+    func protectModuleNames(hash protectionHash: ProtectedClassHash, projectPaths: [String]) {
+        let pbxProjTargetNameRegex = "buildConfigurationList = (.*) \\/\\* .* PBXNativeTarget \"(.*)\""
+        let pbxProjRegex = ".*"
+        Logger.log("Obfuscating Modules")
+        for projectPath in projectPaths {
+            var idToTargetNameHash: [String:String] = [:]
+            //Getting target names first based on their ID
+            let data = try! String(contentsOfFile: projectPath+"/project.pbxproj", encoding: .utf8)
+            _ = data.matchRegex(regex: pbxProjTargetNameRegex) { result in
+                guard result.numberOfRanges == 3 else {
+                    return ""
+                }
+                let id = (data as NSString).substring(with: result.rangeAt(1))
+                let target = (data as NSString).substring(with: result.rangeAt(2))
+                idToTargetNameHash[id] = target
+                Logger.log("Found module \(target)")
+                return ""
+            }
+            var configurationIdToTargetId: [String:String] = [:]
+            var listenToConfigId = false
+            var currentTargetId = ""
+            var shouldMap = false
+            //Mapping build configuration ids to its target ID
+            _ = data.matchRegex(regex: pbxProjRegex) { result in
+                let currentLine = (data as NSString).substring(with: result.rangeAt(0))
+                if shouldMap == false {
+                    shouldMap = currentLine.contains("Begin XCConfigurationList section")
+                    return currentLine
+                }
+                if currentLine.contains("/*") {
+                    if currentLine.contains("Build configuration list for") {
+                        listenToConfigId = true
+                        currentTargetId = currentLine.components(separatedBy: "/*")[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    } else if currentLine.contains("End") && listenToConfigId {
+                        listenToConfigId = false
+                    } else {
+                        let configId = currentLine.components(separatedBy: "/*")[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        configurationIdToTargetId[configId] = currentTargetId
+                    }
+                }
+                return currentLine
+            }
+            //Replacing
+            let spacing = "\t\t"
+            let productModuleLine = "PRODUCT_MODULE_NAME = "
+            let productNameLine = "PRODUCT_NAME = "
+            let buildSettingsSection = "XCBuildConfiguration section"
+            var configId = ""
+            var listenToTargetId = false
+            var previousLine = ""
+            let newProj = data.matchRegex(regex: pbxProjRegex) { result in
+                var currentLine = (data as NSString).substring(with: result.rangeAt(0))
+                guard currentLine != "" else {
+                    return currentLine + "\n"
+                }
+                defer { previousLine = currentLine }
+                if currentLine.contains(buildSettingsSection) {
+                    listenToTargetId = currentLine.contains("Begin")
+                } else if listenToTargetId {
+                    let foundTarget = currentLine.contains("/*") && currentLine.contains("= {")
+                    if foundTarget {
+                        configId = currentLine.components(separatedBy: "/*")[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    }
+                }
+                if currentLine.contains(productModuleLine) {
+                    let targetName = currentLine.components(separatedBy: productModuleLine)[1].components(separatedBy: ";")[0]
+                    let newName = protectionHash.hash[targetName] ?? targetName
+                    if newName != targetName {
+                        currentLine = currentLine.replacingOccurrences(of: targetName, with: protectionHash.hash[targetName] ?? targetName)
+                        Logger.log("\(targetName) -> \(newName) (Target had a custom module name")
+                    }
+                } else if currentLine.contains(productNameLine) && previousLine.contains(productModuleLine) == false {
+                    if let targetName = idToTargetNameHash[configurationIdToTargetId[configId]!] {
+                        let newName = protectionHash.hash[targetName] ?? targetName
+                        currentLine = spacing + productModuleLine + newName + ";\n" + currentLine
+                        Logger.log("\(targetName) -> \(newName)")
+                    }
+                }
+                return currentLine + "\n"
+            }.joined()
+            try! newProj.write(toFile: projectPath+"/project.pbxproj", atomically: false, encoding: String.Encoding.utf8)
+        }
     }
     
     func protectStoryboards(hash: ProtectedClassHash) {
@@ -189,7 +274,7 @@ class Protector {
         Logger.log("Getting schemes")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = ["-list", projectParameter, basePath+"/"+projectToBuild]
+        let arguments: [String] = ["-list", projectParameter, projectToBuild]
         let task = Process()
         task.launchPath = path
         task.arguments = arguments
@@ -209,7 +294,7 @@ class Protector {
         Logger.log("Performing fake build to detect class references. This can take a few minutes...")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = ["-quiet", projectParameter, basePath+"/"+projectToBuild, "-scheme", scheme, "ALREADY_RUNNING_SWIFTSHIELD=true"]
+        let arguments: [String] = ["-quiet", projectParameter, projectToBuild, "-scheme", scheme, "ALREADY_RUNNING_SWIFTSHIELD=true"]
         let task = Process()
         task.launchPath = path
         task.arguments = arguments
