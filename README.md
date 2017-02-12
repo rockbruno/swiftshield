@@ -25,7 +25,7 @@ class djjck3KDxjs04tgbvb: djdj3ocnC38nid {
 ```
 
 
-## How do I deal with crash logs / analytics if my project uses SwiftShield?
+## How do I deal with crash logs / Analytics if my project uses SwiftShield?
 
 After succesfully encrypting your project, SwiftShield generates a `conversionMap.txt` file with all the changes it made to your project, allowing you to pinpoint what an encrypted class really is.
 ````
@@ -45,7 +45,7 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 ## Requirements
 
 1. Xcode command-line tools
-2. No logic based on class names, like loading `MyClass.xib` because `type(of:self)` is `'MyClass'`.
+2. No logic based on class names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
 2. Swift 3.0 (untested on other versions, but could work)
 3. Xcode 8.1 (untested on other versions, but could work)
 4. No Objective-C classes that call Swift methods (untested, but could work. Swift classes that call Objective-C methods are fine)
