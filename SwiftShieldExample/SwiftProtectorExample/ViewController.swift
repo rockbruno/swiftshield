@@ -15,10 +15,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let importantStruct = ImportantStruct()
-        //Properties stay intact as they should
-        let aenum = AEnum.class
-        let `class` = ViewController()
+        let importantThing = ImportantClass()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -29,12 +26,8 @@ class ViewController: UIViewController {
 }
 
 
-struct ImportantStruct {
-    //Only actual classes and structs will be modified
+class ImportantClass {
+    //Only actual classes will be modified
     var thing = "class ViewController"
     var string = "struct ImportantStruct"
-}
-
-enum AEnum {
-    case `class`
 }
