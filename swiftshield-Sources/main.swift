@@ -1,9 +1,9 @@
 import Foundation
 
-let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? ""
-let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
+let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? "/Users/bruno.rocha/Desktop/vivo-meditacao-ios"
+let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? "aaa"
 
-let projectToBuild = UserDefaults.standard.string(forKey: "projectfile") ?? ""
+let projectToBuild = UserDefaults.standard.string(forKey: "projectfile") ?? "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/VivoMeditacao.xcworkspace"
 
 guard basePath.isEmpty == false, mainScheme.isEmpty == false, projectToBuild.isEmpty == false else {
     Logger.log("Bad arguments.\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-ignoreschemes 'NAME1,NAME2,NAME3' (If you have multiple schemes that point to the same target, like MyApp-CI or MyApp-Debug, mark them as ignored to prevent errors)\n\n-v (Verbose mode)")
@@ -32,7 +32,9 @@ let storyboardFiles = storyboardFilePaths.flatMap{ File(filePath: $0) }
 
 let protector = Protector(swiftFiles: swiftFiles, storyboardFiles: storyboardFiles)
 
-fileprivate let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj") ?? []
+fileprivate let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj", ignoreDirs: false) ?? []
+
+protector.markAsProtected(projectPaths: projects)
 
 fileprivate var protectionHash = protector.getProtectionHash(projectPaths: projects)
 

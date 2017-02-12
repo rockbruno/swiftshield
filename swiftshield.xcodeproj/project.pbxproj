@@ -10,7 +10,7 @@
 		FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */; };
 		FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */; };
 		FD6F379D1E509A1100EF6013 /* Protector++Builds.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD6F379C1E509A1100EF6013 /* Protector++Builds.swift */; };
-		FD77AFF51E4F8BF5001A90DA /* Protector++Modules.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD77AFF41E4F8BF5001A90DA /* Protector++Modules.swift */; };
+		FD77AFF51E4F8BF5001A90DA /* Protector++Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD77AFF41E4F8BF5001A90DA /* Protector++Projects.swift */; };
 		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
 		FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD11E31140C00A753FB /* Storyboard.swift */; };
 		FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */; };
@@ -40,7 +40,7 @@
 		FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorData.swift; path = "swiftshield-Sources/ErrorData.swift"; sourceTree = SOURCE_ROOT; };
 		FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectedClassHash.swift; path = "swiftshield-Sources/ProtectedClassHash.swift"; sourceTree = SOURCE_ROOT; };
 		FD6F379C1E509A1100EF6013 /* Protector++Builds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Protector++Builds.swift"; sourceTree = SOURCE_ROOT; };
-		FD77AFF41E4F8BF5001A90DA /* Protector++Modules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Protector++Modules.swift"; sourceTree = SOURCE_ROOT; };
+		FD77AFF41E4F8BF5001A90DA /* Protector++Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Protector++Projects.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD11E31140C00A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = "swiftshield-Sources/Storyboard.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftFileScanData.swift; path = "swiftshield-Sources/SwiftFileScanData.swift"; sourceTree = SOURCE_ROOT; };
@@ -96,7 +96,7 @@
 				FD895AD91E31142400A753FB /* Array.swift */,
 				FD895ADA1E31142400A753FB /* ForbiddenZone.swift */,
 				FD895ADB1E31142400A753FB /* Protector.swift */,
-				FD77AFF41E4F8BF5001A90DA /* Protector++Modules.swift */,
+				FD77AFF41E4F8BF5001A90DA /* Protector++Projects.swift */,
 				FD6F379C1E509A1100EF6013 /* Protector++Builds.swift */,
 				FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */,
 				FD895ADC1E31142400A753FB /* String.swift */,
@@ -185,7 +185,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD77AFF51E4F8BF5001A90DA /* Protector++Modules.swift in Sources */,
+				FD77AFF51E4F8BF5001A90DA /* Protector++Projects.swift in Sources */,
 				FD895AE11E31142400A753FB /* String.swift in Sources */,
 				FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */,
 				FD895ADE1E31142400A753FB /* Array.swift in Sources */,

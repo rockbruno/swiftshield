@@ -33,7 +33,7 @@ extension Protector {
         Logger.log("Performing fake build to detect class references. This can take a few minutes...")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = ["-quiet", projectParameter, projectToBuild, "-scheme", scheme, "SWIFTSHIELDED=true"]
+        let arguments: [String] = ["-quiet", projectParameter, projectToBuild, "-scheme", scheme]
         let task = Process()
         task.launchPath = path
         task.arguments = arguments
