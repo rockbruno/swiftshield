@@ -46,7 +46,7 @@ guard protectionHash.isEmpty == false else {
 protector.protectStoryboards(hash: protectionHash)
 
 fileprivate var schemes = protector.getSchemes()
-var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? ["VivoLearning","VivoLearning-CI"]
+var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? []
 ignoredSchemes.append(mainScheme)
 schemes = schemes.filter{return ignoredSchemes.contains($0) == false && ignoredSchemes.contains("Pods-") == false}
 schemes.append(mainScheme)
