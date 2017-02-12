@@ -1,1 +1,1 @@
-./swiftshield -projectroot ./ -projectfile ./SwiftProtectorExample.xcodeproj -scheme 'SwiftProtectorExample'
+./swiftshield -projectroot ./ -projectfile ./SwiftProtectorExample.xcodeproj -scheme 'SwiftProtectorExample' -ignoreschemes 'SwiftProtectorExample-Debug,SwiftProtectorExample-CI'
