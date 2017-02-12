@@ -11,10 +11,6 @@ import Foundation
 func findFiles(rootPath: String, suffix: String, ignoreDirs: Bool = true) -> [String]? {
     var result = Array<String>()
     let fileManager = FileManager.default
-   /* if onlyAtRoot {
-        result.append(contentsOf: try! fileManager.contentsOfDirectory(atPath: rootPath).filter({ return $0.hasSuffix(suffix)}))
-    } */
-    //else {
         if let paths = fileManager.subpaths(atPath: rootPath) {
             let swiftPaths = paths.filter({ return $0.hasSuffix(suffix)})
             for path in swiftPaths {
@@ -27,6 +23,5 @@ func findFiles(rootPath: String, suffix: String, ignoreDirs: Bool = true) -> [St
                 }
             }
         }
-   // }
     return result.count > 0 ? result : nil
 }

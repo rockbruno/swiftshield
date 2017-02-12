@@ -130,14 +130,8 @@ class Protector {
         func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
             return { result in
                 let word = nsString.substring(with: result.rangeAt(0))
-                var wordToReturn = word/*
-                if currentErrors.isEmpty == false {
-                    print("Current error at line \(currentErrors[0].line) and column \(currentErrors[0].column). File at line \(line) and column \(column). Error target is \(currentErrors[0].target) and retrieved word was \(word) Full error \(currentErrors[0].fullError).")
-                } else {
-                    print("No more errors for this file")
-                }*/
+                var wordToReturn = word
                 if currentErrors.isEmpty == false && line == currentErrors[0].line && column == currentErrors[0].column {
-                    /*print("Reached line \(currentErrors[0].line) and column \(currentErrors[0].column). Error target is \(currentErrors[0].target) and retrieved word was \(word). Full error: \(currentErrors[0].fullError)")*/
                     currentErrors.remove(at: 0)
                     wordToReturn = (protectedHash.hash[word] ?? word)
                 }
@@ -198,65 +192,4 @@ class Protector {
             Logger.log("FATAL: Failed to generate conversion map: \(error.localizedDescription)")
         }
     }
-    
-    /*
-    private func protectClassReferences(hash: ProtectedClassHash) {
-        Logger.log("--- Overwriting .swift files ---")
-        var scanData = SwiftFileScanData(phase: .overwriting)
-        
-        func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
-            return { result in
-                scanData.currentWord = nsString.substring(with: result.rangeAt(0))
-                defer {
-                    scanData.prepareForNextWord()
-                }
-                guard scanData.shouldIgnoreCurrentWord == false || scanData.beginOfInterpolatedZone else {
-                    scanData.stopIgnoringWordsIfNeeded()
-                    return scanData.currentWord
-                }
-                guard scanData.currentWordIsNotAFramework && scanData.currentWordIsNotAStandardSwiftClass, let protectedWord = hash.hash[scanData.currentWord] else {
-                    scanData.startIgnoringWordsIfNeeded()
-                    return scanData.currentWord
-                }
-                return protectedWord
-            }
-        }
-        for file in swiftFiles {
-            autoreleasepool {
-                let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-                let protectedClassData = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
-                do {
-                    Logger.log("--- Overwriting \(file.name) ---")
-                    try protectedClassData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
-                    scanData = SwiftFileScanData(phase: .overwriting)
-                } catch {
-                    Logger.log("FATAL: \(error.localizedDescription)")
-                    exit(1)
-                }
-            }
-        }
-    }
-    
-    private func writeToFile(hash: ProtectedClassHash) {
-        Logger.log("--- Generating conversion map ---")
-        var output = ""
-        output += "//\n"
-        output += "//  SwiftShield\n"
-        output += "//  Conversion Map\n"
-        output += "//\n"
-        output += "\n"
-        output += "Classes:"
-        output += "\n"
-        for (k,v) in hash.hash {
-            output += "\n\(k) ===> \(v)"
-        }
-        let path = basePath + (basePath.characters.last == "/" ? "" : "/") + "swiftshield-output"
-        try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
-        do {
-            try output.write(toFile: path + "/conversionMap.txt", atomically: false, encoding: String.Encoding.utf8)
-        } catch {
-            Logger.log("FATAL: Failed to generate conversion map: \(error.localizedDescription)")
-        }
-    }
-    */
 }

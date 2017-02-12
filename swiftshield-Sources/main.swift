@@ -59,6 +59,7 @@ for scheme in schemes {
         protector.protectClassReferences(output: parsedOutputHash, protectedHash: protectionHash)
         parsedOutputHash = protector.parse(fakeBuildOutput: protector.runFakeBuild(scheme: scheme))
     }
+    Logger.log("Complete!")
 }
 
 protector.writeToFile(hash: protectionHash)
