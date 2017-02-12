@@ -3,7 +3,7 @@
 
 ## Modify Run Scripts that can affect SwiftShield
 
-If your project uses a framework that also changes your .swift files, like `R.swift` or `SwiftGen`, you need to prevent them from interfering with SwiftShield. Don't worry, it's very simple. You probably have a Run Script configured to run these frameworks. You just need to wrap their main call around a "$SWIFTSHIELDED != true" condition.
+If your project uses a framework that also changes your .swift files, like `R.swift` or `SwiftGen`, you need to prevent them from interfering with SwiftShield. Don't worry, it's very simple. You probably have a Run Script configured to run these frameworks. You just need to wrap them around a `"$SWIFTSHIELDED" != "true"` condition.
 For example, my SwiftGen script:
 ```bash
 $PODS_ROOT/SwiftGen/bin/swiftgen images --output $SRCROOT/Asset.swift $SRCROOT/Assets.xcassets
@@ -15,16 +15,14 @@ if [ "$SWIFTSHIELDED" != "true" ]; then
 fi
 ```
 
-With this, after SwiftShield obfuscates your project, that framework will not affect your code anymore.
+This will prevent that script from running after your project gets obfuscated.
 
 
 ## Unlocking your Project (if you use Cocoapods)
 
-By default, Cocoapod sources are locked. SwiftShield needs them to be unlocked to be able to obfuscate your project. To unlock your project, you can run:
+By default, Cocoapod sources are locked. SwiftShield needs them to be unlocked in order to be able to obfuscate your project. To unlock your project, you can run:
 
 `chmod -R 774 PATHTOPROJECTFOLDER`
-
-If you don't do this, you'll get a Segmentation Fault error.
 
 
 ## Running SwiftShield
