@@ -20,6 +20,9 @@ extension String {
     var isNotScopeIdentifier: Bool {
         return self != "public" && self != "open" && self != "private" && self != "dynamic" && self != "internal" && self != "var" && self != "let" && self != "final" && self != "func"
     }
+    var noSpaces: String {
+        return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+    }
 }
 
 extension String {

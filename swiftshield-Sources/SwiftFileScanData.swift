@@ -8,13 +8,7 @@
 
 import Foundation
 
-enum SwiftFileScanDataPhase {
-    case reading
-    case overwriting
-}
-
 class SwiftFileScanData {
-    let phase: SwiftFileScanDataPhase
     var currentWord = ""
     var shouldProtectNextWord = false
     var forbiddenZone: ForbiddenZone? = nil
@@ -32,10 +26,6 @@ class SwiftFileScanData {
         return currentWord.isNotUsingClassAsAParameterNameOrProtocol && currentWord.isNotScopeIdentifier && currentWord.isNotASwiftStandardClass
     }
     
-    init(phase: SwiftFileScanDataPhase) {
-        self.phase = phase
-    }
-    
     func stopIgnoringWordsIfNeeded() {
         if currentWord == forbiddenZone?.zoneEnd {
             forbiddenZone = nil
@@ -43,7 +33,7 @@ class SwiftFileScanData {
     }
     
     func protectNextWordIfNeeded() {
-        guard (currentWord == "class" || currentWord == "import") else {
+        guard currentWord == "class" && currentWordIsNotAParameterName else {
             return
         }
         shouldProtectNextWord = true
@@ -54,8 +44,6 @@ class SwiftFileScanData {
     }
 
     func prepareForNextWord() {
-        if phase == .reading {
-            previousWord = currentWord
-        }
+        previousWord = currentWord
     }
 }

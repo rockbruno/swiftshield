@@ -22,7 +22,7 @@ struct ErrorData {
         let line = Int(separated[1])!
         let column = Int(separated[2])!
         let separatedError = separated[4].components(separatedBy: "'")
-        let specificError = separatedError[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let specificError = separatedError[0].noSpaces
         let target = separatedError[1]
         
         self.file = file
@@ -42,7 +42,7 @@ struct ErrorData {
             return nil
         case "type": //type 'nrjCKwImewhNjhC.acDjfj3kfnc' has no member 'ScaleMode'
             let descriptionIndex = separatedError.count > 5 ? 4 : 2
-            let secondErrorPart = separatedError[descriptionIndex].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            let secondErrorPart = separatedError[descriptionIndex].noSpaces
             if secondErrorPart.contains("has no member") {
                 self.column = column + (target.components(separatedBy: ".")).last!.characters.count + 1
                 self.target = separatedError[descriptionIndex + 1]
@@ -53,7 +53,7 @@ struct ErrorData {
                 self.target = target
             }
         case "":
-            let description = separatedError[2].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            let description = separatedError[2].noSpaces
             if description.contains("is not a member type of") {
                 self.column = column
                 self.target = target

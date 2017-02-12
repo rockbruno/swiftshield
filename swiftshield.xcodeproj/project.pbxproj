@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FD2E99F61E4BDD4D00648610 /* InterpolatedStringZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD2E99F51E4BDD4D00648610 /* InterpolatedStringZone.swift */; };
 		FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */; };
 		FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */; };
+		FD6F379D1E509A1100EF6013 /* Protector++Builds.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD6F379C1E509A1100EF6013 /* Protector++Builds.swift */; };
+		FD77AFF51E4F8BF5001A90DA /* Protector++Modules.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD77AFF41E4F8BF5001A90DA /* Protector++Modules.swift */; };
 		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
 		FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD11E31140C00A753FB /* Storyboard.swift */; };
 		FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */; };
@@ -36,9 +37,10 @@
 
 /* Begin PBXFileReference section */
 		FD0B10941E2F8ACD00AED458 /* swiftshield */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = swiftshield; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD2E99F51E4BDD4D00648610 /* InterpolatedStringZone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterpolatedStringZone.swift; path = "swiftshield-Sources/InterpolatedStringZone.swift"; sourceTree = SOURCE_ROOT; };
 		FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorData.swift; path = "swiftshield-Sources/ErrorData.swift"; sourceTree = SOURCE_ROOT; };
 		FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectedClassHash.swift; path = "swiftshield-Sources/ProtectedClassHash.swift"; sourceTree = SOURCE_ROOT; };
+		FD6F379C1E509A1100EF6013 /* Protector++Builds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Protector++Builds.swift"; sourceTree = SOURCE_ROOT; };
+		FD77AFF41E4F8BF5001A90DA /* Protector++Modules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Protector++Modules.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD11E31140C00A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = "swiftshield-Sources/Storyboard.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftFileScanData.swift; path = "swiftshield-Sources/SwiftFileScanData.swift"; sourceTree = SOURCE_ROOT; };
@@ -94,6 +96,8 @@
 				FD895AD91E31142400A753FB /* Array.swift */,
 				FD895ADA1E31142400A753FB /* ForbiddenZone.swift */,
 				FD895ADB1E31142400A753FB /* Protector.swift */,
+				FD77AFF41E4F8BF5001A90DA /* Protector++Modules.swift */,
+				FD6F379C1E509A1100EF6013 /* Protector++Builds.swift */,
 				FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */,
 				FD895ADC1E31142400A753FB /* String.swift */,
 				FD895ADD1E31142400A753FB /* FileFinder.swift */,
@@ -117,7 +121,6 @@
 				FD895ACF1E3113FA00A753FB /* File.swift */,
 				FD895AD11E31140C00A753FB /* Storyboard.swift */,
 				FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */,
-				FD2E99F51E4BDD4D00648610 /* InterpolatedStringZone.swift */,
 				FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */,
 			);
 			name = File;
@@ -182,10 +185,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD77AFF51E4F8BF5001A90DA /* Protector++Modules.swift in Sources */,
 				FD895AE11E31142400A753FB /* String.swift in Sources */,
 				FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */,
 				FD895ADE1E31142400A753FB /* Array.swift in Sources */,
-				FD2E99F61E4BDD4D00648610 /* InterpolatedStringZone.swift in Sources */,
 				FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */,
 				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,
 				FD895AE21E31142400A753FB /* FileFinder.swift in Sources */,
@@ -193,6 +196,7 @@
 				FD895ADF1E31142400A753FB /* ForbiddenZone.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
+				FD6F379D1E509A1100EF6013 /* Protector++Builds.swift in Sources */,
 				FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
 			);
@@ -294,6 +298,7 @@
 			buildSettings = {
 				DEVELOPMENT_TEAM = WZ2UP2QF9G;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFTSHIELDED = true;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -303,6 +308,7 @@
 			buildSettings = {
 				DEVELOPMENT_TEAM = WZ2UP2QF9G;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFTSHIELDED = true;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

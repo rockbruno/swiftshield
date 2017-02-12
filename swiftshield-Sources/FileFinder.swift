@@ -8,7 +8,7 @@
 
 import Foundation
 
-func findFiles(rootPath: String, suffix: String, onlyAtRoot: Bool = false) -> [String]? {
+func findFiles(rootPath: String, suffix: String, ignoreDirs: Bool = true) -> [String]? {
     var result = Array<String>()
     let fileManager = FileManager.default
    /* if onlyAtRoot {
@@ -21,7 +21,7 @@ func findFiles(rootPath: String, suffix: String, onlyAtRoot: Bool = false) -> [S
                 var isDir : ObjCBool = false
                 let fullPath = (rootPath as NSString).appendingPathComponent(path)
                 if fileManager.fileExists(atPath: fullPath, isDirectory: &isDir) {
-                    if isDir.boolValue == false {
+                    if ignoreDirs == false || (ignoreDirs && isDir.boolValue == false) {
                         result.append(fullPath)
                     }
                 }

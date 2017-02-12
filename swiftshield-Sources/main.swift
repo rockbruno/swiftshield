@@ -3,16 +3,23 @@ import Foundation
 let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? ""
 let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
 
-guard basePath.isEmpty == false, mainScheme.isEmpty == false else {
-    Logger.log("Bad arguments. Syntax: 'swiftshield [-projectroot PATH] [-scheme 'NAME']\nOptional parameters: [-ignoreschemes 'NAME1,NAME2,NAME3'] [-v]")
+let projectToBuild = UserDefaults.standard.string(forKey: "projectfile") ?? ""
+
+guard basePath.isEmpty == false, mainScheme.isEmpty == false, projectToBuild.isEmpty == false else {
+    Logger.log("Bad arguments.\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-ignoreschemes 'NAME1,NAME2,NAME3' (If you have multiple schemes that point to the same target, like MyApp-CI or MyApp-Debug, mark them as ignored to prevent errors)\n\n-v (Verbose mode)")
+    exit(1)
+}
+
+let isWorkspace = projectToBuild.contains(".xcworkspace")
+if isWorkspace == false && projectToBuild.contains(".xcodeproj") == false {
+    Logger.log("Project file provided is not a project or workspace.")
     exit(1)
 }
 
 let verbose = CommandLine.arguments.contains("-v")
-let providedSize = UserDefaults.standard.integer(forKey: "size")
 let protectedClassNameSize = 25
 
-Logger.log("Swift Protector 0.9.0")
+Logger.log("Swift Protector 1.0.0")
 Logger.log("Verbose Mode", verbose: true)
 Logger.log("Path: \(basePath)", verbose: true)
 Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: true)
@@ -26,19 +33,8 @@ let storyboardFiles = storyboardFilePaths.flatMap{ File(filePath: $0) }
 let protector = Protector(swiftFiles: swiftFiles, storyboardFiles: storyboardFiles)
 
 fileprivate let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj") ?? []
-fileprivate let workspaces = findFiles(rootPath: basePath, suffix: ".xcworkspace") ?? []
 
-if workspaces.count > 1 || (projects.count > 1 && workspaces.count > 1) || (projects.count > 1 && workspaces.count == 0) {
-    Logger.log("Multiple projects (or multiple workspaces) found at the provided. Please make sure there's only one project (or workspace).")
-    exit(1)
-}
-
-let projectToBuild = workspaces.count == 1 ? workspaces[0] : projects[0]
-let isWorkspace = workspaces.count == 1
-
-fileprivate let protectionHash = protector.getProtectionHash()
-
-protector.protectModuleNames(hash: protectionHash, projectPaths: projects)
+fileprivate var protectionHash = protector.getProtectionHash(projectPaths: projects)
 
 guard protectionHash.isEmpty == false else {
     Logger.log("No class/methods to obfuscate.")
@@ -48,7 +44,7 @@ guard protectionHash.isEmpty == false else {
 protector.protectStoryboards(hash: protectionHash)
 
 fileprivate var schemes = protector.getSchemes()
-var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? []
+var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? ["VivoLearning","VivoLearning-CI"]
 ignoredSchemes.append(mainScheme)
 schemes = schemes.filter{return ignoredSchemes.contains($0) == false && ignoredSchemes.contains("Pods-") == false}
 schemes.append(mainScheme)

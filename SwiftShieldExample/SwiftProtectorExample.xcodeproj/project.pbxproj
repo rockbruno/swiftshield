@@ -71,7 +71,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FD0B10C11E2F91FA00AED458 /* Build configuration list for PBXNativeTarget "SwiftProtectorExample" */;
 			buildPhases = (
-				FD5F33DA1E4DF1F600BA07D3 /* SwiftShield */,
 				FD0B10AB1E2F91FA00AED458 /* Sources */,
 				FD0B10AC1E2F91FA00AED458 /* Frameworks */,
 				FD0B10AD1E2F91FA00AED458 /* Resources */,
@@ -132,23 +131,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		FD5F33DA1E4DF1F600BA07D3 /* SwiftShield */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = SwiftShield;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "ONLY_RUN_AT=\"Release\"\nMAIN_SCHEME=\"SwiftProtectorExample-AppStore\"\nIGNORE_SCHEMES=\"SwiftProtectorExample-CI,SwiftProtectorExample-Debug\"\n\nif [ \"$CONFIGURATION\" = \"$ONLY_RUN_AT\" ] && [ \"$ALREADY_RUNNING_SWIFTSHIELD\" != \"true\" ]; then\n    \"$SRCROOT/swiftshield\" -projectroot \"$SRCROOT\" -scheme \"$MAIN_SCHEME\" -ignoreschemes \"$IGNORED_SCHEMES\" -v\nfi";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FD0B10AB1E2F91FA00AED458 /* Sources */ = {
@@ -280,8 +262,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = WZ2UP2QF9G;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SwiftProtectorExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brunorocha.SwiftProtectorExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -293,8 +277,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = WZ2UP2QF9G;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SwiftProtectorExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brunorocha.SwiftProtectorExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
