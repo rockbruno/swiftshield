@@ -18,7 +18,7 @@ extension String {
         return self != "`" && self != "{" && self != ":" && self != "_"
     }
     var isNotScopeIdentifier: Bool {
-        return self != "public" && self != "open" && self != "private" && self != "dynamic" && self != "internal" && self != "var" && self != "let" && self != "final" && self != "func"
+        return self != "public" && self != "open" && self != "private" && self != "dynamic" && self != "internal" && self != "var" && self != "let" && self != "final" && self != "func" && self != "lazy"
     }
     var noSpaces: String {
         return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)

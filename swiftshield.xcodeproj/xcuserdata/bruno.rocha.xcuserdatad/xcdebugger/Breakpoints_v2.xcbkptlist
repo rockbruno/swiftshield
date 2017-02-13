@@ -399,8 +399,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "158"
             endingLineNumber = "158"
-            landmarkName = "lesserPosition(_:_:)"
-            landmarkType = "9">
+            landmarkName = "protectClassReferences(output:protectedHash:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -445,7 +445,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "176"
             endingLineNumber = "176"
-            landmarkName = "protectClassReferences(output:protectedHash:)"
+            landmarkName = "writeToFile(hash:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

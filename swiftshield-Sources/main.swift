@@ -19,7 +19,7 @@ if isWorkspace == false && projectToBuild.contains(".xcodeproj") == false {
 let verbose = CommandLine.arguments.contains("-v")
 let protectedClassNameSize = 25
 
-Logger.log("Swift Protector 1.0.0")
+Logger.log("Swift Protector 1.0.1")
 Logger.log("Verbose Mode", verbose: true)
 Logger.log("Path: \(basePath)", verbose: true)
 Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: true)
