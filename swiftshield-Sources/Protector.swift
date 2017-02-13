@@ -29,16 +29,15 @@ class Protector {
     }
     
     func getProtectionHash(projectPaths: [String]) -> ProtectedClassHash {
-        Logger.log("Scanning class/method declarations")
+        Logger.log("Scanning class/struct declarations")
         guard swiftFiles.isEmpty == false else {
             return ProtectedClassHash(hash: [:])
         }
         var classes: [String:String] = [:]
         var scanData = SwiftFileScanData()
         
-        Logger.log("Getting Module names")
         let modules = self.retrieveModuleNames(projectPaths: projectPaths)
-        Logger.log("Found these modules: \(modules)")
+        Logger.log("Found these modules: \(modules)", verbose: true)
         
         modules.forEach {
             classes[$0] = $0
@@ -68,12 +67,12 @@ class Protector {
                 }
                 let protectedClassName = (classes[scanData.currentWord] != nil ? classes[scanData.currentWord] : String.random(length: protectedClassNameSize))!
                 classes[scanData.currentWord] = protectedClassName
-                Logger.log("\(scanData.currentWord) -> \(protectedClassName)")
+                Logger.log("\(scanData.currentWord) -> \(protectedClassName)", verbose: true)
                 return protectedClassName
             }
         }
         for file in swiftFiles {
-            Logger.log("--- Checking \(file.name) ---")
+            Logger.log("--- Checking \(file.name) ---", verbose: true)
             autoreleasepool {
                 do {
                     let data = try String(contentsOfFile: file.path, encoding: .utf8)
@@ -82,7 +81,7 @@ class Protector {
                     scanData = SwiftFileScanData()
                 } catch {
                     Logger.log("FATAL: \(error.localizedDescription)")
-                    exit(1)
+                    exit(error: true)
                 }
             }
         }
@@ -114,14 +113,12 @@ class Protector {
                 try overwrittenData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 Logger.log("FATAL: \(error.localizedDescription)")
-                exit(1)
+                exit(error: true)
             }
         }
     }
     
     func protectClassReferences(output: BuildOutput, protectedHash: ProtectedClassHash) {
-        Logger.log("--- Overwriting .swift class references ---")
-        
         var line = 1
         var column = 1
         
@@ -165,7 +162,7 @@ class Protector {
                     try protectedClassData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
                 } catch {
                     Logger.log("FATAL: \(error.localizedDescription)")
-                    exit(1)
+                    exit(error: true)
                 }
             }
         }

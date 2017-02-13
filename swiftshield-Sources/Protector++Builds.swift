@@ -30,7 +30,7 @@ extension Protector {
     }
     
     func runFakeBuild(scheme: String) -> String {
-        Logger.log("Performing fake build to detect class references. This can take a few minutes...")
+        Logger.log("Detecting references by running fake builds. This can take a long time.")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
         let arguments: [String] = ["-quiet", projectParameter, projectToBuild, "-scheme", scheme]
