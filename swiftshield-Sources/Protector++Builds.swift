@@ -8,6 +8,8 @@
 
 import Foundation
 
+typealias BuildOutput = [File:[ErrorData]]
+
 extension Protector {
     func getSchemes() -> [String] {
         Logger.log("Getting schemes")
@@ -46,7 +48,7 @@ extension Protector {
         return output!
     }
     
-    func parse(fakeBuildOutput: String) -> [File:[ErrorData]] {
+    func parse(fakeBuildOutput: String) -> BuildOutput {
         let errorRegex = "/.* error:.*'.*'"
         func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
             return { result in

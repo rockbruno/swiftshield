@@ -9,15 +9,11 @@
 import Foundation
 
 private let comments = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)"
-private let words = "[a-zA-Z0-9]{1,99}"
+private let words = "[a-zA-Z0-9\\u00C0-\\u017F]{1,99}"
 private let quotes = "\\]\\[\\-\"\'"
-private let swiftSymbols = "[" + ":{}(),.<_>/`?!@#$%&*+-^|=; \n" + quotes + "]"
+private let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&*+-^|=; \n" + quotes + "]"
 
 private let swiftRegex = comments + "|" + words + "|" + swiftSymbols
-
-private let storyboardClassNameRegex = "(?<=customClass=\").*?(?=\")"
-
-typealias BuildOutput = [File:[ErrorData]]
 
 class Protector {
     private let swiftFiles : [File]
@@ -89,6 +85,7 @@ class Protector {
     }
     
     func protectStoryboards(hash: ProtectedClassHash) {
+        let storyboardClassNameRegex = "(?<=customClass=\").*?(?=\")"
         Logger.log("--- Overwriting Storyboards ---")
         for file in storyboardFiles {
             Logger.log("--- Checking \(file.name) ---", verbose: true)
