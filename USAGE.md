@@ -1,6 +1,12 @@
 # SwiftShield Usage
 
 
+## Enable Xcode's "Continue building after errors" option
+
+To prevent Swiftshield from taking forever to run, you should enable the `Continue building after errors` option on your Xcode settings's General tab.
+
+<img src="https://i.stack.imgur.com/Pa0UT.png" alt="Xcode settings">
+
 ## Modify Run Scripts that can affect SwiftShield
 
 If your project uses a framework that also changes your .swift files, like `R.swift` or `SwiftGen`, you need to prevent them from interfering with SwiftShield. Don't worry, it's very simple. You probably have a Run Script configured to run these frameworks. You just need to wrap them around a `"$SWIFTSHIELDED" != "true"` condition.
