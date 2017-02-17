@@ -25,7 +25,7 @@ class Protector {
     }
     
     func getProtectionHash(projectPaths: [String]) -> ProtectedClassHash {
-        Logger.log("Scanning class/struct declarations")
+        Logger.log("-- Scanning declarations --")
         guard swiftFiles.isEmpty == false else {
             return ProtectedClassHash(hash: [:])
         }

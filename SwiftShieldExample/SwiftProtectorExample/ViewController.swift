@@ -26,8 +26,8 @@ class ViewController: UIViewController {
 }
 
 
-class ImportantClass {
+struct ImportantClass {
     //Only actual classes will be modified
-    var thing = "class ViewController"
-    var string = "struct ImportantStruct"
+    var thing = "class ViewController áäÁÚúú"
+    var string = "struct ImportantStruct ççç"
 }
