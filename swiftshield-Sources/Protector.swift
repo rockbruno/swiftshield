@@ -29,15 +29,10 @@ class Protector {
         guard swiftFiles.isEmpty == false else {
             return ProtectedClassHash(hash: [:])
         }
+        
         var classes: [String:String] = [:]
+        var dataOfClass:[String:(SwiftScope,String)] = [:]
         var scanData = SwiftFileScanData()
-        
-        let modules = self.retrieveModuleNames(projectPaths: projectPaths)
-        Logger.log("Found these modules: \(modules)", verbose: true)
-        
-        modules.forEach {
-            classes[$0] = $0
-        }
         
         func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
             return { result in
@@ -45,6 +40,7 @@ class Protector {
                 defer {
                     scanData.prepareForNextWord()
                 }
+                scanData.updateScopeIfNeeded()
                 guard scanData.shouldIgnoreCurrentWord == false else {
                     scanData.stopIgnoringWordsIfNeeded()
                     return scanData.currentWord
@@ -63,23 +59,24 @@ class Protector {
                 }
                 let protectedClassName = (classes[scanData.currentWord] != nil ? classes[scanData.currentWord] : String.random(length: protectedClassNameSize))!
                 classes[scanData.currentWord] = protectedClassName
-                Logger.log("\(scanData.currentWord) -> \(protectedClassName)", verbose: true)
+                dataOfClass[scanData.currentWord] = (scanData.scope,protectedClassName)
+                Logger.log("\(scanData.currentWord) (\(scanData.scope)) -> \(protectedClassName)", verbose: true)
+                scanData.resetScope()
                 return protectedClassName
             }
         }
         for file in swiftFiles {
             Logger.log("--- Checking \(file.name) ---", verbose: true)
-            autoreleasepool {
                 do {
                     let data = try String(contentsOfFile: file.path, encoding: .utf8)
                     let newClasses = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
-                    try newClasses.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
+                    try newClasses.injectTypeAliases(classes: dataOfClass).write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
                     scanData = SwiftFileScanData()
+                    dataOfClass = [:]
                 } catch {
                     Logger.log("FATAL: \(error.localizedDescription)")
                     exit(error: true)
                 }
-            }
         }
         return ProtectedClassHash(hash: classes)
     }

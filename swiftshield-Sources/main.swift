@@ -1,12 +1,12 @@
 import Foundation
 
-let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? ""
-let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
+let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? "/Users/bruno.rocha/Desktop/vivo-learning-ios"
+let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? "ds"
 
-let projectToBuild = UserDefaults.standard.string(forKey: "projectfile") ?? ""
+let projectToBuild = UserDefaults.standard.string(forKey: "projectfile") ?? "/Users/bruno.rocha/Desktop/vivo-learning-ios/Vivo Learning.xcworkspace"
 
 if basePath.isEmpty || mainScheme.isEmpty || projectToBuild.isEmpty {
-    Logger.log("Bad arguments.\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-structs (Obfuscate Swift structs as well)\n\n-ignoreschemes 'NAME1,NAME2,NAME3' (If you have multiple schemes that point to the same target, like MyApp-CI or MyApp-Debug, mark them as ignored to prevent errors)\n\n-v (Verbose mode)")
+    Logger.log("Bad arguments.\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-ignoreschemes 'NAME1,NAME2,NAME3' (If you have multiple schemes that point to the same target, like MyApp-CI or MyApp-Debug, mark them as ignored to prevent errors)\n\n-v (Verbose mode)")
     exit(error: true)
 }
 
@@ -17,7 +17,7 @@ if isWorkspace == false && projectToBuild.hasSuffix(".xcodeproj") == false {
     exit(error: true)
 }
 
-let verbose = CommandLine.arguments.contains("-v")
+let verbose = true //CommandLine.arguments.contains("-v")
 let structs = CommandLine.arguments.contains("-structs")
 let protocols = CommandLine.arguments.contains("-protocols")
 var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? []
@@ -27,9 +27,6 @@ Logger.log("Swift Protector 1.0.1")
 Logger.log("Verbose Mode", verbose: true)
 Logger.log("Path: \(basePath)", verbose: true)
 Logger.log("Ignoring Schemes: \(ignoredSchemes)", verbose: true)
-if structs {
-    Logger.log("Also obfuscating structs", verbose: true)
-}
 
 let swiftFilePaths = findFiles(rootPath: basePath, suffix: ".swift") ?? []
 let storyboardFilePaths = (findFiles(rootPath: basePath, suffix: ".storyboard") ?? []) + (findFiles(rootPath: basePath, suffix: ".xib") ?? [])
@@ -51,6 +48,8 @@ if protectionHash.isEmpty {
 }
 
 protector.protectStoryboards(hash: protectionHash)
+
+exit(0)
 
 fileprivate var schemes = protector.getSchemes()
 ignoredSchemes.append(mainScheme)

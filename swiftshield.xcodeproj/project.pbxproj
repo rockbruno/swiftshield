@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD36F19D1E584609008BEA96 /* SwiftScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD36F19C1E584609008BEA96 /* SwiftScope.swift */; };
 		FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */; };
 		FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */; };
 		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		FD0B10941E2F8ACD00AED458 /* swiftshield */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = swiftshield; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD36F19C1E584609008BEA96 /* SwiftScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftScope.swift; sourceTree = SOURCE_ROOT; };
 		FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorData.swift; path = "swiftshield-Sources/ErrorData.swift"; sourceTree = SOURCE_ROOT; };
 		FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectedClassHash.swift; path = "swiftshield-Sources/ProtectedClassHash.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
@@ -123,6 +125,7 @@
 				FD895ACF1E3113FA00A753FB /* File.swift */,
 				FD895AD11E31140C00A753FB /* Storyboard.swift */,
 				FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */,
+				FD36F19C1E584609008BEA96 /* SwiftScope.swift */,
 				FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */,
 			);
 			name = File;
@@ -198,6 +201,7 @@
 			files = (
 				FD895AE11E31142400A753FB /* String.swift in Sources */,
 				FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */,
+				FD36F19D1E584609008BEA96 /* SwiftScope.swift in Sources */,
 				FD895ADE1E31142400A753FB /* Array.swift in Sources */,
 				FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */,
 				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,

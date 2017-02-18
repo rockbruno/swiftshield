@@ -13,6 +13,7 @@ class SwiftFileScanData {
     var shouldProtectNextWord = false
     var forbiddenZone: ForbiddenZone? = nil
     var previousWord = ""
+    var scope: SwiftScope = .internal
     
     var currentWordIsNotAParameterName: Bool {
         return previousWord != "."
@@ -23,7 +24,7 @@ class SwiftFileScanData {
     }
     
     var wordSuccedingClassStringIsActuallyAProtectableClass: Bool {
-        return currentWord.isNotUsingClassAsAParameterNameOrProtocol && currentWord.isNotScopeIdentifier && currentWord.isNotASwiftStandardClass
+        return currentWord.isNotUsingClassAsAParameterNameOrProtocol && currentWord.isNotScopeIdentifier
     }
     
     func stopIgnoringWordsIfNeeded() {
@@ -33,7 +34,7 @@ class SwiftFileScanData {
     }
     
     func protectNextWordIfNeeded() {
-        guard (currentWord == "class" || (structs && currentWord == "struct")) && currentWordIsNotAParameterName else {
+        guard (currentWord == "class" || currentWord == "struct" || currentWord == "protocol") && currentWordIsNotAParameterName else {
             return
         }
         shouldProtectNextWord = true
@@ -41,6 +42,20 @@ class SwiftFileScanData {
     
     func startIgnoringWordsIfNeeded() {
         forbiddenZone = ForbiddenZone(rawValue: currentWord)
+    }
+    
+    func updateScopeIfNeeded() {
+        if currentWord == "\n" {
+            scope = .internal
+        } else {
+            if let scope = SwiftScope(rawValue: currentWord) {
+                self.scope = scope
+            }
+        }
+    }
+    
+    func resetScope() {
+        scope = .internal
     }
 
     func prepareForNextWord() {
