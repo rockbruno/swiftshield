@@ -21,6 +21,7 @@
 		FD895AE21E31142400A753FB /* FileFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADD1E31142400A753FB /* FileFinder.swift */; };
 		FD8C2F9E1E50A5A500B81BF2 /* Protector++Builds.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8C2F9D1E50A5A500B81BF2 /* Protector++Builds.swift */; };
 		FD8C2FA01E50A5AA00B81BF2 /* Protector++Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */; };
+		FDFF64D11E5275A000300623 /* Exit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFF64D01E5275A000300623 /* Exit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +52,7 @@
 		FD895ADD1E31142400A753FB /* FileFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileFinder.swift; path = "swiftshield-Sources/FileFinder.swift"; sourceTree = SOURCE_ROOT; };
 		FD8C2F9D1E50A5A500B81BF2 /* Protector++Builds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Protector++Builds.swift"; path = "swiftshield-Sources/Protector++Builds.swift"; sourceTree = SOURCE_ROOT; };
 		FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Protector++Projects.swift"; path = "swiftshield-Sources/Protector++Projects.swift"; sourceTree = SOURCE_ROOT; };
+		FDFF64D01E5275A000300623 /* Exit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exit.swift; path = "swiftshield-Sources/Exit.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 		FD0B10961E2F8ACD00AED458 /* swiftshield */ = {
 			isa = PBXGroup;
 			children = (
+				FDFF64CD1E52745900300623 /* Helpers */,
 				FD53F6EF1E302E5D00E94CDA /* Model */,
 				FD895AD71E31141500A753FB /* main.swift */,
 			);
@@ -110,7 +113,6 @@
 			children = (
 				FD53F6F21E303BF300E94CDA /* File */,
 				FD0B109E1E2F8C0500AED458 /* Protector */,
-				FD895AD51E31141100A753FB /* Logger.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -124,6 +126,15 @@
 				FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */,
 			);
 			name = File;
+			sourceTree = "<group>";
+		};
+		FDFF64CD1E52745900300623 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				FD895AD51E31141100A753FB /* Logger.swift */,
+				FDFF64D01E5275A000300623 /* Exit.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,6 +210,7 @@
 				FD8C2F9E1E50A5A500B81BF2 /* Protector++Builds.swift in Sources */,
 				FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
+				FDFF64D11E5275A000300623 /* Exit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

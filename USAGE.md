@@ -1,6 +1,12 @@
 # SwiftShield Usage
 
 
+## (Optional) Enable Xcode's "Continue building after errors" option
+
+To make Swiftshield run faster, you should enable the `Continue building after errors` option on your Xcode settings's General tab.
+
+<img src="https://i.stack.imgur.com/Pa0UT.png" alt="Xcode settings">
+
 ## Modify Run Scripts that can affect SwiftShield
 
 If your project uses a framework that also changes your .swift files, like `R.swift` or `SwiftGen`, you need to prevent them from interfering with SwiftShield. Don't worry, it's very simple. You probably have a Run Script configured to run these frameworks. You just need to wrap them around a `"$SWIFTSHIELDED" != "true"` condition.
@@ -41,5 +47,7 @@ By default, Cocoapod sources are locked. SwiftShield needs them to be unlocked i
 **Optional Parameters:**
 
 `-ignoreschemes`: If your app has multiple schemes that point to the same target, like MyApp-CI/MyApp-Debug/MyApp-AppStore, you can use this setting to ignore the irrelevant targets.
+
+`-structs`: Obfuscates structs as well. This can make SwiftShield take several hours to run.
 
 `-v`: Prints additional information about the obfuscation proccess.

@@ -35,7 +35,7 @@ extension Protector {
                 try newProject.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 Logger.log("FATAL: \(error.localizedDescription)")
-                exit(1)
+                exit(error: true)
             }
         }
     }

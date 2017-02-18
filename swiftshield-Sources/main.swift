@@ -5,24 +5,31 @@ let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
 
 let projectToBuild = UserDefaults.standard.string(forKey: "projectfile") ?? ""
 
-guard basePath.isEmpty == false, mainScheme.isEmpty == false, projectToBuild.isEmpty == false else {
-    Logger.log("Bad arguments.\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-ignoreschemes 'NAME1,NAME2,NAME3' (If you have multiple schemes that point to the same target, like MyApp-CI or MyApp-Debug, mark them as ignored to prevent errors)\n\n-v (Verbose mode)")
-    exit(1)
+if basePath.isEmpty || mainScheme.isEmpty || projectToBuild.isEmpty {
+    Logger.log("Bad arguments.\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-structs (Obfuscate Swift structs as well)\n\n-ignoreschemes 'NAME1,NAME2,NAME3' (If you have multiple schemes that point to the same target, like MyApp-CI or MyApp-Debug, mark them as ignored to prevent errors)\n\n-v (Verbose mode)")
+    exit(error: true)
 }
 
-let isWorkspace = projectToBuild.contains(".xcworkspace")
-if isWorkspace == false && projectToBuild.contains(".xcodeproj") == false {
+let isWorkspace = projectToBuild.hasSuffix(".xcworkspace")
+
+if isWorkspace == false && projectToBuild.hasSuffix(".xcodeproj") == false {
     Logger.log("Project file provided is not a project or workspace.")
-    exit(1)
+    exit(error: true)
 }
 
 let verbose = CommandLine.arguments.contains("-v")
+let structs = CommandLine.arguments.contains("-structs")
+let protocols = CommandLine.arguments.contains("-protocols")
+var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? []
 let protectedClassNameSize = 25
 
-Logger.log("Swift Protector 1.0.0")
+Logger.log("Swift Protector 1.0.1")
 Logger.log("Verbose Mode", verbose: true)
 Logger.log("Path: \(basePath)", verbose: true)
-Logger.log("Class Name Size: \(protectedClassNameSize)", verbose: true)
+Logger.log("Ignoring Schemes: \(ignoredSchemes)", verbose: true)
+if structs {
+    Logger.log("Also obfuscating structs", verbose: true)
+}
 
 let swiftFilePaths = findFiles(rootPath: basePath, suffix: ".swift") ?? []
 let storyboardFilePaths = (findFiles(rootPath: basePath, suffix: ".storyboard") ?? []) + (findFiles(rootPath: basePath, suffix: ".xib") ?? [])
@@ -38,15 +45,14 @@ protector.markAsProtected(projectPaths: projects)
 
 fileprivate var protectionHash = protector.getProtectionHash(projectPaths: projects)
 
-guard protectionHash.isEmpty == false else {
+if protectionHash.isEmpty {
     Logger.log("No class/methods to obfuscate.")
-    exit(0)
+    exit(error: true)
 }
 
 protector.protectStoryboards(hash: protectionHash)
 
 fileprivate var schemes = protector.getSchemes()
-var ignoredSchemes = UserDefaults.standard.string(forKey: "ignoreschemes")?.components(separatedBy: ",") ?? []
 ignoredSchemes.append(mainScheme)
 schemes = schemes.filter{return ignoredSchemes.contains($0) == false && ignoredSchemes.contains("Pods-") == false}
 schemes.append(mainScheme)
@@ -55,13 +61,12 @@ for scheme in schemes {
     Logger.log("Obfuscating \(scheme)")
     var parsedOutputHash = protector.parse(fakeBuildOutput: protector.runFakeBuild(scheme: scheme))
     while parsedOutputHash.keys.isEmpty == false {
-        Logger.log("Collected errors. Running...")
         protector.protectClassReferences(output: parsedOutputHash, protectedHash: protectionHash)
         parsedOutputHash = protector.parse(fakeBuildOutput: protector.runFakeBuild(scheme: scheme))
     }
-    Logger.log("Complete!")
+    Logger.log("\(scheme) obfuscation complete!")
 }
 
 protector.writeToFile(hash: protectionHash)
 Logger.log("Finished.")
-exit(0)
+exit()

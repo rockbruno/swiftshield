@@ -8,6 +8,8 @@
 
 import Foundation
 
+typealias BuildOutput = [File:[ErrorData]]
+
 extension Protector {
     func getSchemes() -> [String] {
         Logger.log("Getting schemes")
@@ -30,7 +32,7 @@ extension Protector {
     }
     
     func runFakeBuild(scheme: String) -> String {
-        Logger.log("Performing fake build to detect class references. This can take a few minutes...")
+        Logger.log("Detecting references by running fake builds. This can take a long time.")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
         let arguments: [String] = ["-quiet", projectParameter, projectToBuild, "-scheme", scheme]
@@ -46,7 +48,7 @@ extension Protector {
         return output!
     }
     
-    func parse(fakeBuildOutput: String) -> [File:[ErrorData]] {
+    func parse(fakeBuildOutput: String) -> BuildOutput {
         let errorRegex = "/.* error:.*'.*'"
         func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
             return { result in
