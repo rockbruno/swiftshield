@@ -72,7 +72,7 @@ Struct and Protocol obfuscations are currently disabled due to massive compile t
 
 SwiftShield is new, and even though it works, it takes quite some time to do so. It works by obfuscating your classes' declarations and then triggering a build. This build will fail, revealing the location of where the classes are being used, which then are accessed and obfuscated. The process is repeated until the project builds succesfully. Unfortunately, the Swift compiler sometimes doesn't show all errors at once, needing dozens of compiles in order to completely obfuscate a target.
 
-To obfuscate files in a single go, SwiftShield needs to manually run and parse Apple's SourceKit, but that's not a simple task. We are working on it!
+To obfuscate files in a single go, SwiftShield needs to manually run and parse Apple's SourceKit and/or swiftc's ASTs, but that's not a simple task. We are working on it!
 
 For this branch, the next steps will be obfuscating method names and module names.
 
