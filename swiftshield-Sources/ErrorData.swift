@@ -52,6 +52,8 @@ struct ErrorData {
                 self.column = column
                 self.target = target
             }
+        case "could not infer type for":
+            return nil
         case "":
             let description = separatedError[2].noSpaces
             if description.contains("is not a member type of") {
