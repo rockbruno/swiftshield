@@ -1,4 +1,7 @@
 import Foundation
+#if SWIFT_PACKAGE
+    import SourceKit
+#endif
 
 let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? ""
 let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? ""
