@@ -8,88 +8,104 @@
 
 import Foundation
 
-private let comments = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)"
-private let words = "[a-zA-Z0-9\\u00C0-\\u017F]{1,99}"
-private let quotes = "\\]\\[\\-\"\'"
-private let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&*+-^|=; \n" + quotes + "]"
-
-private let swiftRegex = comments + "|" + words + "|" + swiftSymbols
-
 class Protector {
-    private let swiftFiles : [File]
-    private let storyboardFiles: [File]
     
-    init() {
-        self.swiftFiles = []
-        self.storyboardFiles = []
-    }
-    
-    init(swiftFiles: [File], storyboardFiles: [File]) {
-        self.swiftFiles = swiftFiles
-        self.storyboardFiles = storyboardFiles
-    }
-    
-    func getProtectionHash(projectPaths: [String]) -> ProtectedClassHash {
-        Logger.log("-- Scanning declarations --")
-        guard swiftFiles.isEmpty == false else {
-            return ProtectedClassHash(hash: [:])
-        }
-        var classes: [String:String] = [:]
-        var scanData = SwiftFileScanData()
+    func index(modules: [Module]) -> ObfuscationData {
+        let SK = SourceKit()
+        let obfuscationData = ObfuscationData()
         
-        let modules = self.retrieveModuleNames(projectPaths: projectPaths)
-        Logger.log("Found these modules: \(modules)", verbose: true)
-        
-        modules.forEach {
-            classes[$0] = $0
-        }
-        
-        func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
-            return { result in
-                scanData.currentWord = nsString.substring(with: result.rangeAt(0))
-                defer {
-                    scanData.prepareForNextWord()
+        for module in modules {
+            for file in module.files {
+                guard file.path.isEmpty == false else {
+                    continue
                 }
-                guard scanData.shouldIgnoreCurrentWord == false else {
-                    scanData.stopIgnoringWordsIfNeeded()
-                    return scanData.currentWord
-                }
-                guard scanData.shouldProtectNextWord else {
-                    scanData.protectNextWordIfNeeded()
-                    scanData.startIgnoringWordsIfNeeded()
-                    return scanData.currentWord
-                }
-                guard scanData.currentWord.isNotAnEmptyCharacter else {
-                    return scanData.currentWord
-                }
-                scanData.shouldProtectNextWord = false
-                guard scanData.wordSuccedingClassStringIsActuallyAProtectableClass else {
-                    return scanData.currentWord
-                }
-                let protectedClassName = (classes[scanData.currentWord] != nil ? classes[scanData.currentWord] : String.random(length: protectedClassNameSize))!
-                classes[scanData.currentWord] = protectedClassName
-                Logger.log("\(scanData.currentWord) -> \(protectedClassName)", verbose: true)
-                return protectedClassName
-            }
-        }
-        for file in swiftFiles {
-            Logger.log("--- Checking \(file.name) ---", verbose: true)
-            autoreleasepool {
-                do {
-                    let data = try String(contentsOfFile: file.path, encoding: .utf8)
-                    let newClasses = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
-                    try newClasses.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
-                    scanData = SwiftFileScanData()
-                } catch {
-                    Logger.log("FATAL: \(error.localizedDescription)")
+                let compilerArgs = SK.array(argv: module.compilerArguments)
+                Logger.log("-- Indexing \(file.name) --")
+                let resp = SK.indexFile(filePath: file.path, compilerArgs: compilerArgs)
+                if let error = SK.error(resp: resp) {
+                    Logger.log("ERROR: Could not index \(file.name), aborting. SK Error: \(error)")
                     exit(error: true)
                 }
+                let dict = SKApi.sourcekitd_response_get_value(resp)
+                SK.recurseOver( childID: SK.entitiesID, resp: dict, visualiser: nil, block: { dict in
+                    guard let usr = dict.getString(key: SK.usrID) else {
+                        return
+                    }
+                    let kind = dict.getUUIDString(key: SK.kindID)
+                    guard SK.isObjectDeclaration(kind: kind), let name = dict.getString(key: SK.nameID) else {
+                        return
+                    }
+                    let obfuscatedName = obfuscationData.obfuscationDict[name] ?? String.random(length: protectedClassNameSize)
+                    obfuscationData.obfuscationDict[name] = obfuscatedName
+                    obfuscationData.indexedFiles.append((file,resp))
+                    obfuscationData.usrDict[usr] = true
+                    Logger.log("Found declaration of \(name) (\(usr)) -> now \(obfuscatedName)")
+                })
             }
         }
-        return ProtectedClassHash(hash: classes)
+        return obfuscationData
     }
     
-    func protectStoryboards(data: ObfuscationData) {
+    func obfuscateReferences(obfuscationData: ObfuscationData) {
+        let SK = SourceKit()
+        Logger.log("-- Finding references of the retrieved USRs --")
+        for (file,indexResponse) in obfuscationData.indexedFiles {
+            let dict = SKApi.sourcekitd_response_get_value(indexResponse)
+            SK.recurseOver( childID: SK.entitiesID, resp: dict, visualiser: nil, block: { dict in
+                guard let usr = dict.getString(key: SK.usrID), let name = dict.getString(key: SK.nameID) else {
+                    return
+                }
+                if obfuscationData.usrDict[usr] == true {
+                    let line = dict.getInt(key: SK.lineID)
+                    let col = dict.getInt(key: SK.colID)
+                    let reference = ReferenceData(name: name, line: line, column: col, file: file, usr: usr)
+                    obfuscationData.add(reference: reference, toFile: file)
+                    Logger.log("Found \(name) (\(usr)) at \(file.name) (L:\(line) C:\(col))")
+                }
+            })
+        }
+        overwriteFiles(obfuscationData: obfuscationData)
+    }
+    
+    fileprivate func overwriteFiles(obfuscationData: ObfuscationData) {
+        let comments = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)"
+        let words = "[a-zA-Z0-9\\u00C0-\\u017F]{1,99}"
+        let quotes = "\\]\\[\\-\"\'"
+        let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&*+-^|=; \n" + quotes + "]"
+        let swiftRegex = comments + "|" + words + "|" + swiftSymbols
+        
+        for (file,references) in obfuscationData.referencesDict {
+            var sortedReferences = references.filterDuplicates { $0.line == $1.line && $0.column == $1.column }.sorted(by: lesserPosition)
+            var line = 1
+            var column = 1
+            let data = try! String(contentsOfFile: file.path, encoding: .utf8)
+            Logger.log("--- Overwriting \(file.name) ---")
+            let obfuscatedFile = data.matchRegex(regex: swiftRegex, mappingClosure: { result in
+                let word = (data as NSString).substring(with: result.rangeAt(0))
+                var wordToReturn = word
+                if sortedReferences.isEmpty == false && line == sortedReferences[0].line && column == sortedReferences[0].column {
+                    sortedReferences.remove(at: 0)
+                    wordToReturn = (obfuscationData.obfuscationDict[word] ?? word)
+                }
+                if word == "\n" {
+                    line += 1
+                    column = 1
+                    return wordToReturn
+                } else {
+                    column += word.characters.count
+                    return wordToReturn
+                }
+            }).joined()
+            do {
+                try obfuscatedFile.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
+            } catch {
+                Logger.log("FATAL: \(error.localizedDescription)")
+                exit(error: true)
+            }
+        }
+    }
+    
+    func protectStoryboards(data obfuscationData : ObfuscationData) {
         let storyboardClassNameRegex = "(?<=customClass=\").*?(?=\")"
         Logger.log("--- Overwriting Storyboards ---")
         for file in storyboardFiles {
@@ -100,7 +116,7 @@ class Protector {
                 }.removeDuplicates()
             var overwrittenData = data
             for `class` in retrievedClasses {
-                guard let protectedClass = hash.hash[`class`] else {
+                guard let protectedClass = obfuscationData.obfuscationDict[`class`] else {
                     continue
                 }
                 Logger.log("\(`class`) -> \(protectedClass)", verbose: true)
@@ -120,57 +136,7 @@ class Protector {
         }
     }
     
-    func protectClassReferences(output: BuildOutput, protectedHash: ProtectedClassHash) {
-        var line = 1
-        var column = 1
-        
-        var currentErrors: [ErrorData] = []
-        
-        func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
-            return { result in
-                let word = nsString.substring(with: result.rangeAt(0))
-                var wordToReturn = word
-                if currentErrors.isEmpty == false && line == currentErrors[0].line && column == currentErrors[0].column {
-                    currentErrors.remove(at: 0)
-                    wordToReturn = (protectedHash.hash[word] ?? word)
-                }
-                if word == "\n" {
-                    line += 1
-                    column = 1
-                    return wordToReturn
-                } else {
-                    column += word.characters.count
-                    return wordToReturn
-                }
-            }
-        }
-        for (file,errorData) in output {
-            autoreleasepool {
-                func lesserPosition(_ e1: ErrorData, _ e2: ErrorData) -> Bool {
-                    if e1.line != e2.line {
-                        return e1.line < e2.line
-                    } else {
-                        return e1.column < e2.column
-                    }
-                }
-                let sortedData = errorData.filterDuplicates { $0.line == $1.line && $0.column == $1.column }.sorted(by: lesserPosition)
-                line = 1
-                column = 1
-                let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-                currentErrors = sortedData
-                Logger.log("--- Overwriting \(file.name) (\(errorData.count) changes) ---")
-                let protectedClassData = data.matchRegex(regex: swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
-                do {
-                    try protectedClassData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
-                } catch {
-                    Logger.log("FATAL: \(error.localizedDescription)")
-                    exit(error: true)
-                }
-            }
-        }
-    }
-    
-    func writeToFile(hash: ProtectedClassHash) {
+    func writeToFile(data: ObfuscationData) {
         Logger.log("--- Generating conversion map ---")
         var output = ""
         output += "//\n"
@@ -178,9 +144,9 @@ class Protector {
         output += "//  Conversion Map\n"
         output += "//\n"
         output += "\n"
-        output += "Classes:"
+        output += "Data:"
         output += "\n"
-        for (k,v) in hash.hash {
+        for (k,v) in data.obfuscationDict {
             output += "\n\(k) ===> \(v)"
         }
         let path = basePath + (basePath.characters.last == "/" ? "" : "/") + "swiftshield-output"

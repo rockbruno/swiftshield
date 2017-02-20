@@ -13,10 +13,6 @@ fileprivate let pbxProjTargetNameRegex = "buildConfigurationList = (.*) \\/\\* .
 
 extension Protector {
     
-    func runFakeBuild(scheme: String) -> String {
-        return ""
-    }
-    
     func getModulesAndCompilerArguments(scheme: String) -> [Module] {
         Logger.log("Building your project to gather it's modules and compiler arguments...")
         let path = "/usr/bin/xcodebuild"
@@ -50,6 +46,7 @@ extension Protector {
             guard modules.contains(where: {$0.name == moduleName}) == false else {
                 continue
             }
+            Logger.log("Found module \(moduleName)", verbose: true)
             let files = matches(for: "(?<=).*?(?= )", in: matches(for: "(?<=-j4 ).*?(?= -)", in: line).joined() + " ").flatMap { File(filePath: $0) }
             var compilerArguments: [String] = []
             let fullCall = line.components(separatedBy: " ")
@@ -84,6 +81,7 @@ extension Protector {
     }
     
     func markAsProtected(projectPaths: [String]) {
+        Logger.log("-- Adding SWIFTSHIELDED=true to projects --")
         let targetLine = "PRODUCT_NAME ="
         let injectedLine = "SWIFTSHIELDED = true;"
         for projectPath in projectPaths {
@@ -109,99 +107,5 @@ extension Protector {
                 exit(error: true)
             }
         }
-    }
-    
-    func retrieveModuleNames(projectPaths: [String]) -> [String] {
-        var moduleNames: [String] = []
-        for projectPath in projectPaths {
-            let data = try! String(contentsOfFile: projectPath+"/project.pbxproj", encoding: .utf8)
-            let idToTargetNameDict = getTargetsIdAndNameDict(data: data)
-            let configurationIdToTargetIdDict = getConfigurationIdToTargetIdDict(data: data)
-            let names = getModuleNames(data: data, idTargetDict: idToTargetNameDict, configIdTargetIdDict: configurationIdToTargetIdDict)
-            moduleNames.append(contentsOf: names)
-        }
-        return moduleNames.map{$0.replacingOccurrences(of: " ", with: "_")}.removeDuplicates()
-    }
-    
-    fileprivate func getTargetsIdAndNameDict(data: String) -> [String:String] {
-        let results = data.matchRegex(regex: pbxProjTargetNameRegex) { result in
-            guard result.numberOfRanges == 3 else {
-                return nil
-            }
-            let id = (data as NSString).substring(with: result.rangeAt(1))
-            let target = (data as NSString).substring(with: result.rangeAt(2))
-            return "\(id)|\(target)"
-        }
-        var dict: [String:String] = [:]
-        for result in results {
-            let data = result.components(separatedBy: "|")
-            dict[data[0]] = data[1]
-        }
-        return dict
-    }
-    
-    fileprivate func getConfigurationIdToTargetIdDict(data: String) -> [String:String] {
-        var configurationIdToTargetId: [String:String] = [:]
-        var listenToConfigId = false
-        var currentTargetId = ""
-        var shouldMap = false
-        _ = data.matchRegex(regex: pbxProjRegex) { result in
-            let currentLine = (data as NSString).substring(with: result.rangeAt(0))
-            if shouldMap == false {
-                shouldMap = currentLine.contains("Begin XCConfigurationList section")
-                return currentLine
-            }
-            if currentLine.contains("/*") {
-                if currentLine.contains("Build configuration list for") {
-                    listenToConfigId = true
-                    currentTargetId = currentLine.components(separatedBy: "/*")[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                } else if currentLine.contains("End") && listenToConfigId {
-                    listenToConfigId = false
-                } else {
-                    let configId = currentLine.components(separatedBy: "/*")[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    configurationIdToTargetId[configId] = currentTargetId
-                }
-            }
-            return currentLine
-        }
-        return configurationIdToTargetId
-    }
-    
-    fileprivate func getModuleNames(data: String, idTargetDict: [String:String], configIdTargetIdDict: [String:String]) -> [String] {
-        let productModuleLine = "PRODUCT_MODULE_NAME = "
-        let productNameLine = "PRODUCT_NAME = "
-        let buildSettingsSection = "XCBuildConfiguration section"
-        var configId = ""
-        var listenToTargetId = false
-        var previousLine = ""
-        var moduleNames: [String] = []
-        _ = data.matchRegex(regex: pbxProjRegex) { result in
-            var currentLine = (data as NSString).substring(with: result.rangeAt(0))
-            guard currentLine != "" else {
-                return nil
-            }
-            defer { previousLine = currentLine }
-            if currentLine.contains(buildSettingsSection) {
-                listenToTargetId = currentLine.contains("Begin")
-            } else if listenToTargetId {
-                let foundTarget = currentLine.contains("/*") && currentLine.contains("= {")
-                if foundTarget {
-                    configId = currentLine.components(separatedBy: "/*")[0].noSpaces
-                }
-            }
-            if currentLine.contains(productModuleLine) {
-                let targetName = currentLine.components(separatedBy: productModuleLine)[1].components(separatedBy: ";")[0]
-                moduleNames.append(targetName)
-            } else if currentLine.contains(productNameLine) && previousLine.contains(productModuleLine) == false {
-                let productName = currentLine.replacingOccurrences(of: productNameLine, with: "").replacingOccurrences(of: ";", with: "").noSpaces
-                if productName.contains("$") == false {
-                    moduleNames.append(productName)
-                } else if let targetName = idTargetDict[configIdTargetIdDict[configId]!] {
-                    moduleNames.append(targetName)
-                }
-            }
-            return nil
-        }
-        return moduleNames
     }
 }

@@ -9,23 +9,17 @@
 /* Begin PBXBuildFile section */
 		FD4FB04D1E5B1549009856B8 /* SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB04C1E5B1549009856B8 /* SourceKit.swift */; };
 		FD4FB0531E5B1734009856B8 /* sourcekitd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4FB0521E5B1734009856B8 /* sourcekitd.framework */; };
-		FD4FB0551E5B196C009856B8 /* Protector++SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0541E5B196C009856B8 /* Protector++SourceKit.swift */; };
 		FD4FB0571E5B2507009856B8 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0561E5B2507009856B8 /* Module.swift */; };
 		FD4FB0591E5B5134009856B8 /* ObfuscationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0581E5B5134009856B8 /* ObfuscationData.swift */; };
-		FD4FB05B1E5B51DD009856B8 /* ImplementationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB05A1E5B51DD009856B8 /* ImplementationData.swift */; };
-		FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */; };
-		FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */; };
+		FD4FB05B1E5B51DD009856B8 /* ReferenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB05A1E5B51DD009856B8 /* ReferenceData.swift */; };
 		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
 		FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD11E31140C00A753FB /* Storyboard.swift */; };
-		FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */; };
 		FD895AD61E31141100A753FB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD51E31141100A753FB /* Logger.swift */; };
 		FD895AD81E31141500A753FB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD71E31141500A753FB /* main.swift */; };
 		FD895ADE1E31142400A753FB /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD91E31142400A753FB /* Array.swift */; };
-		FD895ADF1E31142400A753FB /* ForbiddenZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADA1E31142400A753FB /* ForbiddenZone.swift */; };
 		FD895AE01E31142400A753FB /* Protector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADB1E31142400A753FB /* Protector.swift */; };
 		FD895AE11E31142400A753FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADC1E31142400A753FB /* String.swift */; };
 		FD895AE21E31142400A753FB /* FileFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADD1E31142400A753FB /* FileFinder.swift */; };
-		FD8C2F9E1E50A5A500B81BF2 /* Protector++Builds.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8C2F9D1E50A5A500B81BF2 /* Protector++Builds.swift */; };
 		FD8C2FA01E50A5AA00B81BF2 /* Protector++Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */; };
 		FDFF64D11E5275A000300623 /* Exit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFF64D01E5275A000300623 /* Exit.swift */; };
 /* End PBXBuildFile section */
@@ -36,23 +30,17 @@
 		FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SwiftShield-Bridging-Header.h"; path = "swiftshield-Sources/SwiftShield-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		FD4FB04C1E5B1549009856B8 /* SourceKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceKit.swift; sourceTree = SOURCE_ROOT; };
 		FD4FB0521E5B1734009856B8 /* sourcekitd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sourcekitd.framework; path = Toolchains/XcodeDefault.xctoolchain/usr/lib/sourcekitd.framework; sourceTree = DEVELOPER_DIR; };
-		FD4FB0541E5B196C009856B8 /* Protector++SourceKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Protector++SourceKit.swift"; sourceTree = SOURCE_ROOT; };
 		FD4FB0561E5B2507009856B8 /* Module.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Module.swift; path = "swiftshield-Sources/Module.swift"; sourceTree = SOURCE_ROOT; };
 		FD4FB0581E5B5134009856B8 /* ObfuscationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObfuscationData.swift; sourceTree = SOURCE_ROOT; };
-		FD4FB05A1E5B51DD009856B8 /* ImplementationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImplementationData.swift; sourceTree = SOURCE_ROOT; };
-		FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorData.swift; path = "swiftshield-Sources/ErrorData.swift"; sourceTree = SOURCE_ROOT; };
-		FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectedClassHash.swift; path = "swiftshield-Sources/ProtectedClassHash.swift"; sourceTree = SOURCE_ROOT; };
+		FD4FB05A1E5B51DD009856B8 /* ReferenceData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReferenceData.swift; sourceTree = SOURCE_ROOT; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD11E31140C00A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = "swiftshield-Sources/Storyboard.swift"; sourceTree = SOURCE_ROOT; };
-		FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftFileScanData.swift; path = "swiftshield-Sources/SwiftFileScanData.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD51E31141100A753FB /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = "swiftshield-Sources/Logger.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD71E31141500A753FB /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = "swiftshield-Sources/main.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD91E31142400A753FB /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = "swiftshield-Sources/Array.swift"; sourceTree = SOURCE_ROOT; };
-		FD895ADA1E31142400A753FB /* ForbiddenZone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ForbiddenZone.swift; path = "swiftshield-Sources/ForbiddenZone.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADB1E31142400A753FB /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protector.swift; path = "swiftshield-Sources/Protector.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADC1E31142400A753FB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = "swiftshield-Sources/String.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADD1E31142400A753FB /* FileFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileFinder.swift; path = "swiftshield-Sources/FileFinder.swift"; sourceTree = SOURCE_ROOT; };
-		FD8C2F9D1E50A5A500B81BF2 /* Protector++Builds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Protector++Builds.swift"; path = "swiftshield-Sources/Protector++Builds.swift"; sourceTree = SOURCE_ROOT; };
 		FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Protector++Projects.swift"; path = "swiftshield-Sources/Protector++Projects.swift"; sourceTree = SOURCE_ROOT; };
 		FDFF64D01E5275A000300623 /* Exit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exit.swift; path = "swiftshield-Sources/Exit.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -102,14 +90,9 @@
 			isa = PBXGroup;
 			children = (
 				FD895AD91E31142400A753FB /* Array.swift */,
-				FD895ADA1E31142400A753FB /* ForbiddenZone.swift */,
 				FD895ADB1E31142400A753FB /* Protector.swift */,
 				FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */,
-				FD8C2F9D1E50A5A500B81BF2 /* Protector++Builds.swift */,
-				FD4FB0541E5B196C009856B8 /* Protector++SourceKit.swift */,
-				FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */,
 				FD895ADC1E31142400A753FB /* String.swift */,
-				FD895ADD1E31142400A753FB /* FileFinder.swift */,
 			);
 			name = Protector;
 			sourceTree = "<group>";
@@ -139,11 +122,9 @@
 			children = (
 				FD895ACF1E3113FA00A753FB /* File.swift */,
 				FD4FB0581E5B5134009856B8 /* ObfuscationData.swift */,
-				FD4FB05A1E5B51DD009856B8 /* ImplementationData.swift */,
+				FD4FB05A1E5B51DD009856B8 /* ReferenceData.swift */,
 				FD4FB0561E5B2507009856B8 /* Module.swift */,
 				FD895AD11E31140C00A753FB /* Storyboard.swift */,
-				FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */,
-				FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */,
 			);
 			name = File;
 			sourceTree = "<group>";
@@ -160,6 +141,7 @@
 			children = (
 				FD895AD51E31141100A753FB /* Logger.swift */,
 				FDFF64D01E5275A000300623 /* Exit.swift */,
+				FD895ADD1E31142400A753FB /* FileFinder.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -223,22 +205,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD895AE11E31142400A753FB /* String.swift in Sources */,
-				FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */,
 				FD895ADE1E31142400A753FB /* Array.swift in Sources */,
 				FD4FB04D1E5B1549009856B8 /* SourceKit.swift in Sources */,
-				FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */,
 				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,
 				FD8C2FA01E50A5AA00B81BF2 /* Protector++Projects.swift in Sources */,
 				FD895AE21E31142400A753FB /* FileFinder.swift in Sources */,
 				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
-				FD895ADF1E31142400A753FB /* ForbiddenZone.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
-				FD8C2F9E1E50A5A500B81BF2 /* Protector++Builds.swift in Sources */,
-				FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */,
-				FD4FB0551E5B196C009856B8 /* Protector++SourceKit.swift in Sources */,
-				FD4FB05B1E5B51DD009856B8 /* ImplementationData.swift in Sources */,
+				FD4FB05B1E5B51DD009856B8 /* ReferenceData.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
 				FD4FB0591E5B5134009856B8 /* ObfuscationData.swift in Sources */,
 				FDFF64D11E5275A000300623 /* Exit.swift in Sources */,

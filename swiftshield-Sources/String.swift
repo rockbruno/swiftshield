@@ -10,21 +10,6 @@ import Foundation
 
 typealias RegexClosure = ((NSTextCheckingResult) -> String?)
 
-extension String {
-    var isNotAnEmptyCharacter: Bool {
-        return self != " " && self != "\n"
-    }
-    var isNotUsingClassAsAParameterNameOrProtocol: Bool {
-        return self != "`" && self != "{" && self != ":" && self != "_"
-    }
-    var isNotScopeIdentifier: Bool {
-        return self != "public" && self != "open" && self != "private" && self != "dynamic" && self != "internal" && self != "var" && self != "let" && self != "final" && self != "func" && self != "lazy"
-    }
-    var noSpaces: String {
-        return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-    }
-}
-
 func matches(for regex: String, in text: String) -> [String] {
     do {
         let regex = try NSRegularExpression(pattern: regex)
