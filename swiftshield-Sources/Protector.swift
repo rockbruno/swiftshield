@@ -19,6 +19,11 @@ class Protector {
     private let swiftFiles : [File]
     private let storyboardFiles: [File]
     
+    init() {
+        self.swiftFiles = []
+        self.storyboardFiles = []
+    }
+    
     init(swiftFiles: [File], storyboardFiles: [File]) {
         self.swiftFiles = swiftFiles
         self.storyboardFiles = storyboardFiles
@@ -84,7 +89,7 @@ class Protector {
         return ProtectedClassHash(hash: classes)
     }
     
-    func protectStoryboards(hash: ProtectedClassHash) {
+    func protectStoryboards(data: ObfuscationData) {
         let storyboardClassNameRegex = "(?<=customClass=\").*?(?=\")"
         Logger.log("--- Overwriting Storyboards ---")
         for file in storyboardFiles {

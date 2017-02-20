@@ -31,23 +31,6 @@ extension Protector {
         return output!
     }
     
-    func runFakeBuild(scheme: String) -> String {
-        Logger.log("Detecting references by running fake builds. This can take a long time.")
-        let path = "/usr/bin/xcodebuild"
-        let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = ["-quiet", projectParameter, projectToBuild, "-scheme", scheme]
-        let task = Process()
-        task.launchPath = path
-        task.arguments = arguments
-        let outpipe: Pipe = Pipe()
-        task.standardOutput = outpipe
-        task.standardError = nil
-        task.launch()
-        let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: outdata, encoding: .utf8)
-        return output!
-    }
-    
     func parse(fakeBuildOutput: String) -> BuildOutput {
         let errorRegex = "/.* error:.*'.*'"
         func regexMapClosure(fromData nsString: NSString) -> RegexClosure {

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD4FB04D1E5B1549009856B8 /* SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB04C1E5B1549009856B8 /* SourceKit.swift */; };
+		FD4FB0531E5B1734009856B8 /* sourcekitd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4FB0521E5B1734009856B8 /* sourcekitd.framework */; };
+		FD4FB0551E5B196C009856B8 /* Protector++SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0541E5B196C009856B8 /* Protector++SourceKit.swift */; };
+		FD4FB0571E5B2507009856B8 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0561E5B2507009856B8 /* Module.swift */; };
+		FD4FB0591E5B5134009856B8 /* ObfuscationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0581E5B5134009856B8 /* ObfuscationData.swift */; };
+		FD4FB05B1E5B51DD009856B8 /* ImplementationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB05A1E5B51DD009856B8 /* ImplementationData.swift */; };
 		FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */; };
 		FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */; };
 		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
@@ -24,20 +30,16 @@
 		FDFF64D11E5275A000300623 /* Exit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFF64D01E5275A000300623 /* Exit.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		FD0B10921E2F8ACD00AED458 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		FD0B10941E2F8ACD00AED458 /* swiftshield */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = swiftshield; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD4FB0441E5B140E009856B8 /* sourcekitd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sourcekitd.h; path = "swiftshield-Sources/sourcekitd.h"; sourceTree = SOURCE_ROOT; };
+		FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SwiftShield-Bridging-Header.h"; path = "swiftshield-Sources/SwiftShield-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		FD4FB04C1E5B1549009856B8 /* SourceKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceKit.swift; sourceTree = SOURCE_ROOT; };
+		FD4FB0521E5B1734009856B8 /* sourcekitd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sourcekitd.framework; path = Toolchains/XcodeDefault.xctoolchain/usr/lib/sourcekitd.framework; sourceTree = DEVELOPER_DIR; };
+		FD4FB0541E5B196C009856B8 /* Protector++SourceKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Protector++SourceKit.swift"; sourceTree = SOURCE_ROOT; };
+		FD4FB0561E5B2507009856B8 /* Module.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Module.swift; path = "swiftshield-Sources/Module.swift"; sourceTree = SOURCE_ROOT; };
+		FD4FB0581E5B5134009856B8 /* ObfuscationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObfuscationData.swift; sourceTree = SOURCE_ROOT; };
+		FD4FB05A1E5B51DD009856B8 /* ImplementationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImplementationData.swift; sourceTree = SOURCE_ROOT; };
 		FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorData.swift; path = "swiftshield-Sources/ErrorData.swift"; sourceTree = SOURCE_ROOT; };
 		FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectedClassHash.swift; path = "swiftshield-Sources/ProtectedClassHash.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD4FB0531E5B1734009856B8 /* sourcekitd.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +74,7 @@
 			children = (
 				FD0B10961E2F8ACD00AED458 /* swiftshield */,
 				FD0B10951E2F8ACD00AED458 /* Products */,
+				FDD0B6161E5B097E00715DDF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -85,6 +89,7 @@
 		FD0B10961E2F8ACD00AED458 /* swiftshield */ = {
 			isa = PBXGroup;
 			children = (
+				FD4FB0491E5B146E009856B8 /* Resources */,
 				FDFF64CD1E52745900300623 /* Helpers */,
 				FD53F6EF1E302E5D00E94CDA /* Model */,
 				FD895AD71E31141500A753FB /* main.swift */,
@@ -101,11 +106,23 @@
 				FD895ADB1E31142400A753FB /* Protector.swift */,
 				FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */,
 				FD8C2F9D1E50A5A500B81BF2 /* Protector++Builds.swift */,
+				FD4FB0541E5B196C009856B8 /* Protector++SourceKit.swift */,
 				FD69AAE71E32231A00A58201 /* ProtectedClassHash.swift */,
 				FD895ADC1E31142400A753FB /* String.swift */,
 				FD895ADD1E31142400A753FB /* FileFinder.swift */,
 			);
 			name = Protector;
+			sourceTree = "<group>";
+		};
+		FD4FB0491E5B146E009856B8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FD4FB04C1E5B1549009856B8 /* SourceKit.swift */,
+				FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */,
+				FD4FB0441E5B140E009856B8 /* sourcekitd.h */,
+				FD4FB0521E5B1734009856B8 /* sourcekitd.framework */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		FD53F6EF1E302E5D00E94CDA /* Model */ = {
@@ -121,11 +138,21 @@
 			isa = PBXGroup;
 			children = (
 				FD895ACF1E3113FA00A753FB /* File.swift */,
+				FD4FB0581E5B5134009856B8 /* ObfuscationData.swift */,
+				FD4FB05A1E5B51DD009856B8 /* ImplementationData.swift */,
+				FD4FB0561E5B2507009856B8 /* Module.swift */,
 				FD895AD11E31140C00A753FB /* Storyboard.swift */,
 				FD895AD21E31140C00A753FB /* SwiftFileScanData.swift */,
 				FD5F33DB1E4DFD1F00BA07D3 /* ErrorData.swift */,
 			);
 			name = File;
+			sourceTree = "<group>";
+		};
+		FDD0B6161E5B097E00715DDF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		FDFF64CD1E52745900300623 /* Helpers */ = {
@@ -146,7 +173,6 @@
 			buildPhases = (
 				FD0B10901E2F8ACD00AED458 /* Sources */,
 				FD0B10911E2F8ACD00AED458 /* Frameworks */,
-				FD0B10921E2F8ACD00AED458 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -199,6 +225,7 @@
 				FD895AE11E31142400A753FB /* String.swift in Sources */,
 				FD895AD41E31140C00A753FB /* SwiftFileScanData.swift in Sources */,
 				FD895ADE1E31142400A753FB /* Array.swift in Sources */,
+				FD4FB04D1E5B1549009856B8 /* SourceKit.swift in Sources */,
 				FD69AAE81E32231A00A58201 /* ProtectedClassHash.swift in Sources */,
 				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,
 				FD8C2FA01E50A5AA00B81BF2 /* Protector++Projects.swift in Sources */,
@@ -206,10 +233,14 @@
 				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
 				FD895ADF1E31142400A753FB /* ForbiddenZone.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
+				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
 				FD8C2F9E1E50A5A500B81BF2 /* Protector++Builds.swift in Sources */,
 				FD5F33DC1E4DFD1F00BA07D3 /* ErrorData.swift in Sources */,
+				FD4FB0551E5B196C009856B8 /* Protector++SourceKit.swift in Sources */,
+				FD4FB05B1E5B51DD009856B8 /* ImplementationData.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
+				FD4FB0591E5B5134009856B8 /* ObfuscationData.swift in Sources */,
 				FDFF64D11E5275A000300623 /* Exit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,8 +340,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = WZ2UP2QF9G;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFTSHIELDED = true;
+				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -319,8 +356,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = WZ2UP2QF9G;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFTSHIELDED = true;
+				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
