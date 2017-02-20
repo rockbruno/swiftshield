@@ -183,6 +183,7 @@ class SourceKit {
 
     /** request arguments */
     lazy var offsetID = SKApi.sourcekitd_uid_get_from_cstr("key.offset")!
+    lazy var nameOffsetID = SKApi.sourcekitd_uid_get_from_cstr("key.nameoffset")!
     lazy var sourceFileID = SKApi.sourcekitd_uid_get_from_cstr("key.sourcefile")!
     lazy var compilerArgsID = SKApi.sourcekitd_uid_get_from_cstr("key.compilerargs")!
 
@@ -192,6 +193,7 @@ class SourceKit {
     lazy var entitiesID = SKApi.sourcekitd_uid_get_from_cstr("key.entities")!
     lazy var relatedID = SKApi.sourcekitd_uid_get_from_cstr("key.related")!
     lazy var syntaxID = SKApi.sourcekitd_uid_get_from_cstr("key.syntaxmap")!
+    lazy var substructureID = SKApi.sourcekitd_uid_get_from_cstr("key.substructure")!
 
     /** entity attributes */
     lazy var receiverID = SKApi.sourcekitd_uid_get_from_cstr("key.receiver_usr")!
@@ -204,6 +206,8 @@ class SourceKit {
     lazy var lineID = SKApi.sourcekitd_uid_get_from_cstr("key.line")!
     lazy var colID = SKApi.sourcekitd_uid_get_from_cstr("key.column")!
     lazy var usrID = SKApi.sourcekitd_uid_get_from_cstr("key.usr")!
+    lazy var runtimeNameID = SKApi.sourcekitd_uid_get_from_cstr("key.runtime_name")!
+    lazy var typeUsrID = SKApi.sourcekitd_uid_get_from_cstr("key.typeusr")!
 
     /** kinds */
     lazy var clangID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.import.module.clang")!
@@ -221,7 +225,11 @@ class SourceKit {
     lazy var enumID = SKApi.sourcekitd_uid_get_from_cstr(SourceKit.enumIDString)!
     
     func isObjectDeclaration(kind: String) -> Bool {
-        return kind == SourceKit.classIDString || kind == SourceKit.structIDString || kind == SourceKit.protocolIDString || kind == SourceKit.enumIDString
+        return kind == SourceKit.classIDString || kind == SourceKit.structIDString || kind == SourceKit.enumIDString || kind == SourceKit.protocolIDString
+    }
+    
+    func isObjectReference(kind: String) -> Bool {
+        return isObjectDeclaration(kind: kind) || kind.contains("typeref") || kind.contains("typeidentifier")
     }
 
     /** references */
@@ -250,7 +258,7 @@ class SourceKit {
 
     func sendRequest( req: sourcekitd_object_t ) -> sourcekitd_response_t {
 
-        if isTTY {
+        if isTTY && verbose {
             SKApi.sourcekitd_request_description_dump( req )
         }
 
@@ -269,7 +277,7 @@ class SourceKit {
 
         SKApi.sourcekitd_request_release( req )
 
-        if isTTY && !SKApi.sourcekitd_response_is_error( resp! ) {
+        if isTTY && !SKApi.sourcekitd_response_is_error( resp! ) && verbose {
             SKApi.sourcekitd_response_description_dump_filedesc( resp!, STDERR_FILENO )
         }
 
@@ -294,6 +302,17 @@ class SourceKit {
         SKApi.sourcekitd_request_dictionary_set_string( req, sourceFileID, filePath )
         SKApi.sourcekitd_request_dictionary_set_value( req, compilerArgsID, compilerArgs )
 
+        return sendRequest( req: req )
+    }
+    
+    func editorOpen( filePath: String, compilerArgs: sourcekitd_object_t ) -> sourcekitd_response_t {
+        var req = SKApi.sourcekitd_request_dictionary_create( nil, nil, 0 )!
+        
+        SKApi.sourcekitd_request_dictionary_set_uid( req, requestID, editorOpenID )
+        SKApi.sourcekitd_request_dictionary_set_string( req, nameID, filePath )
+        SKApi.sourcekitd_request_dictionary_set_string( req, sourceFileID, filePath )
+        SKApi.sourcekitd_request_dictionary_set_value( req, compilerArgsID, compilerArgs)
+        
         return sendRequest( req: req )
     }
 

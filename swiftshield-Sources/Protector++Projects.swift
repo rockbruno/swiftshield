@@ -14,7 +14,7 @@ fileprivate let pbxProjTargetNameRegex = "buildConfigurationList = (.*) \\/\\* .
 extension Protector {
     
     func getModulesAndCompilerArguments(scheme: String) -> [Module] {
-        Logger.log("Building your project to gather it's modules and compiler arguments...")
+        Logger.log("Building project to gather it's modules and compiler arguments...")
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
         let arguments: [String] = [projectParameter, projectToBuild, "-scheme", scheme]
@@ -47,11 +47,12 @@ extension Protector {
                 continue
             }
             Logger.log("Found module \(moduleName)", verbose: true)
-            let files = matches(for: "(?<=).*?(?= )", in: matches(for: "(?<=-j4 ).*?(?= -)", in: line).joined() + " ").flatMap { File(filePath: $0) }
             var compilerArguments: [String] = []
             let fullCall = line.components(separatedBy: " ")
             var startRetrievingArguments = false
             var ignoreNext = false
+            var files: [File] = []
+            var fileZone: Bool = false
             for arg in fullCall {
                 guard startRetrievingArguments else {
                     startRetrievingArguments = arg.contains("bin/swiftc")
@@ -60,6 +61,14 @@ extension Protector {
                 guard ignoreNext == false else {
                     ignoreNext = false
                     continue
+                }
+                if fileZone {
+                    if arg.hasPrefix("/") {
+                        files.append(File(filePath: arg))
+                    }
+                    fileZone = arg.hasPrefix("-") == false || files.count == 0
+                } else {
+                    fileZone = arg == "-c"
                 }
                 if arg == "-incremental" || arg == "-parseable-output" || arg == "-serialize-diagnostics" || arg == "-emit-dependencies" {
                     continue
