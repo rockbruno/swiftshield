@@ -72,7 +72,7 @@ Protocol obfuscations are currently disabled due to massive compile times. They 
 
 SwiftShield is new, and even though it works, it takes quite some time to do so. It works by obfuscating your classes' declarations and then triggering a build. This build will fail, revealing the location of where the classes are being used, which then are accessed and obfuscated. The process is repeated until the project builds succesfully. Unfortunately, the Swift compiler sometimes doesn't show all errors at once, needing dozens of compiles in order to completely obfuscate a target.
 
-To obfuscate files in a single go, SwiftShield needs to manually run and parse Apple's SourceKit. This being done in the `sourcekit` branch, but unfortunately, SourceKit isn't perfect. For example, it currently can't detect classes inside generic constraints, like Array<MyClass>.
+To obfuscate files in a single go, SwiftShield needs to manually run and parse Apple's SourceKit. This is being done in the `sourcekit` branch, but unfortunately, SourceKit isn't perfect. For example, it currently can't detect classes inside generic constraints, like Array<MyClass>.
 
 
 ## License
