@@ -9,10 +9,10 @@
 import Cocoa
 
 class ObfuscationData {
-    var runtimeNameDict: [String:Bool] = [:]
+    var usrDict: [String:Bool] = [:]
     var referencesDict: [File:[ReferenceData]] = [:]
     var obfuscationDict: [String:String] = [:]
-    var indexedFiles: [(File,Module,sourcekitd_response_t)] = []
+    var indexedFiles: [(File,sourcekitd_response_t)] = []
     
     func add(reference: ReferenceData, toFile file: File) {
         if referencesDict[file] == nil {

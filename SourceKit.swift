@@ -176,6 +176,9 @@ class SourceKit {
     private lazy var indexRequestID = SKApi.sourcekitd_uid_get_from_cstr("source.request.indexsource")!
     private lazy var editorCloseID = SKApi.sourcekitd_uid_get_from_cstr("source.request.editor.close")!
     private lazy var editorOpenID = SKApi.sourcekitd_uid_get_from_cstr("source.request.editor.open")!
+    private lazy var symbolContainsID =
+        SKApi.sourcekitd_uid_get_from_cstr("source.request.indexer.srv.symbol-contains")!
+    private lazy var symbolOccurencesID = SKApi.sourcekitd_uid_get_from_cstr("source.request.document.symbol-occurrences")!
 
     private lazy var enableMapID = SKApi.sourcekitd_uid_get_from_cstr("key.enablesyntaxmap")!
     private lazy var enableSubID = SKApi.sourcekitd_uid_get_from_cstr("key.enablesubstructure")!
@@ -186,6 +189,7 @@ class SourceKit {
     lazy var nameOffsetID = SKApi.sourcekitd_uid_get_from_cstr("key.nameoffset")!
     lazy var sourceFileID = SKApi.sourcekitd_uid_get_from_cstr("key.sourcefile")!
     lazy var compilerArgsID = SKApi.sourcekitd_uid_get_from_cstr("key.compilerargs")!
+    lazy var enableSyntaxMapId = SKApi.sourcekitd_uid_get_from_cstr("key.enablesyntaxmap")!
 
     /** sub entity lists */
     lazy var depedenciesID = SKApi.sourcekitd_uid_get_from_cstr("key.dependencies")!
@@ -208,7 +212,12 @@ class SourceKit {
     lazy var usrID = SKApi.sourcekitd_uid_get_from_cstr("key.usr")!
     lazy var runtimeNameID = SKApi.sourcekitd_uid_get_from_cstr("key.runtime_name")!
     lazy var typeUsrID = SKApi.sourcekitd_uid_get_from_cstr("key.typeusr")!
-
+    
+    /** indexer */
+    lazy var isAnchorEndID = SKApi.sourcekitd_uid_get_from_cstr("key.indexer.arg.symbol.is-anchor-end")!
+    lazy var isSubsequenceID = SKApi.sourcekitd_uid_get_from_cstr("key.indexer.arg.symbol.is-subsequence")!
+    lazy var ignoreCaseID = SKApi.sourcekitd_uid_get_from_cstr("key.indexer.arg.symbol.is-ignore-case")!
+    
     /** kinds */
     lazy var clangID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.import.module.clang")!
 
@@ -229,7 +238,7 @@ class SourceKit {
     }
     
     func isObjectReference(kind: String) -> Bool {
-        return isObjectDeclaration(kind: kind) || kind.contains("typeref") || kind.contains("typeidentifier")
+        return isObjectDeclaration(kind: kind) || kind.contains("ref.class") || kind.contains("ref.struct") || kind.contains("ref.enum")
     }
 
     /** references */
@@ -309,13 +318,22 @@ class SourceKit {
         var req = SKApi.sourcekitd_request_dictionary_create( nil, nil, 0 )!
         
         SKApi.sourcekitd_request_dictionary_set_uid( req, requestID, editorOpenID )
-        SKApi.sourcekitd_request_dictionary_set_string( req, nameID, filePath )
+        SKApi.sourcekitd_request_dictionary_set_string( req, nameID, "annotate-source-text" )
         SKApi.sourcekitd_request_dictionary_set_string( req, sourceFileID, filePath )
+        SKApi.sourcekitd_request_dictionary_set_int64( req, enableSyntaxMapId, 1 )
         SKApi.sourcekitd_request_dictionary_set_value( req, compilerArgsID, compilerArgs)
         
         return sendRequest( req: req )
     }
-
+    
+    func symbolOccurrences( filePath: String, compilerArgs: sourcekitd_object_t ) -> sourcekitd_response_t {
+        var req = SKApi.sourcekitd_request_dictionary_create( nil, nil, 0 )!
+        SKApi.sourcekitd_request_dictionary_set_uid( req, requestID, symbolOccurencesID )
+        SKApi.sourcekitd_request_dictionary_set_string( req, sourceFileID, filePath )
+        
+        return sendRequest( req: req )
+    }
+    
     func syntaxMap( filePath: String ) -> sourcekitd_response_t {
         var req = SKApi.sourcekitd_request_dictionary_create( nil, nil, 0 )!
 

@@ -2,10 +2,12 @@ import Foundation
 /*
 let SK = SourceKit()
 
+let verbose = true
+
 let args = SK.array(argv: [
     "-module-name",
     "Freddy",
-    "-O",
+    "-Onone",
     "-D",
     "COCOAPODS",
     "-suppress-warnings",
@@ -19,10 +21,11 @@ let args = SK.array(argv: [
     "-Xfrontend",
     "-serialize-debugging-options",
     "-embed-bitcode-marker",
+    "-enable-testing",
     "-I",
-    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Products/Debug-AppStore-iphoneos/Freddy",
+    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Products/Debug-iphoneos/Freddy",
     "-F",
-    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Products/Debug-AppStore-iphoneos/Freddy",
+    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Products/Debug-iphoneos/Freddy",
     "-c",
     "-j4",
     "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSON.swift",
@@ -36,17 +39,17 @@ let args = SK.array(argv: [
     "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSONSubscripting.swift",
     "-emit-module",
     "-emit-module-path",
-    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/Objects-normal/arm64/Freddy.swiftmodule",
+    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/Objects-normal/arm64/Freddy.swiftmodule",
     "-Xcc",
-    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/swift-overrides.hmap",
+    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/swift-overrides.hmap",
     "-Xcc",
     "-iquote",
     "-Xcc",
-    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/Freddy-generated-files.hmap",
+    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/Freddy-generated-files.hmap",
     "-Xcc",
-    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/Freddy-own-target-headers.hmap",
+    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/Freddy-own-target-headers.hmap",
     "-Xcc",
-    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/Freddy-all-non-framework-target-headers.hmap",
+    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/Freddy-all-non-framework-target-headers.hmap",
     "-Xcc",
     "-ivfsoverlay",
     "-Xcc",
@@ -54,9 +57,9 @@ let args = SK.array(argv: [
     "-Xcc",
     "-iquote",
     "-Xcc",
-    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/Freddy-project-headers.hmap",
+    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/Freddy-project-headers.hmap",
     "-Xcc",
-    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Products/Debug-AppStore-iphoneos/Freddy/include",
+    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Products/Debug-iphoneos/Freddy/include",
     "-Xcc",
     "-I/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Headers/Private",
     "-Xcc",
@@ -70,32 +73,37 @@ let args = SK.array(argv: [
     "-Xcc",
     "-I/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Headers/Public/SwiftGen",
     "-Xcc",
-    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/DerivedSources/arm64",
+    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/DerivedSources/arm64",
     "-Xcc",
-    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/DerivedSources",
+    "-I/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/DerivedSources",
     "-Xcc",
-    "-DPOD_CONFIGURATION_DEBUG_APP_STORE=1",
+    "-DPOD_CONFIGURATION_DEBUG=1",
+    "-Xcc",
+    "-DDEBUG=1",
     "-Xcc",
     "-DCOCOAPODS=1",
     "-emit-objc-header",
     "-emit-objc-header-path",
-    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/Objects-normal/arm64/Freddy-Swift.h",
+    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/Objects-normal/arm64/Freddy-Swift.h",
     "-import-underlying-module",
     "-Xcc",
     "-ivfsoverlay",
     "-Xcc",
-    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-AppStore-iphoneos/Freddy.build/unextended-module-overlay.yaml",
+    "/Users/bruno.rocha/Library/Developer/Xcode/DerivedData/VivoMeditacao-bqopcdindlgtscgvtewihlenbnzq/Build/Intermediates/Pods.build/Debug-iphoneos/Freddy.build/unextended-module-overlay.yaml",
     "-Xcc",
     "-working-directory/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods"
     ])
 
-//SK.editorOpen(filePath: "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSONDecodable.swift", compilerArgs: args)
-//SK.cursorInfo(filePath: "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSONDecodable.swift", byteOffset: 683, compilerArgs: args)
-let resp = SK.editorOpen(filePath: "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSONDecodable.swift", compilerArgs: args)
+SK.editorOpen(filePath: "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSONDecodable.swift", compilerArgs: args)
+//SK.cursorInfo(filePath: "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSONDecodable.swift", byteOffset: 4697, compilerArgs: args)
+let resp = SK.symbolOccurrences(filePath: "/Users/bruno.rocha/Desktop/vivo-meditacao-ios/Pods/Freddy/Sources/JSONDecodable.swift", compilerArgs: args)
+if let error = SK.error(resp: resp) {
+    Logger.log("SK Error: \(error)")
+    exit(error: true)
+}
 let dict = SKApi.sourcekitd_response_get_value(resp)
+exit()*/
 
-exit()
-*/
 let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? "/Users/bruno.rocha/Desktop/vivo-meditacao-ios"
 let mainScheme = UserDefaults.standard.string(forKey: "scheme") ?? "VivoMeditacao-AppStore"
 
@@ -113,7 +121,7 @@ if isWorkspace == false && projectToBuild.hasSuffix(".xcodeproj") == false {
     exit(error: true)
 }
 
-let verbose = CommandLine.arguments.contains("-v")
+let verbose = true
 let protectedClassNameSize = 25
 
 Logger.log("SwiftShield 2.0.0")
@@ -128,6 +136,10 @@ if obfuscationData.obfuscationDict.isEmpty {
     Logger.log("Found nothing to obfuscate. Finishing...")
     exit(error: true)
 }
+
+
+Logger.log("REMOVE ME")
+exit(0)
 protector.obfuscateReferences(obfuscationData: obfuscationData)
 
 let storyboardFilePaths = (findFiles(rootPath: basePath, suffix: ".storyboard") ?? []) + (findFiles(rootPath: basePath, suffix: ".xib") ?? [])

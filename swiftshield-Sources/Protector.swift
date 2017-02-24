@@ -21,25 +21,25 @@ class Protector {
                 }
                 let compilerArgs = SK.array(argv: module.compilerArguments)
                 Logger.log("-- Indexing \(file.name) --")
-                let resp = SK.editorOpen(filePath: file.path, compilerArgs: compilerArgs)
+                let resp = SK.indexFile(filePath: file.path, compilerArgs: compilerArgs)
                 if let error = SK.error(resp: resp) {
                     Logger.log("ERROR: Could not index \(file.name), aborting. SK Error: \(error)")
                     exit(error: true)
                 }
                 let dict = SKApi.sourcekitd_response_get_value(resp)
-                SK.recurseOver( childID: SK.substructureID, resp: dict, block: { dict in
+                SK.recurseOver( childID: SK.entitiesID, resp: dict, block: { dict in
                     let kind = dict.getUUIDString(key: SK.kindID)
                     guard SK.isObjectDeclaration(kind: kind),
                         let name = dict.getString(key: SK.nameID),
-                        let runtimeName = dict.getString(key: SK.runtimeNameID) else {
+                        let usr = dict.getString(key: SK.usrID) else {
                         return
                     }
                     let obfuscatedName = obfuscationData.obfuscationDict[name] ?? String.random(length: protectedClassNameSize)
                     obfuscationData.obfuscationDict[name] = obfuscatedName
-                    obfuscationData.runtimeNameDict[runtimeName] = true
-                    Logger.log("Found declaration of \(name) (\(runtimeName)) -> now \(obfuscatedName)")
+                    obfuscationData.usrDict[usr] = true
+                    Logger.log("Found declaration of \(name) (\(usr)) -> now \(obfuscatedName)")
                 })
-                obfuscationData.indexedFiles.append((file,module,resp))
+                obfuscationData.indexedFiles.append((file,resp))
                 objc_sync_exit(self)
             }
         }
@@ -49,29 +49,22 @@ class Protector {
     func obfuscateReferences(obfuscationData: ObfuscationData) {
         let SK = SourceKit()
         Logger.log("-- Finding references of the retrieved USRs --")
-        for (file,module,indexResponse) in obfuscationData.indexedFiles {
-            let dict = SKApi.sourcekitd_response_get_value(indexResponse)
+        for (file,indexResponse) in obfuscationData.indexedFiles {
             objc_sync_enter(self)
-            SK.recurseOver( childID: SK.substructureID, resp: dict, block: { dict in
+            let dict = SKApi.sourcekitd_response_get_value(indexResponse)
+            SK.recurseOver( childID: SK.entitiesID, resp: dict, block: { dict in
                 let kind = dict.getUUIDString(key: SK.kindID)
-                guard SK.isObjectReference(kind: kind)else {
+                guard SK.isObjectReference(kind: kind) else {
                     return
                 }
-                let offset = dict.getInt(key: SK.nameOffsetID) != 0 ? dict.getInt(key: SK.nameOffsetID) : dict.getInt(key: SK.offsetID)
-                let compilerArgs = SK.array(argv: module.compilerArguments)
-                let resp = SK.cursorInfo(filePath: file.path, byteOffset: Int32(offset), compilerArgs: compilerArgs)
-                if let error = SK.error(resp: resp) {
-                    Logger.log("ERROR: Could not find cursor info of \(file.name) (offset \(offset)), aborting. SK Error: \(error)")
-                    exit(error: true)
-                }
-                let cursorDict = SKApi.sourcekitd_response_get_value(resp)
-                guard let usr = cursorDict.getString(key: SK.usrID), let name = cursorDict.getString(key: SK.nameID), let typeUsr = cursorDict.getString(key: SK.typeUsrID) else {
+                guard let usr = dict.getString(key: SK.usrID), let name = dict.getString(key: SK.nameID) else {
                     return
                 }
-                let runtimeName = typeUsr + usr.components(separatedBy: ":")[1]
-                Logger.log("Found \(name) (\(runtimeName)) at \(file.name) (offset: \(offset)", verbose: true)
-                if obfuscationData.runtimeNameDict[runtimeName] == true {
-                    let reference = ReferenceData(name: name, offset: offset, file: file, runtimeName: runtimeName)
+                let line = dict.getInt(key: SK.lineID)
+                let column = dict.getInt(key: SK.colID)
+                Logger.log("Found \(name) (\(usr)) at \(file.name) (L:\(line) C: \(column)")
+                if obfuscationData.usrDict[usr] == true {
+                    let reference = ReferenceData(name: name, line: line, column: column, file: file, usr: usr)
                     obfuscationData.add(reference: reference, toFile: file)
                 }
             })
@@ -88,18 +81,24 @@ class Protector {
         let swiftRegex = comments + "|" + words + "|" + swiftSymbols
         
         for (file,references) in obfuscationData.referencesDict {
-            var sortedReferences = references.filterDuplicates { $0.offset == $1.offset }.sorted(by: lesserPosition)
-            var offset = 1
+            var sortedReferences = references.filterDuplicates { $0.line == $1.line && $0.column == $1.column }.sorted(by: lesserPosition)
+            var line = 1
+            var column = 1
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)
             Logger.log("--- Overwriting \(file.name) ---")
             let obfuscatedFile = data.matchRegex(regex: swiftRegex, mappingClosure: { result in
                 let word = (data as NSString).substring(with: result.rangeAt(0))
                 var wordToReturn = word
-                if sortedReferences.isEmpty == false && offset == sortedReferences[0].offset {
+                if sortedReferences.isEmpty == false && line == sortedReferences[0].line && column == sortedReferences[0].column {
                     sortedReferences.remove(at: 0)
                     wordToReturn = (obfuscationData.obfuscationDict[word] ?? word)
                 }
-                offset += word.characters.count
+                if word == "\n" {
+                    line += 1
+                    column = 1
+                } else {
+                    column += word.characters.count
+                }
                 return wordToReturn
             }).joined()
             do {

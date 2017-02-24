@@ -138,7 +138,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509326443.938336"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "protectStoryboards(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "swiftshield-Sources/Protector.swift"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "139"
@@ -154,12 +170,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
-            landmarkName = "protectStoryboards(data:)"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "writeToFile(data:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -170,28 +186,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "protectStoryboards(data:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
-            landmarkName = "protectStoryboards(data:)"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "writeToFile(data:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
             landmarkName = "protectStoryboards(data:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/main.swift"
-            timestampString = "509317216.226136"
+            timestampString = "509477547.832217"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142">
+            startingLineNumber = "154"
+            endingLineNumber = "154">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -248,11 +248,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
             landmarkName = "protectStoryboards(data:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -264,11 +264,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "writeToFile(data:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -280,12 +280,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
-            landmarkName = "protectStoryboards(data:)"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
+            landmarkName = "writeToFile(data:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -552,11 +552,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/main.swift"
-            timestampString = "509317216.226136"
+            timestampString = "509477547.832217"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136">
+            startingLineNumber = "148"
+            endingLineNumber = "148">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -820,11 +820,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SourceKit.swift"
-            timestampString = "509319206.816158"
+            timestampString = "509477457.435396"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "SourceKit"
             landmarkType = "3">
          </BreakpointContent>
@@ -1060,11 +1060,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509318771.208998"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
             landmarkName = "index(modules:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1108,11 +1108,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/main.swift"
-            timestampString = "509317216.226136"
+            timestampString = "509477547.832217"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97">
+            startingLineNumber = "105"
+            endingLineNumber = "105">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1170,7 +1170,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509318771.208998"
+            timestampString = "509326443.938336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
@@ -1186,12 +1186,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509318662.963129"
+            timestampString = "509321688.616055"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "index(modules:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1202,268 +1202,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509318918.494634"
+            timestampString = "509326386.471458"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.(obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()).(closure #1)"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319208.447638"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "63"
-                  endingLineNumber = "63"
-                  offsetFromSymbolStart = "716">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.(obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()).(closure #1)"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319208.449612"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "63"
-                  endingLineNumber = "63"
-                  offsetFromSymbolStart = "870">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509318919.011805"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509318930.531772"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319426.778272"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.(obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()).(closure #1)"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319429.296577"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "1569">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.(obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()).(closure #1)"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319429.299451"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "1758">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319693.78337"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319705.134584"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319708.735566"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319708.739724"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "903">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.(obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()).(closure #1)"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319708.742385"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "3237">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319709.702065"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319709.706844"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "55"
-                  endingLineNumber = "55"
-                  offsetFromSymbolStart = "607">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swiftshield.Protector.(obfuscateReferences (obfuscationData : swiftshield.ObfuscationData) -&gt; ()).(closure #1)"
-                  moduleName = "swiftshield"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bruno.rocha/Desktop/Personal%20Codes/swiftshield/swiftshield-Sources/Protector.swift"
-                  timestampString = "509319709.709394"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "56"
-                  endingLineNumber = "56"
-                  offsetFromSymbolStart = "71">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "swiftshield-Sources/Protector.swift"
-            timestampString = "509319727.072505"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "obfuscateReferences(obfuscationData:)"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "index(modules:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

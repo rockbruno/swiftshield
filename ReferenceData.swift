@@ -10,18 +10,24 @@ import Cocoa
 
 class ReferenceData {
     let name: String
-    let offset: Int
+    let line: Int
+    let column: Int
     let file: File
-    let runtimeName: String
+    let usr: String
     
-    init(name: String, offset: Int, file: File, runtimeName: String) {
+    init(name: String, line: Int, column: Int, file: File, usr: String) {
         self.name = name
-        self.offset = offset
+        self.line = line
+        self.column = column
         self.file = file
-        self.runtimeName = runtimeName
+        self.usr = usr
     }
 }
 
 func lesserPosition(_ e1: ReferenceData, _ e2: ReferenceData) -> Bool {
-    return e1.offset < e2.offset
+    if e1.line != e2.line {
+        return e1.line < e2.line
+    } else {
+        return e1.column < e2.column
+    }
 }
