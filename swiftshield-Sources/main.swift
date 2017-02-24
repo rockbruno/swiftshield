@@ -137,9 +137,6 @@ if obfuscationData.obfuscationDict.isEmpty {
     exit(error: true)
 }
 
-
-Logger.log("REMOVE ME")
-exit(0)
 protector.obfuscateReferences(obfuscationData: obfuscationData)
 
 let storyboardFilePaths = (findFiles(rootPath: basePath, suffix: ".storyboard") ?? []) + (findFiles(rootPath: basePath, suffix: ".xib") ?? [])
