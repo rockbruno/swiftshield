@@ -56,7 +56,7 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 **Warning:** SwiftShield **irreversibly overwrites** all of your .swift files. Ideally, you should have it run only on your CI server, and on release builds.
 
-Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here](https://github.com/rockbruno/swiftshield/blob/master/USAGE.md) to see how to setup SwiftShield.
+Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here](https://github.com/rockbruno/swiftshield/blob/sourcekit/USAGE.md) to see how to setup SwiftShield.
 
 
 ## Next steps
