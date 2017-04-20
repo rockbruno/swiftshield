@@ -48,7 +48,7 @@ By tagging your objects with a case insensitive word of your choice (`shielded` 
 
 # Automatic mode (beta)
 
-While automatic mode is probably what you're looking for, it only works for simple projects due to [a few SourceKit bugs](https://github.com/rockbruno/swiftshield/blob/sourcekit/USAGE.md). Consider checking out if manual mode isn't enough for your case.
+While automatic mode is probably what you're looking for, it only works for simple projects due to [a few SourceKit bugs](https://github.com/rockbruno/swiftshield/blob/sourcekit/SOURCEKITISSUES.md). Consider checking out if manual mode isn't enough for your case.
 
 ```
 ./swiftshield -auto -projectroot /Desktop/MyApp -projectfile /Desktop/MyApp/MyApp.xcworkspace -scheme 'MyApp-AppStore' -v
