@@ -85,7 +85,7 @@ Download the [latest release](https://github.com/rockbruno/swiftshield/releases)
 
 1. Fix SourceKit's exceptions
 2. Module names
-3. Method names
+3. Method names (For automatic mode)
 
 
 ## License
