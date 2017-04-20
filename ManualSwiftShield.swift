@@ -17,7 +17,8 @@ struct ManualSwiftShield {
         }
         let protector = Protector()
         let swiftFiles = getSwiftFiles()
-        let obfuscationData = protector.findAndProtectReferencesManually(tag: "shielded", swiftFiles: swiftFiles)
+        let tag = UserDefaults.standard.string(forKey: "projectroot") ?? "shielded"
+        let obfuscationData = protector.findAndProtectReferencesManually(tag: tag, swiftFiles: swiftFiles)
         if obfuscationData.obfuscationDict.isEmpty {
             Logger.log("Found nothing to obfuscate. Finishing...")
             exit(error: true)

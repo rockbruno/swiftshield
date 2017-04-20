@@ -24,6 +24,26 @@ class djjck3KDxjs04tgbvb: djdj3ocnC38nid {
 }
 ```
 
+While Automatic mode is restricted to classes, structs and protocols, you can use SwiftShield's manual mode to obfuscate virtually anything via tags: (in this case, `"Shielded"`)
+
+```swift
+class ShieldedSubscription: ShieldedAuthenticator {
+  var shieldedIsSubscribed: Bool {
+    let shieldedSubscription = shieldedGetSubscription()
+    return shieldedSubscription.shieldedIsExpired() == false
+  }
+}
+```
+creating:
+```swift
+class fj39jdnconxos: mxov9h3hfVjb {
+  var fvhvcx9nvn4b: Bool {
+    let dj09d9cjx89cx = vxcvocxnmoicxvnv903()
+    return dj09d9cjx89cx.kdbxiudn38bg8v() == false
+  }
+}
+```
+
 
 ## How do I deal with crash logs / Analytics if my project uses SwiftShield?
 
@@ -46,10 +66,12 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 1. Xcode command-line tools
 2. No logic based on class names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
-**3. Temporary:** No constrained extensions like `extension MyEnum where RawValue: MyProtocol` or verbose generic calls like `Array<MyClass>`. This is because SourceKit currently does not detect these cases. If your app contains these calls, you will have to obfuscate them manually after SwiftShield runs.
-2. Swift 3.0 (untested on other versions, but could work)
-3. Xcode 8.1 (untested on other versions, but could work)
-4. No Objective-C classes that call Swift methods (untested, but could work. Swift classes that call Objective-C methods are fine)
+3. Xcode 8.1+ (untested on other versions, but could work)
+Automatic mode:
+1. Swift 3.0 (untested on other versions, but could work)
+2. No Objective-C classes that call Swift methods (untested, but could work. Swift classes that call Objective-C methods are fine)
+Manual mode:
+1. Make sure your tags aren't used on things that are not supposed to be obfuscated, like a hardcoded string.
 
 
 ## Installation

@@ -62,6 +62,6 @@ extension String {
     
     static var badArguments: String {
         return "\n\nAUTOMATIC MODE:\n\nExample: swiftshield -auto -projectroot /app/MyApp -projectfile /app/MyApp/MyApp.xcodeproj -scheme 'MyApp-AppStore' -v\n\nRequired parameters:\n\n-auto -projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-v (Verbose mode)" +
-        "\n\nMANUAL MODE:\n\nExample: swiftshield -projectroot /app/MyApp -v\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\nOptional parameters:\n\n-v (Verbose mode)"
+        "\n\nMANUAL MODE:\n\nExample: swiftshield -projectroot /app/MyApp -v -tag 'myTag'\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\nOptional parameters:\n\n-tag 'myTag' (Custom tag. Default is 'shielded')\n\n-v (Verbose mode)"
     }
 }
