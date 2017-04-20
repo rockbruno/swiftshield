@@ -67,10 +67,14 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 1. Xcode command-line tools
 2. No logic based on class names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
 3. Xcode 8.1+ (untested on other versions, but could work)
+
 Automatic mode:
+
 1. Swift 3.0 (untested on other versions, but could work)
 2. No Objective-C classes that call Swift methods (untested, but could work. Swift classes that call Objective-C methods are fine)
+
 Manual mode:
+
 1. Make sure your tags aren't used on things that are not supposed to be obfuscated, like a hardcoded string.
 
 
