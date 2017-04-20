@@ -4,7 +4,7 @@
 [![GitHub release](https://img.shields.io/github/tag/rockbruno/swiftshield.svg)](https://github.com/rockbruno/swiftshield/releases)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/rockbruno/swiftshield/master/LICENSE)
 
-SwiftShield is a tool that generates irreversible, encrypted names for your Swift project's classes, structs and protocols (including your Pods and Storyboards) in order to protect your app from tools that reverse engineer iOS apps, like class-dump and Cycript.
+SwiftShield is a tool that uses SourceKit to generate irreversible, encrypted names for your Swift project's classes, structs and protocols (including your Pods and Storyboards) in order to protect your app from tools that reverse engineer iOS apps, like class-dump and Cycript.
 For example, after running SwiftShield, the following class:
 ```swift
 class EncryptedVideoPlayer: DecryptionProtocol {
@@ -24,17 +24,37 @@ class djjck3KDxjs04tgbvb: djdj3ocnC38nid {
 }
 ```
 
+While Automatic mode is restricted to classes, structs and protocols, you can use SwiftShield's manual mode to obfuscate virtually anything via tags: (in this case, `"Shielded"`)
+
+```swift
+class ShieldedSubscription: ShieldedAuthenticator {
+  var shieldedIsSubscribed: Bool {
+    let shieldedSubscription = shieldedGetSubscription()
+    return shieldedSubscription.shieldedIsExpired() == false
+  }
+}
+```
+creating:
+```swift
+class fj39jdnconxos: mxov9h3hfVjb {
+  var fvhvcx9nvn4b: Bool {
+    let dj09d9cjx89cx = vxcvocxnmoicxvnv903()
+    return dj09d9cjx89cx.kdbxiudn38bg8v() == false
+  }
+}
+```
+
 
 ## How do I deal with crash logs / Analytics if my project uses SwiftShield?
 
-After succesfully encrypting your project, SwiftShield generates a `conversionMap.txt` file with all the changes it made to your project, allowing you to pinpoint what an encrypted class really is.
+After succesfully encrypting your project, SwiftShield generates a `conversionMap.txt` file with all the changes it made to your project, allowing you to pinpoint what an encrypted object really is.
 ````
 //
 //  SwiftShield
 //  Conversion Map
 //
 
-Classes:
+Data:
 
 ViewController ===> YytSIcFnBAqTAyR
 AppDelegate ===> uJXJkhVbwdQGNhh
@@ -46,35 +66,33 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 1. Xcode command-line tools
 2. No logic based on class names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
-2. Swift 3.0 (untested on other versions, but could work)
-3. Xcode 8.1 (untested on other versions, but could work)
-4. No Objective-C classes that call Swift methods (untested, but could work. Swift classes that call Objective-C methods are fine)
+3. Xcode 8.1+ (untested on other versions, but could work)
+Automatic mode:
+1. Swift 3.0 (untested on other versions, but could work)
+2. No Objective-C classes that call Swift methods (untested, but could work. Swift classes that call Objective-C methods are fine)
+Manual mode:
+1. Make sure your tags aren't used on things that are not supposed to be obfuscated, like a hardcoded string.
 
 
 ## Installation
 
 **Warning:** SwiftShield **irreversibly overwrites** all of your .swift files. Ideally, you should have it run only on your CI server, and on release builds.
 
-Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here](https://github.com/rockbruno/swiftshield/blob/master/USAGE.md) to see how to setup SwiftShield.
-
-
-## Exceptions
-
-SwiftShield will not obfuscate:
-
-1. Module classes that are named after default classes, like `class String`.
-2. Classes that are named after their own modules, like `class SwiftyStoreKit` inside module `SwiftyStoreKit`
-
-Protocol obfuscations are currently disabled due to massive compile times. They will be back soon.
+Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here](https://github.com/rockbruno/swiftshield/blob/sourcekit/USAGE.md) to see how to setup SwiftShield.
 
 
 ## Next steps
 
-SwiftShield is new, and even though it works, it takes quite some time to do so. It works by obfuscating your classes' declarations and then triggering a build. This build will fail, revealing the location of where the classes are being used, which then are accessed and obfuscated. The process is repeated until the project builds succesfully. Unfortunately, the Swift compiler sometimes doesn't show all errors at once, needing dozens of compiles in order to completely obfuscate a target.
-
-To obfuscate files in a single go, SwiftShield needs to manually run and parse Apple's SourceKit. This is being done in the `sourcekit` branch, but unfortunately, SourceKit isn't perfect. For example, it currently can't detect classes inside generic constraints, like Array<MyClass>.
+1. Fix SourceKit's exceptions
+2. Module names
+3. Method names (For automatic mode)
 
 
 ## License
 
 SwiftShield is released under the MIT license. See LICENSE for details.
+
+
+## Thanks
+
+Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`.

@@ -9,13 +9,14 @@
 import UIKit
 import Foundation
 
-class ViewController: UIViewController {
+class ShieldedViewController: UIViewController {
     
     @IBOutlet weak var label: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let importantThing = ImportantClass()
+        let shieldedImportantThing = ShieldedImportantClass()
+        shieldedImportantThing.shieldedIsUserSubscribed()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -26,8 +27,8 @@ class ViewController: UIViewController {
 }
 
 
-struct ImportantClass {
-    //Only actual classes will be modified
-    var thing = "class ViewController áäÁÚúú"
-    var string = "struct ImportantStruct ççç"
+struct ShieldedImportantClass {
+    func shieldedIsUserSubscribed() -> Bool {
+        return true
+    }
 }

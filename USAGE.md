@@ -1,12 +1,6 @@
 # SwiftShield Usage
 
 
-## (Optional) Enable Xcode's "Continue building after errors" option
-
-To make Swiftshield run faster, you should enable the `Continue building after errors` option on your Xcode settings's General tab.
-
-<img src="https://i.stack.imgur.com/Pa0UT.png" alt="Xcode settings">
-
 ## Modify Run Scripts that can affect SwiftShield
 
 If your project uses a framework that also changes your .swift files, like `R.swift` or `SwiftGen`, you need to prevent them from interfering with SwiftShield. Don't worry, it's very simple. You probably have a Run Script configured to run these frameworks. You just need to wrap them around a `"$SWIFTSHIELDED" != "true"` condition.
@@ -24,30 +18,49 @@ fi
 This will prevent that script from running after your project gets obfuscated.
 
 
-## Unlocking your Project (if you use Cocoapods)
+## Unlocking your Project (if you use CocoaPods)
 
-By default, Cocoapod sources are locked. SwiftShield needs them to be unlocked in order to be able to obfuscate your project. To unlock your project, you can run:
+By default, CocoaPods sources are locked. SwiftShield needs them to be unlocked in order to be able to obfuscate your project. To unlock your project, you can run, for example:
 
 `chmod -R 774 PATHTOPROJECTFOLDER`
 
 
 ## Running SwiftShield
 
+
+# Manual mode
+
+By tagging your objects with a case insensitive word of your choice (`shielded` by default), SwiftShield can effortlesly obfuscate your project. Choose a tag, add it to your objects (`isSubscribed` -> `shieldedIsSubscribed`), and then run:
+
 ```
-./swiftshield -projectroot /Desktop/MyApp -projectfile /Desktop/MyApp/MyApp.xcworkspace -scheme 'MyApp-AppStore' -ignoreschemes 'MyApp-CI,MyApp-Debug' -v
+./swiftshield -projectroot /Desktop/MyApp -tag 'myTag' -v
 ```
 **Required Parameters:**
 
-`-projectroot`: The root of your project. SwiftShield will use this to search for .swift files, and .xcodeproj files in order to map your app's modules.
-
-`-projectfile`: Your app's main .xcodeproj/.xcworkspace file.
-
-`-scheme`: The main scheme to build from your `-projectfile`. SwiftShield will obfuscate every scheme, but this one will be the last one. This should be your app's main target.
+`-projectroot`: The root of your project. SwiftShield will use this to search for .xcodeproj in order to tag them as `SWIFTSHIELDED`.
 
 **Optional Parameters:**
 
-`-ignoreschemes`: If your app has multiple schemes that point to the same target, like MyApp-CI/MyApp-Debug/MyApp-AppStore, you can use this setting to ignore the irrelevant targets.
+`-tag`: Uses a custom tag. Default is `shielded`.
 
-`-structs`: Obfuscates structs as well. This can make SwiftShield take several hours to run.
+`-v`: Prints additional information, as well as SourceKit's calls.
 
-`-v`: Prints additional information about the obfuscation proccess.
+
+# Automatic mode (beta)
+
+While automatic mode is probably what you're looking for, it only works for simple projects due to [a few SourceKit bugs](https://github.com/rockbruno/swiftshield/blob/sourcekit/USAGE.md). Consider checking out if manual mode isn't enough for your case.
+
+```
+./swiftshield -auto -projectroot /Desktop/MyApp -projectfile /Desktop/MyApp/MyApp.xcworkspace -scheme 'MyApp-AppStore' -v
+```
+**Required Parameters:**
+
+`-projectroot`: The root of your project. SwiftShield will use this to search for .xcodeproj in order to tag them as `SWIFTSHIELDED`.
+
+`-projectfile`: Your app's main .xcodeproj/.xcworkspace file.
+
+`-scheme`: The main scheme to build from your `-projectfile`.
+
+**Optional Parameters:**
+
+`-v`: Prints additional information, as well as SourceKit's calls.
