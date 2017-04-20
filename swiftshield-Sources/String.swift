@@ -49,10 +49,11 @@ extension String {
 extension String {
     
     static var swiftRegex: String {
+        //TODO: Need a better way of getting everything, but keeping words together
         let comments = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)"
         let words = "[a-zA-Z0-9\\u00C0-\\u017F]{1,99}"
         let quotes = "\\]\\[\\-\"\'"
-        let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&*+-^|=; \n\t" + quotes + "]"
+        let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&~*+-^|=; \n\t" + quotes + "]"
         return comments + "|" + words + "|" + swiftSymbols
     }
     
