@@ -1,6 +1,0 @@
-version: "Apple Swift version 3.0.1 (swiftlang-800.0.58.6 clang-800.0.42.1)"
-options: "c7f7db33005a61750009afdbc8526059"
-build_time: [540744032, 747463000]
-inputs:
-  "/Users/bruno.rocha/Desktop/Personal Codes/swiftshield/SwiftShieldExample/SwiftProtectorExample/ViewController.swift": [9223372036854775807, 0]
-  "/Users/bruno.rocha/Desktop/Personal Codes/swiftshield/SwiftShieldExample/SwiftProtectorExample/AppDelegate.swift": [9223372036854775807, 0]
