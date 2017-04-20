@@ -69,3 +69,8 @@ Download the [latest release](https://github.com/rockbruno/swiftshield/releases)
 ## License
 
 SwiftShield is released under the MIT license. See LICENSE for details.
+
+
+## Thanks
+
+Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`.

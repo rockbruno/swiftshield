@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD34D4E31EA933690002A273 /* AutomaticSwiftShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD34D4E21EA933690002A273 /* AutomaticSwiftShield.swift */; };
+		FD34D4E61EA933F90002A273 /* ManualSwiftShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD34D4E51EA933F90002A273 /* ManualSwiftShield.swift */; };
 		FD4FB04D1E5B1549009856B8 /* SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB04C1E5B1549009856B8 /* SourceKit.swift */; };
 		FD4FB0531E5B1734009856B8 /* sourcekitd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4FB0521E5B1734009856B8 /* sourcekitd.framework */; };
 		FD4FB0571E5B2507009856B8 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0561E5B2507009856B8 /* Module.swift */; };
@@ -26,6 +28,8 @@
 
 /* Begin PBXFileReference section */
 		FD0B10941E2F8ACD00AED458 /* swiftshield */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = swiftshield; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD34D4E21EA933690002A273 /* AutomaticSwiftShield.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutomaticSwiftShield.swift; sourceTree = SOURCE_ROOT; };
+		FD34D4E51EA933F90002A273 /* ManualSwiftShield.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManualSwiftShield.swift; sourceTree = SOURCE_ROOT; };
 		FD4FB0441E5B140E009856B8 /* sourcekitd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sourcekitd.h; path = "swiftshield-Sources/sourcekitd.h"; sourceTree = SOURCE_ROOT; };
 		FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SwiftShield-Bridging-Header.h"; path = "swiftshield-Sources/SwiftShield-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		FD4FB04C1E5B1549009856B8 /* SourceKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceKit.swift; sourceTree = SOURCE_ROOT; };
@@ -78,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				FD4FB0491E5B146E009856B8 /* Resources */,
+				FD34D4EC1EA93A800002A273 /* Extensions */,
 				FDFF64CD1E52745900300623 /* Helpers */,
 				FD53F6EF1E302E5D00E94CDA /* Model */,
 				FD895AD71E31141500A753FB /* main.swift */,
@@ -92,9 +97,25 @@
 				FD895AD91E31142400A753FB /* Array.swift */,
 				FD895ADB1E31142400A753FB /* Protector.swift */,
 				FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */,
-				FD895ADC1E31142400A753FB /* String.swift */,
 			);
 			name = Protector;
+			sourceTree = "<group>";
+		};
+		FD34D4E41EA933C60002A273 /* Modes */ = {
+			isa = PBXGroup;
+			children = (
+				FD34D4E21EA933690002A273 /* AutomaticSwiftShield.swift */,
+				FD34D4E51EA933F90002A273 /* ManualSwiftShield.swift */,
+			);
+			name = Modes;
+			sourceTree = "<group>";
+		};
+		FD34D4EC1EA93A800002A273 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FD895ADC1E31142400A753FB /* String.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		FD4FB0491E5B146E009856B8 /* Resources */ = {
@@ -113,6 +134,7 @@
 			children = (
 				FD53F6F21E303BF300E94CDA /* File */,
 				FD0B109E1E2F8C0500AED458 /* Protector */,
+				FD34D4E41EA933C60002A273 /* Modes */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -210,6 +232,7 @@
 				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,
 				FD8C2FA01E50A5AA00B81BF2 /* Protector++Projects.swift in Sources */,
 				FD895AE21E31142400A753FB /* FileFinder.swift in Sources */,
+				FD34D4E61EA933F90002A273 /* ManualSwiftShield.swift in Sources */,
 				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
@@ -217,6 +240,7 @@
 				FD4FB05B1E5B51DD009856B8 /* ReferenceData.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
 				FD4FB0591E5B5134009856B8 /* ObfuscationData.swift in Sources */,
+				FD34D4E31EA933690002A273 /* AutomaticSwiftShield.swift in Sources */,
 				FDFF64D11E5275A000300623 /* Exit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -238,7 +238,7 @@ class SourceKit {
     }
     
     func isObjectReference(kind: String) -> Bool {
-        return isObjectDeclaration(kind: kind) || kind.contains("ref.class") || kind.contains("ref.struct") || kind.contains("ref.enum")
+        return isObjectDeclaration(kind: kind) || kind.contains("ref.class") || kind.contains("ref.struct") || kind.contains("ref.enum") || kind.contains("ref.protocol")
     }
 
     /** references */

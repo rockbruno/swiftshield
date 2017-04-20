@@ -8,6 +8,19 @@
 
 import Foundation
 
+func getStoryboardsAndXibs() -> [File] {
+    return getFiles(suffix: ".storyboard") + getFiles(suffix: ".xib")
+}
+
+func getSwiftFiles() -> [File] {
+    return getFiles(suffix: ".swift")
+}
+
+func getFiles(suffix: String) -> [File] {
+    let filePaths = findFiles(rootPath: basePath, suffix: suffix) ?? []
+    return filePaths.flatMap{ File(filePath: $0) }
+}
+
 func findFiles(rootPath: String, suffix: String, ignoreDirs: Bool = true) -> [String]? {
     var result = Array<String>()
     let fileManager = FileManager.default

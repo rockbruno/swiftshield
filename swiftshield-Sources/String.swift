@@ -45,3 +45,23 @@ extension String {
         return randomString
     }
 }
+
+extension String {
+    
+    static var swiftRegex: String {
+        let comments = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)"
+        let words = "[a-zA-Z0-9\\u00C0-\\u017F]{1,99}"
+        let quotes = "\\]\\[\\-\"\'"
+        let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&*+-^|=; \n\t" + quotes + "]"
+        return comments + "|" + words + "|" + swiftSymbols
+    }
+    
+    static var storyboardClassNameRegex: String {
+        return "(?<=customClass=\").*?(?=\")"
+    }
+    
+    static var badArguments: String {
+        return "\n\nAUTOMATIC MODE:\n\nExample: swiftshield -auto -projectroot /app/MyApp -projectfile /app/MyApp/MyApp.xcodeproj -scheme 'MyApp-AppStore' -v\n\nRequired parameters:\n\n-auto -projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-v (Verbose mode)" +
+        "\n\nMANUAL MODE:\n\nExample: swiftshield -projectroot /app/MyApp -v\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\nOptional parameters:\n\n-v (Verbose mode)"
+    }
+}
