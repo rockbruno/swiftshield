@@ -12,7 +12,7 @@ let protectedClassNameSize = 25
 
 let automatic = CommandLine.arguments.contains("-auto")
 
-Logger.log("SwiftShield 2.0.0")
+Logger.log("SwiftShield 2.0.1")
 Logger.log("Verbose Mode", verbose: true)
 Logger.log("Path: \(basePath)", verbose: true)
 

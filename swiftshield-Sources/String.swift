@@ -25,7 +25,7 @@ func matches(for regex: String, in text: String) -> [String] {
 extension String {
     
     func matchRegex(regex: String, mappingClosure: RegexClosure) -> [String] {
-        let regex = try! NSRegularExpression(pattern: regex, options: [])
+        let regex = try! NSRegularExpression(pattern: regex, options: [.caseInsensitive])
         let nsString = self as NSString
         let results = regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
         return results.map(mappingClosure).flatMap{$0}
@@ -55,6 +55,11 @@ extension String {
         let quotes = "\\]\\[\\-\"\'"
         let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&~*+-^|=; \n\t" + quotes + "]"
         return comments + "|" + words + "|" + swiftSymbols
+    }
+    
+    static func swiftRegexFor(tag: String) -> String {
+        let words = "[a-zA-Z0-9\\u00C0-\\u017F]"
+        return "\(words){0,99}\(tag)\(words){0,99}"
     }
     
     static var storyboardClassNameRegex: String {
