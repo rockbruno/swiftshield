@@ -33,9 +33,15 @@ class Protector {
                         let usr = dict.getString(key: SK.usrID) else {
                         return
                     }
-                    let obfuscatedName = obfuscationData.obfuscationDict[name] ?? String.random(length: protectedClassNameSize)
-                    obfuscationData.obfuscationDict[name] = obfuscatedName
-                    obfuscationData.usrDict[usr] = true
+                    let obfuscatedName: String = {
+                        guard let protected = obfuscationData.obfuscationDict[name] else {
+                            let protected =  String.random(length: protectedClassNameSize)
+                            obfuscationData.obfuscationDict[name] = protected
+                            return protected
+                        }
+                        return protected
+                    }()
+                    obfuscationData.usrDict.insert(usr)
                     Logger.log("Found declaration of \(name) (\(usr)) -> now \(obfuscatedName)")
                 })
                 obfuscationData.indexedFiles.append((file,resp))
@@ -59,7 +65,7 @@ class Protector {
                 }
                 let line = dict.getInt(key: SK.lineID)
                 let column = dict.getInt(key: SK.colID)
-                if obfuscationData.usrDict[usr] == true {
+                if obfuscationData.usrDict.contains(usr) {
                     Logger.log("Found \(name) (\(usr)) at \(file.name) (L:\(line) C: \(column)")
                     let reference = ReferenceData(name: name, line: line, column: column, file: file, usr: usr)
                     obfuscationData.add(reference: reference, toFile: file)
@@ -170,8 +176,14 @@ extension Protector {
                 let matches = data.match(regex: String.swiftRegexFor(tag: tag))
                 let newFile: String = matches.flatMap { result in
                     let word = (data as NSString).substring(with: result.rangeAt(0))
-                    let protectedName = (obfsData.obfuscationDict[word] != nil ? obfsData.obfuscationDict[word] : String.random(length: protectedClassNameSize))!
-                    obfsData.obfuscationDict[word] = protectedName
+                    let protectedName: String = {
+                        guard let protected = obfsData.obfuscationDict[word] else {
+                            let protected = String.random(length: protectedClassNameSize)
+                            obfsData.obfuscationDict[word] = protected
+                            return protected
+                        }
+                        return protected
+                    }()
                     Logger.log("\(word) -> \(protectedName)")
                     let range: Range = currentIndex..<data.index(data.startIndex, offsetBy: result.range.location)
                     currentIndex = data.index(range.upperBound, offsetBy: result.range.length)

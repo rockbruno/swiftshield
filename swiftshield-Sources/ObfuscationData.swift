@@ -9,7 +9,7 @@
 import Cocoa
 
 class ObfuscationData {
-    var usrDict: [String:Bool] = [:]
+    var usrDict: Set<String> = []
     var referencesDict: [File:[ReferenceData]] = [:]
     var obfuscationDict: [String:String] = [:]
     var indexedFiles: [(File,sourcekitd_response_t)] = []
