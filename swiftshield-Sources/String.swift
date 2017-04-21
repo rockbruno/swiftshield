@@ -24,11 +24,10 @@ func matches(for regex: String, in text: String) -> [String] {
 
 extension String {
     
-    func matchRegex(regex: String, mappingClosure: RegexClosure) -> [String] {
+    func match(regex: String) -> [NSTextCheckingResult] {
         let regex = try! NSRegularExpression(pattern: regex, options: [.caseInsensitive])
         let nsString = self as NSString
-        let results = regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
-        return results.map(mappingClosure).flatMap{$0}
+        return regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
     }
     
     static func random(length: Int) -> String {

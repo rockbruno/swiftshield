@@ -98,7 +98,8 @@ extension Protector {
             do {
                 let data = try String(contentsOfFile: path, encoding: .utf8)
                 var shouldInject = true
-                let newProject = data.matchRegex(regex: pbxProjRegex) { result in
+                let matches = data.match(regex: pbxProjRegex)
+                let newProject = matches.flatMap { result in
                     let currentLine = (data as NSString).substring(with: result.rangeAt(0))
                     guard shouldInject else {
                         return currentLine + "\n"

@@ -76,7 +76,8 @@ class Protector {
             var column = 1
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)
             Logger.log("--- Overwriting \(file.name) ---")
-            let obfuscatedFile = data.matchRegex(regex: String.swiftRegex, mappingClosure: { result in
+            let matches = data.match(regex: String.swiftRegex)
+            let obfuscatedFile = matches.flatMap { result in
                 let word = (data as NSString).substring(with: result.rangeAt(0))
                 var wordToReturn = word
                 if sortedReferences.isEmpty == false && line == sortedReferences[0].line && column == sortedReferences[0].column {
@@ -90,7 +91,7 @@ class Protector {
                     column += word.characters.count
                 }
                 return wordToReturn
-            }).joined()
+            }.joined()
             do {
                 try obfuscatedFile.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
@@ -104,12 +105,14 @@ class Protector {
         Logger.log("--- Overwriting Storyboards ---")
         for file in getStoryboardsAndXibs() {
             Logger.log("--- Checking \(file.name) ---", verbose: true)
+            //TODO: We can do the index approach here as well instead of replacingOccurences.
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-            let retrievedClasses = data.matchRegex(regex: String.storyboardClassNameRegex) { result in
+            let matches = data.match(regex: String.storyboardClassNameRegex)
+            let retrievedClasses = matches.flatMap { result in
                 (data as NSString).substring(with: result.rangeAt(0))
-                }.removeDuplicates()
+            }
             var overwrittenData = data
-            for `class` in retrievedClasses {
+            for `class` in retrievedClasses.removeDuplicates() {
                 guard let protectedClass = obfuscationData.obfuscationDict[`class`] else {
                     continue
                 }
@@ -164,7 +167,8 @@ extension Protector {
             do {
                 let data = try String(contentsOfFile: file.path, encoding: .utf8)
                 var currentIndex = data.startIndex
-                let newFile = data.matchRegex(regex: String.swiftRegexFor(tag: tag)) { result in
+                let matches = data.match(regex: String.swiftRegexFor(tag: tag))
+                let newFile: String = matches.flatMap { result in
                     let word = (data as NSString).substring(with: result.rangeAt(0))
                     let protectedName = (obfsData.obfuscationDict[word] != nil ? obfsData.obfuscationDict[word] : String.random(length: protectedClassNameSize))!
                     obfsData.obfuscationDict[word] = protectedName
