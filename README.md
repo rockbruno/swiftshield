@@ -32,7 +32,7 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 ## Automatic mode (Swift only, BETA)
 
-With the `-auto` tag, SwiftShield can also use SourceKit to automatically obfuscate entire projects (including dependencies) without the need of putting tags on objects. Unfortunately, due to [a few SourceKit bugs](https://github.com/rockbruno/swiftshield/blob/sourcekit/SOURCEKITISSUES.md), it is still very unreliable. Use with caution and don't expect much.
+With the `-auto` tag, SwiftShield can also use SourceKit to automatically obfuscate entire projects (including dependencies) without the need of putting tags on objects. Unfortunately, due to [a few SourceKit bugs](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md), it is still very unreliable. Use with caution and don't expect much.
 
 
 ## How do I deal with crash logs / Analytics if my project uses SwiftShield?
@@ -72,7 +72,7 @@ Manual mode:
 
 **Warning:** SwiftShield **irreversibly overwrites** all your source files. Ideally, you should have it run only on your CI server, and on release builds.
 
-Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here to see how to setup SwiftShield.](https://github.com/rockbruno/swiftshield/blob/sourcekit/USAGE.md)
+Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here to see how to setup SwiftShield.](https://github.com/rockbruno/swiftshield/blob/master/USAGE.md)
 
 
 ## Next steps
