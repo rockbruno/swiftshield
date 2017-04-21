@@ -39,7 +39,7 @@ swiftshield -projectroot /Desktop/MyApp
 
 **Optional Parameters:**
 
-`-tag`: Uses a custom tag. Default is `_SHIELDED`.
+`-tag 'myTag'`: Uses a custom tag. Default is `_SHIELDED`.
 
 `-v`: Prints additional information.
 
@@ -57,7 +57,7 @@ swiftshield -auto -projectroot /Desktop/MyApp -projectfile /Desktop/MyApp/MyApp.
 
 `-projectfile`: Your app's main .xcodeproj/.xcworkspace file.
 
-`-scheme`: The main scheme to build from your `-projectfile`.
+`-scheme 'myScheme'`: The main scheme to build from your `-projectfile`.
 
 **Optional Parameters:**
 

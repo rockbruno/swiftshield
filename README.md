@@ -53,8 +53,8 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 ## Requirements
 
-2. No logic based on class/property names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
-3. Xcode 8.1+ (untested on other versions, but could work)
+1. No logic based on class/property names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
+2. Xcode 8.1+ (untested on other versions, but could work)
 
 Automatic mode:
 
