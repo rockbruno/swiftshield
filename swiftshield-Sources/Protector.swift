@@ -159,32 +159,24 @@ extension Protector {
     func findAndProtectReferencesManually(tag: String, swiftFiles: [File]) -> ObfuscationData {
         Logger.log("Scanning class/method declarations")
         let obfsData = ObfuscationData()
-        guard swiftFiles.isEmpty == false else {
-            return obfsData
-        }
-        func regexMapClosure(fromData nsString: NSString) -> RegexClosure {
-            return { result in
-                let word = nsString.substring(with: result.rangeAt(0))
-                guard word.lowercased().contains(tag) else {
-                    return word
-                }
-                let protectedName = (obfsData.obfuscationDict[word] != nil ? obfsData.obfuscationDict[word] : String.random(length: protectedClassNameSize))!
-                obfsData.obfuscationDict[word] = protectedName
-                Logger.log("\(word) -> \(protectedName)")
-                return protectedName
-            }
-        }
         for file in swiftFiles {
             Logger.log("--- Checking \(file.name) ---")
-            autoreleasepool {
-                do {
-                    let data = try String(contentsOfFile: file.path, encoding: .utf8)
-                    let newClasses = data.matchRegex(regex: String.swiftRegex, mappingClosure: regexMapClosure(fromData: data as NSString)).joined()
-                    try newClasses.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
-                } catch {
-                    Logger.log("FATAL: \(error.localizedDescription)")
-                    exit(1)
-                }
+            do {
+                let data = try String(contentsOfFile: file.path, encoding: .utf8)
+                var currentIndex = data.startIndex
+                let newFile = data.matchRegex(regex: String.swiftRegexFor(tag: tag)) { result in
+                    let word = (data as NSString).substring(with: result.rangeAt(0))
+                    let protectedName = (obfsData.obfuscationDict[word] != nil ? obfsData.obfuscationDict[word] : String.random(length: protectedClassNameSize))!
+                    obfsData.obfuscationDict[word] = protectedName
+                    Logger.log("\(word) -> \(protectedName)")
+                    let range: Range = currentIndex..<data.index(data.startIndex, offsetBy: result.range.location)
+                    currentIndex = data.index(range.upperBound, offsetBy: result.range.length)
+                    return data.substring(with: range) + protectedName
+                }.joined() + (currentIndex < data.endIndex ? data.substring(with: currentIndex..<data.endIndex) : "")
+                try newFile.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
+            } catch {
+                Logger.log("FATAL: \(error.localizedDescription)")
+                exit(1)
             }
         }
         return obfsData
