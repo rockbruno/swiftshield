@@ -9,7 +9,7 @@
 import UIKit
 
 @UIApplicationMain
-class ShieldedAppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate_SHIELDED: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     

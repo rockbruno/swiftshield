@@ -172,7 +172,7 @@ extension Protector {
                     let range: Range = currentIndex..<data.index(data.startIndex, offsetBy: result.range.location)
                     currentIndex = data.index(range.upperBound, offsetBy: result.range.length)
                     return data.substring(with: range) + protectedName
-                }.joined()
+                }.joined() + (currentIndex < data.endIndex ? data.substring(with: currentIndex..<data.endIndex) : "")
                 try newFile.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 Logger.log("FATAL: \(error.localizedDescription)")

@@ -9,14 +9,14 @@
 import UIKit
 import Foundation
 
-class ShieldedViewController: UIViewController {
+class ViewController_SHIELDED: UIViewController {
     
     @IBOutlet weak var label: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let shieldedImportantThing = ShieldedImportantClass()
-        shieldedImportantThing.shieldedIsUserSubscribed()
+        let importantThing_SHIELDED = ImportantClass_SHIELDED()
+        importantThing_SHIELDED.isUserSubscribed_SHIELDED()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -27,8 +27,8 @@ class ShieldedViewController: UIViewController {
 }
 
 
-struct ShieldedImportantClass {
-    func shieldedIsUserSubscribed() -> Bool {
+struct ImportantClass_SHIELDED {
+    func isUserSubscribed_SHIELDED() -> Bool {
         return true
     }
 }
