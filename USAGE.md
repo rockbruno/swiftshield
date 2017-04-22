@@ -35,7 +35,7 @@ swiftshield -projectroot /Desktop/MyApp
 ```
 **Required Parameters:**
 
-`-projectroot`: The root of your project. SwiftShield will use this to search for your .xcodeprojs in order to tag them as `SWIFTSHIELDED`.
+`-projectroot`: The root of your project. SwiftShield will use this to search for your project files, storyboards and source files.
 
 **Optional Parameters:**
 
