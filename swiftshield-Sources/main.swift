@@ -1,7 +1,7 @@
 import Foundation
 
 if CommandLine.arguments.contains("-h") {
-    Logger.log(String.badArguments)
+    Logger.log(.helpText)
     exit()
 }
 
@@ -12,9 +12,9 @@ let protectedClassNameSize = 25
 
 let automatic = CommandLine.arguments.contains("-auto")
 
-Logger.log("SwiftShield 2.0.1")
-Logger.log("Verbose Mode", verbose: true)
-Logger.log("Path: \(basePath)", verbose: true)
+Logger.log(.version)
+Logger.log(.verbose)
+Logger.log(.mode)
 
 if automatic {
     AutomaticSwiftShield().protect()

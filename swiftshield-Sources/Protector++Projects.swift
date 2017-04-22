@@ -14,7 +14,7 @@ fileprivate let pbxProjTargetNameRegex = "buildConfigurationList = (.*) \\/\\* .
 extension Protector {
     
     func getModulesAndCompilerArguments(scheme: String) -> [Module] {
-        Logger.log("Building project to gather it's modules and compiler arguments...")
+        Logger.log(.buildingProject)
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
         let arguments: [String] = [projectParameter, projectToBuild, "-scheme", scheme]
@@ -33,7 +33,7 @@ extension Protector {
         task.launch()
         let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
         guard let output = String(data: outdata, encoding: .utf8) else {
-            Logger.log("ERROR: Failed to retrieve compiler argments.")
+            Logger.log(.compilerArgumentsError)
             exit(1)
         }
         let lines = output.components(separatedBy: "\n")
@@ -46,7 +46,7 @@ extension Protector {
             guard modules.contains(where: {$0.name == moduleName}) == false else {
                 continue
             }
-            Logger.log("Found module \(moduleName)", verbose: true)
+            Logger.log(.found(module: moduleName))
             var compilerArguments: [String] = []
             let fullCall = line.components(separatedBy: " ")
             var startRetrievingArguments = false
@@ -90,7 +90,7 @@ extension Protector {
     }
     
     func markAsProtected(projectPaths: [String]) {
-        Logger.log("-- Adding SWIFTSHIELDED=true to projects --")
+        Logger.log(.taggingProjects)
         let targetLine = "PRODUCT_NAME ="
         let injectedLine = "SWIFTSHIELDED = true;"
         for projectPath in projectPaths {
@@ -113,7 +113,7 @@ extension Protector {
                 }.joined()
                 try newProject.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
-                Logger.log("FATAL: \(error.localizedDescription)")
+                Logger.log(.fatal(error: error.localizedDescription))
                 exit(error: true)
             }
         }
