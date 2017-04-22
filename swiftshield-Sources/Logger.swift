@@ -79,7 +79,7 @@ enum LogType {
         case .scanningDeclarations:
             return "--- Searching for tagged objects ---"
         case .helpText:
-            return String.badArguments
+            return String.helpText
         case .projectError:
             return "Project file provided is not a project or workspace."
         case .foundNothingError:
