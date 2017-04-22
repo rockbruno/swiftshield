@@ -1,6 +1,6 @@
 <img src="http://i.imgur.com/0ksj7Gh.png" alt="SwiftShield logo" height="140" >
 
-# Swift/OBJ-C Obfuscator
+# 🛡 Swift/OBJ-C Obfuscator
 
 [![GitHub release](https://img.shields.io/github/tag/rockbruno/swiftshield.svg)](https://github.com/rockbruno/swiftshield/releases)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/rockbruno/swiftshield/master/LICENSE)
