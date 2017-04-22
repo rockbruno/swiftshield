@@ -11,7 +11,7 @@ import Cocoa
 struct ManualSwiftShield {
     func protect() {
         guard basePath.isEmpty == false else {
-            Logger.log(String.badArguments)
+            Logger.log(.helpText)
             exit(error: true)
             return
         }
@@ -20,14 +20,14 @@ struct ManualSwiftShield {
         let tag = UserDefaults.standard.string(forKey: "tag") ?? "_SHIELDED"
         let obfuscationData = protector.findAndProtectReferencesManually(tag: tag, swiftFiles: swiftFiles)
         if obfuscationData.obfuscationDict.isEmpty {
-            Logger.log("Found nothing to obfuscate. Finishing...")
+            Logger.log(.foundNothingError)
             exit(error: true)
         }
         let projects = findFiles(rootPath: basePath, suffix: ".xcodeproj", ignoreDirs: false) ?? []
         protector.protectStoryboards(data: obfuscationData)
         protector.markAsProtected(projectPaths: projects)
         protector.writeToFile(data: obfuscationData)
-        Logger.log("Finished.")
+        Logger.log(.finished)
         exit()
     }
 }

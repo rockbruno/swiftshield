@@ -15,13 +15,13 @@ let isWorkspace = projectToBuild.hasSuffix(".xcworkspace")
 struct AutomaticSwiftShield {
     func protect() {
         guard basePath.isEmpty == false && mainScheme.isEmpty == false && projectToBuild.isEmpty == false else {
-            Logger.log(String.badArguments)
+            Logger.log(.helpText)
             exit(error: true)
             return
         }
         
         if isWorkspace == false && projectToBuild.hasSuffix(".xcodeproj") == false {
-            Logger.log("Project file provided is not a project or workspace.")
+            Logger.log(.projectError)
             exit(error: true)
         }
         
@@ -30,7 +30,7 @@ struct AutomaticSwiftShield {
         let modules = protector.getModulesAndCompilerArguments(scheme: mainScheme)
         let obfuscationData = protector.index(modules: modules)
         if obfuscationData.obfuscationDict.isEmpty {
-            Logger.log("Found nothing to obfuscate. Finishing...")
+            Logger.log(.foundNothingError)
             exit(error: true)
         }
         
@@ -43,7 +43,7 @@ struct AutomaticSwiftShield {
         protector.markAsProtected(projectPaths: projects)
         protector.writeToFile(data: obfuscationData)
         
-        Logger.log("Finished.")
+        Logger.log(.finished)
         
         exit()
     }
