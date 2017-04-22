@@ -10,12 +10,12 @@ SwiftShield is a tool that generates irreversible, encrypted names for your iOS 
 
 ## Manual mode (Swift/OBJ-C)
 
-Manual mode will obfuscate properties and classes based on a case-insensitive tag of your choice (`_SHIELDED` by default). For example, after running SwiftShield in manual mode, the following snippet:
+Manual mode will obfuscate properties and classes based on a case-insensitive tag of your choice (`_SHIELDED` by default). For example, after running SwiftShield in manual mode and a tag `__s`, the following snippet:
 ```swift
-class EncryptedVideoPlayer_SHIELDED: DecryptionProtocol_SHIELDED {
-  func start_SHIELDED() {
-    let vc_SHIELDED = ImportantDecryptingController_SHIELDED(secureMode_SHIELDED: true)
-    vc_SHIELDED.start_SHIELDED(playAutomatically_SHIELDED: true)
+class EncryptedVideoPlayer__s: DecryptionProtocol__s {
+  func start__s() {
+    let vc__s = ImportantDecryptingController__s(secureMode__s: true)
+    vc__s.start__s(playAutomatically__s: true)
   }
 }
 ```
@@ -30,12 +30,12 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 ```
 
 
-## Automatic mode (Swift only, BETA)
+## 🤖 Automatic mode (Swift only, BETA)
 
 With the `-auto` tag, SwiftShield can also use SourceKit to automatically obfuscate entire projects (including dependencies) without the need of putting tags on objects. Unfortunately, due to [a few SourceKit bugs](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md), it is still very unreliable. Use with caution and don't expect much.
 
 
-## How do I deal with crash logs / Analytics if my project uses SwiftShield?
+## 💥 Dealing with encrypted crash logs / analytics
 
 After succesfully encrypting your project, SwiftShield generates a `conversionMap.txt` file with all the changes it made to your project, allowing you to pinpoint what an encrypted object really is.
 ````
@@ -52,7 +52,7 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 ````
 
 
-## Requirements
+## 🚨 Requirements
 
 1. No logic based on class/property names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
 2. Xcode 8.1+ (untested on other versions, but could work)
