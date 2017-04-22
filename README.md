@@ -10,7 +10,7 @@ SwiftShield is a tool that generates irreversible, encrypted names for your iOS 
 
 ## 🛡 Manual mode (Swift/OBJ-C)
 
-Manual mode will obfuscate properties and classes based on a case-insensitive tag of your choice (`_SHIELDED` by default). For example, after running SwiftShield in manual mode and a tag `__s`, the following snippet:
+Manual mode will obfuscate properties and classes based on a case-insensitive tag of your choice (`_SHIELDED` by default). For example, after running SwiftShield in manual mode and a tag `__s`, the following code:
 ```swift
 class EncryptedVideoPlayer__s: DecryptionProtocol__s {
   func start__s() {
