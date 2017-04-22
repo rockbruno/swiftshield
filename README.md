@@ -1,6 +1,6 @@
 <img src="http://i.imgur.com/0ksj7Gh.png" alt="SwiftShield logo" height="140" >
 
-# 🛡 Swift/OBJ-C Obfuscator
+# Swift/OBJ-C Obfuscator
 
 [![GitHub release](https://img.shields.io/github/tag/rockbruno/swiftshield.svg)](https://github.com/rockbruno/swiftshield/releases)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/rockbruno/swiftshield/master/LICENSE)
@@ -8,7 +8,7 @@
 SwiftShield is a tool that generates irreversible, encrypted names for your iOS project's objects (including your Pods and Storyboards) in order to protect your app from tools that reverse engineer iOS apps, like class-dump and Cycript.
 
 
-## Manual mode (Swift/OBJ-C)
+## 🛡 Manual mode (Swift/OBJ-C)
 
 Manual mode will obfuscate properties and classes based on a case-insensitive tag of your choice (`_SHIELDED` by default). For example, after running SwiftShield in manual mode and a tag `__s`, the following snippet:
 ```swift
