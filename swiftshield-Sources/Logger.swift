@@ -63,7 +63,7 @@ enum LogType {
         case let .overwriting(file):
             return "--- Overwriting \(file.name) ---"
         case let .fatal(error):
-            return error.contains("Segmentation") ? "Segmentation fault. Have you unlocked your project folders?" : "FATAL: \(error)"
+            return "FATAL: \(error)"
         case .overwritingStoryboards:
             return "--- Overwriting Storyboards ---"
         case let .checking(file):

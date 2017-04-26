@@ -9,16 +9,16 @@
 import UIKit
 import Foundation
 
-class ViewController_SHIELDED: UIViewController {
+class ViewController__s: UIViewController {
     
     @IBOutlet weak var label: UILabel!
     
-    let something_SHIELDED: Bool = false
+    let something__s: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let importantThing_SHIELDED = ImportantClass_SHIELDED()
-        importantThing_SHIELDED.isUserSubscribed_SHIELDED(arg1_SHIELDED: true, arg2_SHIELDED: 67)
+        let importantThing__s = ImportantClass__s()
+        importantThing__s.isUserSubscribed__s(arg1__s: true, arg2__s: 67)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -29,8 +29,8 @@ class ViewController_SHIELDED: UIViewController {
 }
 
 
-struct ImportantClass_SHIELDED {
-    func isUserSubscribed_SHIELDED(arg1_SHIELDED: Bool, arg2_SHIELDED: Int) -> Bool {
+struct ImportantClass__s {
+    func isUserSubscribed__s(arg1__s: Bool, arg2__s: Int) -> Bool {
         return true
     }
 }
