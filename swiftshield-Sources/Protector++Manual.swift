@@ -9,15 +9,15 @@
 import Cocoa
 
 extension Protector {
-    func findAndProtectReferencesManually(tag: String, swiftFiles: [File]) -> ObfuscationData {
+    func findAndProtectReferencesManually(tag: String, files: [File]) -> ObfuscationData {
         Logger.log(.scanningDeclarations)
         let obfsData = ObfuscationData()
-        for file in swiftFiles {
+        for file in files {
             Logger.log(.checking(file: file))
             do {
                 let data = try String(contentsOfFile: file.path, encoding: .utf8)
                 var currentIndex = data.startIndex
-                let matches = data.match(regex: String.swiftRegexFor(tag: tag))
+                let matches = data.match(regex: String.regexFor(tag: tag))
                 let newFile: String = matches.flatMap { result in
                     let word = (data as NSString).substring(with: result.rangeAt(0))
                     let protectedName: String = {

@@ -12,6 +12,10 @@ func getStoryboardsAndXibs() -> [File] {
     return getFiles(suffix: ".storyboard") + getFiles(suffix: ".xib")
 }
 
+func getSourceFiles() -> [File] {
+    return getSwiftFiles() + getFiles(suffix: ".h") + getFiles(suffix: ".m")
+}
+
 func getSwiftFiles() -> [File] {
     return getFiles(suffix: ".swift")
 }

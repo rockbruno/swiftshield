@@ -56,9 +56,9 @@ extension String {
         return comments + "|" + words + "|" + swiftSymbols
     }
     
-    static func swiftRegexFor(tag: String) -> String {
+    static func regexFor(tag: String) -> String {
         let words = "[a-zA-Z0-9_$]"
-        return "\(words){0,99}\(tag)\(words){0,99}"
+        return "\(words){0,99}\(tag)\\b"
     }
     
     static var storyboardClassNameRegex: String {
