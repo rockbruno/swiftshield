@@ -57,7 +57,7 @@ extension String {
     }
     
     static func swiftRegexFor(tag: String) -> String {
-        let words = "[a-zA-Z0-9\\u00C0-\\u017F]"
+        let words = "[a-zA-Z0-9_$]"
         return "\(words){0,99}\(tag)\(words){0,99}"
     }
     

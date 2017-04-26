@@ -13,6 +13,8 @@ class ViewController_SHIELDED: UIViewController {
     
     @IBOutlet weak var label: UILabel!
     
+    let something_SHIELDED: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let importantThing_SHIELDED = ImportantClass_SHIELDED()
