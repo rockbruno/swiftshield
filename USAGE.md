@@ -39,7 +39,7 @@ swiftshield -projectroot /Desktop/MyApp
 
 **Optional Parameters:**
 
-`-tag 'myTag'`: Uses a custom tag. Default is `_SHIELDED`.
+`-tag 'myTag'`: Uses a custom tag. Default is `__s`.
 
 `-v`: Prints additional information.
 
