@@ -18,7 +18,7 @@ fi
 This will prevent that script from running after your project gets obfuscated.
 
 
-## Unlocking your Project (if you use CocoaPods)
+## (Automatic Mode) Unlocking your Project (if you use CocoaPods)
 
 By default, CocoaPods sources are locked. SwiftShield needs them to be unlocked in order to be able to obfuscate your project. To unlock your project, you can run, for example:
 
