@@ -1,11 +1,3 @@
-//
-//  VerboseLog.swift
-//  swiftprotector
-//
-//  Created by Bruno Rocha on 1/18/17.
-//  Copyright © 2017 Bruno Rocha. All rights reserved.
-//
-
 import Foundation
 
 enum LogType {
