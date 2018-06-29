@@ -5,19 +5,34 @@ if CommandLine.arguments.contains("-h") {
     exit()
 }
 
-let basePath = UserDefaults.standard.string(forKey: "projectroot") ?? ""
+Logger.verbose = CommandLine.arguments.contains("-verbose")
+SKAPI.verbose = CommandLine.arguments.contains("-show-sourcekit-queries")
 
-let verbose = CommandLine.arguments.contains("-v")
-let protectedClassNameSize = 25
-
-let automatic = CommandLine.arguments.contains("-auto")
+let automatic = CommandLine.arguments.contains("-automatic")
 
 Logger.log(.version)
 Logger.log(.verbose)
 Logger.log(.mode)
 
+let basePath = UserDefaults.standard.string(forKey: "project-root") ?? ""
+
+let protector: Protector
 if automatic {
-    AutomaticSwiftShield().protect()
+    let schemeToBuild = UserDefaults.standard.string(forKey: "automatic-project-scheme") ?? ""
+    let projectToBuild = UserDefaults.standard.string(forKey: "automatic-project-file") ?? ""
+    protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild)
 } else {
-    ManualSwiftShield().protect()
+    let tag = UserDefaults.standard.string(forKey: "tag") ?? "__s"
+    protector = ManualSwiftShield(basePath: basePath, tag: tag)
 }
+
+let obfuscationData = protector.protect()
+if obfuscationData.obfuscationDict.isEmpty {
+    Logger.log(.foundNothingError)
+    exit(error: true)
+}
+protector.protectStoryboards(data: obfuscationData)
+protector.writeToFile(data: obfuscationData)
+protector.markProjectsAsProtected()
+Logger.log(.finished)
+exit()

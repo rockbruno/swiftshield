@@ -23,13 +23,13 @@ func matches(for regex: String, in text: String) -> [String] {
 }
 
 extension String {
-    
+
     func match(regex: String) -> [NSTextCheckingResult] {
         let regex = try! NSRegularExpression(pattern: regex, options: [.caseInsensitive])
         let nsString = self as NSString
         return regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
     }
-    
+
     static func random(length: Int) -> String {
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let numbers : NSString = "0123456789"
@@ -46,7 +46,7 @@ extension String {
 }
 
 extension String {
-    
+
     static var swiftRegex: String {
         //TODO: Need a better way of getting everything, but keeping words together
         let comments = "(?:\\/\\/)|(?:\\/\\*)|(?:\\*\\/)"
@@ -55,18 +55,18 @@ extension String {
         let swiftSymbols = "[" + ":{}(),.<_>/`?!@#©$%&~*+-^|=; \n\t" + quotes + "]"
         return comments + "|" + words + "|" + swiftSymbols
     }
-    
+
     static func regexFor(tag: String) -> String {
         let words = "[a-zA-Z0-9_$]"
         return "\(words){0,99}\(tag)\\b"
     }
-    
+
     static var storyboardClassNameRegex: String {
         return "(?<=customClass=\").*?(?=\")"
     }
-    
+
     static var helpText: String {
-        return "\n\n-- Instructions --\n\nAUTOMATIC MODE:\n\nExample: swiftshield -auto -projectroot /app/MyApp -projectfile /app/MyApp/MyApp.xcodeproj -scheme 'MyApp-AppStore' -v\n\nRequired parameters:\n\n-auto -projectroot PATH (Path to your project root, like /app/MyApp \n\n-projectfile PATH (Path to your project file, like /app/MyApp/MyApp.xcodeproj or /app/MyApp/MyApp.xcworkspace)\n\n-scheme 'SCHEMENAME' (Main scheme to build)\n\nOptional parameters:\n\n-v (Verbose mode)" +
-        "\n\nMANUAL MODE:\n\nExample: swiftshield -projectroot /app/MyApp -v -tag 'myTag'\n\nRequired parameters:\n\n-projectroot PATH (Path to your project root, like /app/MyApp \n\nOptional parameters:\n\n-tag 'myTag' (Custom tag. Default is 'shielded')\n\n-v (Verbose mode)"
+        return "\n\n-- Instructions --\n\nAUTOMATIC MODE:\n\nExample: swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xcworkspace -automatic-project-scheme MyApp-AppStore \n\nRequired parameters:\n\n-automatic -project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\n-automatic-project-file PATH_TO_PROJECT_FILE \n\n-automatic-project-scheme SCHEME_NAME_TO_BUILD\n\nOptional parameters:\n\n-verbose (Uses verbose mode)\n\n-show-sourcekit-queries (Prints queries made to SourceKit)" +
+        "\n\nMANUAL MODE:\n\nExample: swiftshield -project-root /app/MyApp -tag myTag\n\nRequired parameters:\n\n-project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\nOptional parameters:\n\n-tag myTag (Custom tag to use. If not provided, '__s' will be used.)\n\n-verbose (Uses verbose mode)"
     }
 }

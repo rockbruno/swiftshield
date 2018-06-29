@@ -1,1 +1,1 @@
-./swiftshield -projectroot ./
+../bin/swiftshield -project-root ./
