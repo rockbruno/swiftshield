@@ -14,7 +14,6 @@
 		FD39B3571EAA9D9B009BFCDF /* ManualSwiftShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B3551EAA9D9B009BFCDF /* ManualSwiftShield.swift */; };
 		FD4FB0531E5B1734009856B8 /* sourcekitd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4FB0521E5B1734009856B8 /* sourcekitd.framework */; };
 		FD4FB0571E5B2507009856B8 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FB0561E5B2507009856B8 /* Module.swift */; };
-		FD79B0511EABC67F00F912A9 /* Protector++Manual.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD79B0501EABC67F00F912A9 /* Protector++Manual.swift */; };
 		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
 		FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD11E31140C00A753FB /* Storyboard.swift */; };
 		FD895AD61E31141100A753FB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD51E31141100A753FB /* Logger.swift */; };
@@ -22,8 +21,7 @@
 		FD895ADE1E31142400A753FB /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD91E31142400A753FB /* Array.swift */; };
 		FD895AE01E31142400A753FB /* Protector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADB1E31142400A753FB /* Protector.swift */; };
 		FD895AE11E31142400A753FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADC1E31142400A753FB /* String.swift */; };
-		FD895AE21E31142400A753FB /* FileFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADD1E31142400A753FB /* FileFinder.swift */; };
-		FD8C2FA01E50A5AA00B81BF2 /* Protector++Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */; };
+		FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */; };
 		FDFF64D11E5275A000300623 /* Exit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFF64D01E5275A000300623 /* Exit.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,7 +36,6 @@
 		FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SwiftShield-Bridging-Header.h"; path = "swiftshield-Sources/SwiftShield-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		FD4FB0521E5B1734009856B8 /* sourcekitd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sourcekitd.framework; path = Toolchains/XcodeDefault.xctoolchain/usr/lib/sourcekitd.framework; sourceTree = DEVELOPER_DIR; };
 		FD4FB0561E5B2507009856B8 /* Module.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Module.swift; path = "swiftshield-Sources/Module.swift"; sourceTree = SOURCE_ROOT; };
-		FD79B0501EABC67F00F912A9 /* Protector++Manual.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Protector++Manual.swift"; path = "swiftshield-Sources/Protector++Manual.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD11E31140C00A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = "swiftshield-Sources/Storyboard.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD51E31141100A753FB /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = "swiftshield-Sources/Logger.swift"; sourceTree = SOURCE_ROOT; };
@@ -46,8 +43,7 @@
 		FD895AD91E31142400A753FB /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = "swiftshield-Sources/Array.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADB1E31142400A753FB /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protector.swift; path = "swiftshield-Sources/Protector.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADC1E31142400A753FB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = "swiftshield-Sources/String.swift"; sourceTree = SOURCE_ROOT; };
-		FD895ADD1E31142400A753FB /* FileFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileFinder.swift; path = "swiftshield-Sources/FileFinder.swift"; sourceTree = SOURCE_ROOT; };
-		FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Protector++Projects.swift"; path = "swiftshield-Sources/Protector++Projects.swift"; sourceTree = SOURCE_ROOT; };
+		FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjectBuilder.swift; sourceTree = "<group>"; };
 		FDFF64D01E5275A000300623 /* Exit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exit.swift; path = "swiftshield-Sources/Exit.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -66,7 +62,7 @@
 		FD0B108B1E2F8ACD00AED458 = {
 			isa = PBXGroup;
 			children = (
-				FD0B10961E2F8ACD00AED458 /* swiftshield */,
+				FD0B10961E2F8ACD00AED458 /* swiftshield-Sources */,
 				FD0B10951E2F8ACD00AED458 /* Products */,
 				FDD0B6161E5B097E00715DDF /* Frameworks */,
 			);
@@ -80,7 +76,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FD0B10961E2F8ACD00AED458 /* swiftshield */ = {
+		FD0B10961E2F8ACD00AED458 /* swiftshield-Sources */ = {
 			isa = PBXGroup;
 			children = (
 				FD4FB0491E5B146E009856B8 /* Resources */,
@@ -89,8 +85,7 @@
 				FD53F6EF1E302E5D00E94CDA /* Model */,
 				FD895AD71E31141500A753FB /* main.swift */,
 			);
-			name = swiftshield;
-			path = swiftprotector;
+			path = "swiftshield-Sources";
 			sourceTree = "<group>";
 		};
 		FD0B109E1E2F8C0500AED458 /* Protector */ = {
@@ -98,8 +93,6 @@
 			children = (
 				FD895AD91E31142400A753FB /* Array.swift */,
 				FD895ADB1E31142400A753FB /* Protector.swift */,
-				FD8C2F9F1E50A5AA00B81BF2 /* Protector++Projects.swift */,
-				FD79B0501EABC67F00F912A9 /* Protector++Manual.swift */,
 			);
 			name = Protector;
 			sourceTree = "<group>";
@@ -108,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				FD39B3541EAA9D9B009BFCDF /* AutomaticSwiftShield.swift */,
+				FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */,
 				FD39B3551EAA9D9B009BFCDF /* ManualSwiftShield.swift */,
 			);
 			name = Modes;
@@ -166,7 +160,6 @@
 			children = (
 				FD895AD51E31141100A753FB /* Logger.swift */,
 				FDFF64D01E5275A000300623 /* Exit.swift */,
-				FD895ADD1E31142400A753FB /* FileFinder.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -235,9 +228,6 @@
 				FD39B3561EAA9D9B009BFCDF /* AutomaticSwiftShield.swift in Sources */,
 				FD39B3571EAA9D9B009BFCDF /* ManualSwiftShield.swift in Sources */,
 				FD39B3531EAA9D92009BFCDF /* ReferenceData.swift in Sources */,
-				FD79B0511EABC67F00F912A9 /* Protector++Manual.swift in Sources */,
-				FD8C2FA01E50A5AA00B81BF2 /* Protector++Projects.swift in Sources */,
-				FD895AE21E31142400A753FB /* FileFinder.swift in Sources */,
 				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
@@ -245,6 +235,7 @@
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
 				FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
+				FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */,
 				FDFF64D11E5275A000300623 /* Exit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

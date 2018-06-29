@@ -87,7 +87,7 @@ enum LogType {
         case .finished:
             return "Finished."
         case .version:
-            return "SwiftShield 2.0.2"
+            return "SwiftShield 3.0.0"
         case .verbose:
             return "Verbose Mode"
         case .mode:
@@ -107,7 +107,9 @@ enum LogType {
     }
 }
 
-class Logger {
+final class Logger {
+    static var verbose = false
+
     static func log(_ log: LogType) {
         if (log.verbose && verbose) || !log.verbose {
             print(log.description)

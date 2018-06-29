@@ -38,7 +38,7 @@ extension sourcekitd_variant_t {
 
     func getUUIDString( key: sourcekitd_uid_t ) -> String {
         let uuid = SKApi.sourcekitd_variant_dictionary_get_uid( self, key )
-        return String( cString: SKApi.sourcekitd_uid_get_string_ptr( uuid! ) )// ?: "NOUUID"
+        return String( cString: SKApi.sourcekitd_uid_get_string_ptr( uuid! )! )// ?: "NOUUID"
     }
 
 }
@@ -53,7 +53,7 @@ struct DynamicLinkLibrary {
         if let sym = dlsym(handle, symbol) {
             return unsafeBitCast(sym, to: T.self)
         }
-        let errorString = String(validatingUTF8: dlerror())
+        let errorString = String(validatingUTF8: dlerror()) ?? ""
         fatalError("Finding symbol \(symbol) failed: \(errorString)")
     }
 }
@@ -98,16 +98,18 @@ private let library = toolchainLoader.load(path: path)
 
 class SKAPI {
 
+    static var verbose = false
+
     internal let sourcekitd_initialize: @convention(c) () -> () = library.load(symbol: "sourcekitd_initialize")
     internal let sourcekitd_shutdown: @convention(c) () -> () = library.load(symbol: "sourcekitd_shutdown")
     internal let sourcekitd_set_interrupted_connection_handler: @convention(c) (@escaping sourcekitd_interrupted_connection_handler_t) -> () = library.load(symbol: "sourcekitd_set_interrupted_connection_handler")
-    internal let sourcekitd_uid_get_from_cstr: @convention(c) (UnsafePointer<Int8>) -> (sourcekitd_uid_t!) = library.load(symbol: "sourcekitd_uid_get_from_cstr")
-    internal let sourcekitd_uid_get_from_buf: @convention(c) (UnsafePointer<Int8>, Int) -> (sourcekitd_uid_t!) = library.load(symbol: "sourcekitd_uid_get_from_buf")
+    internal let sourcekitd_uid_get_from_cstr: @convention(c) (UnsafePointer<Int8>) -> (sourcekitd_uid_t?) = library.load(symbol: "sourcekitd_uid_get_from_cstr")
+    internal let sourcekitd_uid_get_from_buf: @convention(c) (UnsafePointer<Int8>, Int) -> (sourcekitd_uid_t?) = library.load(symbol: "sourcekitd_uid_get_from_buf")
     internal let sourcekitd_uid_get_length: @convention(c) (sourcekitd_uid_t) -> (Int) = library.load(symbol: "sourcekitd_uid_get_length")
-    internal let sourcekitd_uid_get_string_ptr: @convention(c) (sourcekitd_uid_t) -> (UnsafePointer<Int8>!) = library.load(symbol: "sourcekitd_uid_get_string_ptr")
-    internal let sourcekitd_request_retain: @convention(c) (sourcekitd_object_t) -> (sourcekitd_object_t!) = library.load(symbol: "sourcekitd_request_retain")
+    internal let sourcekitd_uid_get_string_ptr: @convention(c) (sourcekitd_uid_t) -> (UnsafePointer<Int8>?) = library.load(symbol: "sourcekitd_uid_get_string_ptr")
+    internal let sourcekitd_request_retain: @convention(c) (sourcekitd_object_t) -> (sourcekitd_object_t?) = library.load(symbol: "sourcekitd_request_retain")
     internal let sourcekitd_request_release: @convention(c) (sourcekitd_object_t) -> () = library.load(symbol: "sourcekitd_request_release")
-    internal let sourcekitd_request_dictionary_create: @convention(c) (UnsafePointer<sourcekitd_uid_t?>?, UnsafePointer<sourcekitd_object_t?>?, Int) -> (sourcekitd_object_t!) = library.load(symbol: "sourcekitd_request_dictionary_create")
+    internal let sourcekitd_request_dictionary_create: @convention(c) (UnsafePointer<sourcekitd_uid_t?>?, UnsafePointer<sourcekitd_object_t?>?, Int) -> (sourcekitd_object_t?) = library.load(symbol: "sourcekitd_request_dictionary_create")
     internal let sourcekitd_request_dictionary_set_value: @convention(c) (sourcekitd_object_t, sourcekitd_uid_t, sourcekitd_object_t) -> () = library.load(symbol: "sourcekitd_request_dictionary_set_value")
     internal let sourcekitd_request_dictionary_set_string: @convention(c) (sourcekitd_object_t, sourcekitd_uid_t, UnsafePointer<Int8>) -> () = library.load(symbol: "sourcekitd_request_dictionary_set_string")
     internal let sourcekitd_request_dictionary_set_stringbuf: @convention(c) (sourcekitd_object_t, sourcekitd_uid_t, UnsafePointer<Int8>, Int) -> () = library.load(symbol: "sourcekitd_request_dictionary_set_stringbuf")
@@ -267,7 +269,7 @@ class SourceKit {
 
     func sendRequest( req: sourcekitd_object_t ) -> sourcekitd_response_t {
 
-        if isTTY && verbose {
+        if isTTY && SKAPI.verbose {
             SKApi.sourcekitd_request_description_dump( req )
         }
 
@@ -286,7 +288,7 @@ class SourceKit {
 
         SKApi.sourcekitd_request_release( req )
 
-        if isTTY && !SKApi.sourcekitd_response_is_error( resp! ) && verbose {
+        if isTTY && !SKApi.sourcekitd_response_is_error( resp! ) && SKAPI.verbose {
             SKApi.sourcekitd_response_description_dump_filedesc( resp!, STDERR_FILENO )
         }
 
@@ -347,7 +349,7 @@ class SourceKit {
 
         let resp = sendRequest( req: req )
 
-        req = SKApi.sourcekitd_request_dictionary_create( nil, nil, 0 )
+        req = SKApi.sourcekitd_request_dictionary_create( nil, nil, 0 )!
         SKApi.sourcekitd_request_dictionary_set_uid( req, requestID, editorCloseID )
         SKApi.sourcekitd_request_dictionary_set_string( req, nameID, filePath )
         SKApi.sourcekitd_request_dictionary_set_string( req, sourceFileID, filePath )
