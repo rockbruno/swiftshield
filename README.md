@@ -33,7 +33,7 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 ## 🤖 Automatic mode (Swift only, BETA)
 
-With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies) without the need of putting tags on objects. Note that the accuracy of SwiftShield's automatic mode is directly related to the accuracy of Xcode's native refactoring tool [which unfortunately is still not perfect](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md), which means that some edge cases might fail to be obfuscated. Use with caution and don't expect much, but be aware that newer releases of Xcode might improve this tool's success rate.
+With the `-automatic` flag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies) without the need of putting tags on objects. Note that the accuracy of SwiftShield's automatic mode is directly related to the accuracy of Xcode's native refactoring tool [which unfortunately is still not perfect](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md), which means that some edge cases might fail to be obfuscated. Use with caution and don't expect much, but be aware that newer releases of Xcode might improve this tool's success rate.
 
 
 ## 💥 Dealing with encrypted crash logs / analytics
