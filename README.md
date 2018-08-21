@@ -17,11 +17,11 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 ## 🤖 Automatic mode (Swift only)
 
-With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool [which fails to refactor certain cases](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md). While this means that the types on the document won't be obfuscated, most important things such as class names and method names will work fine.
+With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool, [which doesn't refactor everything yet](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md). While the specific cases on the document won't be obfuscated, SwiftShield will obfuscate all Swift classes and methods that can be reverse-engineered.
 
 ## 🛡 Manual mode (Swift/OBJ-C)
 
-If the automatic mode cases aren't enough for you, you can also use the manual mode. This is the easiest way of running SwiftShield, but also the most time consuming. When used, SwiftShield will obfuscate properties and classes based on a tag of your choice at the end of it's name. For example, after running SwiftShield in manual mode and a tag `__s`, the following code:
+If you feel like obfuscating absolutely everything - including typealiases and internal property names, you can also use Manual mode. This is the easiest way of running SwiftShield, but also the most time consuming. When used, SwiftShield will obfuscate properties and classes based on a tag of your choice at the end of it's name. For example, after running SwiftShield in manual mode and a tag `__s`, the following code:
 
 ```swift
 class EncryptedVideoPlayer__s: DecryptionProtocol__s {
@@ -57,6 +57,7 @@ ViewController ===> YytSIcFnBAqTAyR
 AppDelegate ===> uJXJkhVbwdQGNhh
 SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 ````
+
 
 ## 🚨 Requirements
 
@@ -122,10 +123,10 @@ swiftshield -project-root /app/MyApp
 
 ## Automatic Mode Next Steps
 
-[-] Method names
-[ ] Properties
-[ ] Module names
-[ ] Update Extension plists (Rich Notifications / Watch main classes)
+- [X] Method names
+- [ ] Properties
+- [ ] Module names
+- [ ] Update Extension plists (Rich Notifications / Watch main classes)
 
 
 ## License
