@@ -70,6 +70,7 @@ Automatic mode:
 1. Xcode command-line tools
 2. Swift 4.1 (works on other versions, but has different results due to SourceKit)
 3. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine)
+4. If you use app extensions, for now you will have to manually update their plist's main class with the obfuscated name.
 
 Manual mode:
 
