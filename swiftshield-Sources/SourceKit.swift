@@ -23,6 +23,9 @@ protocol Visualiser {
 }
 
 extension sourcekitd_variant_t {
+    var isArray: Bool {
+        return SKApi.sourcekitd_variant_get_type(self) == SOURCEKITD_VARIANT_TYPE_ARRAY
+    }
 
     func getInt( key: sourcekitd_uid_t ) -> Int {
         return Int(SKApi.sourcekitd_variant_dictionary_get_int64( self, key ))
@@ -39,6 +42,10 @@ extension sourcekitd_variant_t {
     func getUUIDString( key: sourcekitd_uid_t ) -> String {
         let uuid = SKApi.sourcekitd_variant_dictionary_get_uid( self, key )
         return String( cString: SKApi.sourcekitd_uid_get_string_ptr( uuid! )! )// ?: "NOUUID"
+    }
+
+    func getDictionary(key: sourcekitd_uid_t) -> sourcekitd_variant_t {
+        return SKApi.sourcekitd_variant_dictionary_get_value(self, key)
     }
 
 }
@@ -226,18 +233,42 @@ class SourceKit {
     /** declarations */
     
     fileprivate static let classIDString = "source.lang.swift.decl.class"
+    fileprivate static let classExtensionIDString = "source.lang.swift.decl.extension.class"
     fileprivate static let structIDString = "source.lang.swift.decl.struct"
+    fileprivate static let structExtensionIDString = "source.lang.swift.decl.extension.struct"
     fileprivate static let protocolIDString = "source.lang.swift.decl.protocol"
+    fileprivate static let protocolExtensionIDString = "source.lang.swift.decl.extension.protocol"
     fileprivate static let enumIDString = "source.lang.swift.decl.enum"
+    fileprivate static let enumExtensionIDString = "source.lang.swift.decl.extension.enum"
+    fileprivate static let enumCaseIDString = "source.lang.swift.decl.enumelement"
     fileprivate static let typealiasIDString = "source.lang.swift.decl.typealias"
+    fileprivate static let typealiasExtensionIDString = "source.lang.swift.decl.extension.typealias"
+    fileprivate static let associatedTypeIDString = "source.lang.swift.decl.associatedtype"
+    fileprivate static let associatedTypeExtensionIDString = "source.lang.swift.decl.extension.associatedtype"
+
     fileprivate static let instanceMethodIDString = "source.lang.swift.decl.function.method.instance"
+    fileprivate static let globalInstanceMethodIDString = "source.lang.swift.decl.function.free"
+    fileprivate static let staticMethodIDString = "source.lang.swift.decl.function.method.static"
+    fileprivate static let classMethodIDString = "source.lang.swift.decl.function.method.class"
 
-    func isObjectDeclaration(kind: String) -> Bool {
-        return kind == SourceKit.classIDString || kind == SourceKit.structIDString || kind == SourceKit.enumIDString || kind == SourceKit.protocolIDString || kind == SourceKit.typealiasIDString
-    }
-
-    func isReference(kind: String) -> Bool {
-        return declarationType(for: kind) != nil || kind.contains("ref.class") || kind.contains("ref.struct") || kind.contains("ref.enum") || kind.contains("ref.protocol") || kind.contains("ref.typealias") || kind.contains("ref.function.method")
+    func referenceType(kind: String) -> DeclarationType? {
+        if let type = declarationType(for: kind) {
+            return type
+        }
+        if kind.contains("ref.class") ||
+           kind.contains("ref.struct") ||
+           kind.contains("ref.enumelement") ||
+           kind.contains("ref.protocol") ||
+           kind.contains("ref.typealias") {
+            return .object
+        } else if kind.contains("ref.function.method.instance") ||
+                  kind.contains("ref.function.free") ||
+                  kind.contains("ref.function.method.static") ||
+                  kind.contains("ref.function.method.class") {
+            return .method
+        } else {
+            return nil
+        }
     }
 
     func declarationType(for kind: String) -> DeclarationType? {
@@ -245,9 +276,12 @@ class SourceKit {
         case SourceKit.classIDString,
              SourceKit.structIDString,
              SourceKit.protocolIDString,
-             SourceKit.typealiasIDString:
+             SourceKit.enumCaseIDString:
             return .object
-        case SourceKit.instanceMethodIDString:
+        case SourceKit.instanceMethodIDString,
+             SourceKit.globalInstanceMethodIDString,
+             SourceKit.staticMethodIDString,
+             SourceKit.classMethodIDString:
             return .method
         default:
             return nil

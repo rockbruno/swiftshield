@@ -37,7 +37,7 @@ enum LogType {
     var description: String {
         switch self {
         case .buildingProject:
-            return "Building project to gather it's modules and compiler arguments..."
+            return "Building project to gather modules and compiler arguments..."
         case .compilerArgumentsError:
             return "Failed to retrieve compiler argments."
         case let .found(module):
@@ -79,7 +79,7 @@ enum LogType {
         case .finished:
             return "Finished."
         case .version:
-            return "SwiftShield 3.0.0"
+            return "SwiftShield 3.1.0"
         case .verbose:
             return "Verbose Mode"
         case .mode:

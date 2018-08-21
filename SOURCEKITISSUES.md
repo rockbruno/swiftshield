@@ -1,6 +1,4 @@
-# Current SourceKit issues that prevent SwiftShield from working automatically
+# Current known SourceKit issues that prevent SwiftShield from obfuscating *everything*
 
-- Issues with constrained protocols (`extension Foo where RawValue: Bar`)
-- Issues with explicit generics (`[MyClass]` is fine, `Swift.Array<MyClass>` isn't)
-- Typealiases issues
-- Rare cases where references don't get indexed
+- Typealiases: Not always indexed (`typealias Foo = UIImage | extension Foo {}` - Foo is indexed as UIImage)
+- Enum names (cases are fine): Explicit types don't get indexed (`case MyEnum.myCase` - MyEnum isn't indexed)

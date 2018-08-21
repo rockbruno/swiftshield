@@ -2,8 +2,9 @@ import Foundation
 
 final class ObfuscationData {
     var usrDict: Set<String> = []
-    var referencesDict: [File:[ReferenceData]] = [:]
-    var obfuscationDict: [String:String] = [:]
+    var referencesDict: [File: [ReferenceData]] = [:]
+    var obfuscationDict: [String: String] = [:]
+    var usrRelationDict: [String: sourcekitd_variant_t] = [:]
     var indexedFiles: [(File,sourcekitd_response_t)] = []
     
     func add(reference: ReferenceData, toFile file: File) {

@@ -62,6 +62,9 @@ extension AutomaticSwiftShield {
                 let usr = data.usr
                 let obfuscatedName = data.obfuscatedName
                 obfuscationData.usrDict.insert(usr)
+                if dict.getString(key: sourceKit.receiverID) == nil {
+                    obfuscationData.usrRelationDict[usr] = dict
+                }
                 Logger.log(.foundDeclaration(name: name, usr: usr, newName: obfuscatedName))
             }
             obfuscationData.indexedFiles.append((file, resp))
@@ -80,7 +83,7 @@ extension AutomaticSwiftShield {
 
     private func getNameData(from dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> (name: String, usr: String, obfuscatedName: String)? {
         let kind = dict.getUUIDString(key: sourceKit.kindID)
-        guard let type = sourceKit.declarationType(for: kind) else {
+        guard sourceKit.declarationType(for: kind) != nil else {
             return nil
         }
         guard let name = dict.getString(key: sourceKit.nameID)?.trueName, let usr = dict.getString(key: sourceKit.usrID) else {
@@ -99,9 +102,9 @@ extension AutomaticSwiftShield {
         Logger.log(.searchingReferencesOfUsr)
         for (file,indexResponse) in obfuscationData.indexedFiles {
             let dict = SKApi.sourcekitd_response_get_value(indexResponse)
-            SK.recurseOver( childID: SK.entitiesID, resp: dict, block: { dict in
+            SK.recurseOver(childID: SK.entitiesID, resp: dict, block: { dict in
                 let kind = dict.getUUIDString(key: SK.kindID)
-                guard SK.isReference(kind: kind) else {
+                guard SK.referenceType(kind: kind) != nil else {
                     return
                 }
                 guard let usr = dict.getString(key: SK.usrID), let name = dict.getString(key: SK.nameID)?.trueName else {
@@ -110,6 +113,9 @@ extension AutomaticSwiftShield {
                 let line = dict.getInt(key: SK.lineID)
                 let column = dict.getInt(key: SK.colID)
                 if obfuscationData.usrDict.contains(usr) {
+                    guard self.isReferencingInternalMethod(kind: kind, dict: dict, obfuscationData: obfuscationData, sourceKit: SK) == false else {
+                        return
+                    }
                     Logger.log(.foundReference(name: name, usr: usr, at: file, line: line, column: column))
                     let reference = ReferenceData(name: name, line: line, column: column, file: file, usr: usr)
                     obfuscationData.add(reference: reference, toFile: file)
@@ -117,6 +123,33 @@ extension AutomaticSwiftShield {
             })
         }
         overwriteFiles(obfuscationData: obfuscationData)
+    }
+
+    private func isReferencingInternalMethod(kind: String, dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> Bool {
+        guard sourceKit.referenceType(kind: kind) == .method else {
+            return false
+        }
+        guard let usr = dict.getString(key: sourceKit.usrID) else {
+            return false
+        }
+        if let relDict = obfuscationData.usrRelationDict[usr], relDict.data != dict.data {
+            return isReferencingInternalMethod(kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
+        }
+        var isReference = false
+        sourceKit.recurseOver(childID: sourceKit.relatedID, resp: dict) { dict in
+            guard isReference == false else {
+                return
+            }
+            guard let usr = dict.getString(key: sourceKit.usrID) else {
+                return
+            }
+            if obfuscationData.usrDict.contains(usr) == false {
+                isReference = true
+            } else if let relDict = obfuscationData.usrRelationDict[usr] {
+                isReference = self.isReferencingInternalMethod(kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
+            }
+        }
+        return isReference
     }
 
     func overwriteFiles(obfuscationData: ObfuscationData) {
