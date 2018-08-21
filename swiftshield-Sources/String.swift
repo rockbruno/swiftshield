@@ -30,7 +30,7 @@ extension String {
         return regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
     }
 
-    static func random(length: Int) -> String {
+    static func random(length: Int, excluding: Set<String>) -> String {
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let numbers : NSString = "0123456789"
         let len = UInt32(letters.length)
@@ -41,7 +41,7 @@ extension String {
             var nextChar = characters.character(at: Int(rand))
             randomString += NSString(characters: &nextChar, length: 1) as String
         }
-        return randomString
+        return excluding.contains(randomString) ? random(length: length, excluding: excluding) : randomString
     }
 }
 
@@ -68,5 +68,11 @@ extension String {
     static var helpText: String {
         return "\n\n-- Instructions --\n\nAUTOMATIC MODE:\n\nExample: swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xcworkspace -automatic-project-scheme MyApp-AppStore \n\nRequired parameters:\n\n-automatic -project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\n-automatic-project-file PATH_TO_PROJECT_FILE \n\n-automatic-project-scheme SCHEME_NAME_TO_BUILD\n\nOptional parameters:\n\n-verbose (Uses verbose mode)\n\n-show-sourcekit-queries (Prints queries made to SourceKit)" +
         "\n\nMANUAL MODE:\n\nExample: swiftshield -project-root /app/MyApp -tag myTag\n\nRequired parameters:\n\n-project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\nOptional parameters:\n\n-tag myTag (Custom tag to use. If not provided, '__s' will be used.)\n\n-verbose (Uses verbose mode)"
+    }
+}
+
+extension String {
+    var trueName: String {
+        return components(separatedBy: "(").first ?? self
     }
 }

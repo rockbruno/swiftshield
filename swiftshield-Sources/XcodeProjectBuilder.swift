@@ -45,7 +45,11 @@ struct XcodeProjectBuilder {
                 continue
             }
             Logger.log(.found(module: moduleName))
-            let relevantArguments = matches(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line)[0].components(separatedBy: " ")
+            let fullRelevantArguments = matches(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line)[0]
+            let spacedFolderPlaceholder = "\u{0}"
+            let relevantArguments = fullRelevantArguments.replacingOccurrences(of: "\\ ", with: spacedFolderPlaceholder)
+                                                         .components(separatedBy: " ")
+                                                         .map { $0.replacingOccurrences(of: spacedFolderPlaceholder, with: " ")}
             let files = parseModuleFiles(from: relevantArguments)
             let compilerArguments = parseCompilerArguments(from: relevantArguments)
             let module = Module(name: moduleName, files: files, compilerArguments: compilerArguments)
@@ -60,7 +64,8 @@ struct XcodeProjectBuilder {
         for arg in relevantArguments {
             if fileZone {
                 if arg.hasPrefix("/") {
-                    files.append(File(filePath: arg))
+                    let file = File(filePath: arg)
+                    files.append(file)
                 }
                 fileZone = arg.hasPrefix("-") == false || files.count == 0
             } else {

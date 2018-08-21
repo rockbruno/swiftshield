@@ -35,8 +35,9 @@ final class ManualSwiftShield: Protector {
             let word = (data as NSString).substring(with: result.rangeAt(0))
             let protectedName: String = {
                 guard let protected = obfsData.obfuscationDict[word] else {
-                    let protected = String.random(length: protectedClassNameSize)
+                    let protected = String.random(length: protectedClassNameSize, excluding: obfsData.allObfuscatedNames)
                     obfsData.obfuscationDict[word] = protected
+                    obfsData.allObfuscatedNames.insert(protected)
                     return protected
                 }
                 return protected
