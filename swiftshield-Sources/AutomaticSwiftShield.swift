@@ -83,7 +83,7 @@ extension AutomaticSwiftShield {
         guard let type = sourceKit.declarationType(for: kind) else {
             return nil
         }
-        guard let name = dict.getString(key: sourceKit.nameID), let usr = dict.getString(key: sourceKit.usrID) else {
+        guard let name = dict.getString(key: sourceKit.nameID)?.trueName, let usr = dict.getString(key: sourceKit.usrID) else {
             return nil
         }
         guard let protected = obfuscationData.obfuscationDict[name] else {
@@ -104,7 +104,7 @@ extension AutomaticSwiftShield {
                 guard SK.isReference(kind: kind) else {
                     return
                 }
-                guard let usr = dict.getString(key: SK.usrID), let name = dict.getString(key: SK.nameID) else {
+                guard let usr = dict.getString(key: SK.usrID), let name = dict.getString(key: SK.nameID)?.trueName else {
                     return
                 }
                 let line = dict.getInt(key: SK.lineID)
@@ -122,28 +122,37 @@ extension AutomaticSwiftShield {
     func overwriteFiles(obfuscationData: ObfuscationData) {
         for (file,references) in obfuscationData.referencesDict {
             var sortedReferences = references.filterDuplicates { $0.line == $1.line && $0.column == $1.column }.sorted(by: lesserPosition)
+            var currentReference = 0
             var line = 1
             var column = 1
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)
+            var charArray = Array(data).map(String.init)
+            var currentCharIndex = 0
             Logger.log(.overwriting(file: file))
-            let matches = data.match(regex: String.swiftRegex)
-            let obfuscatedFile = matches.flatMap { result in
-                let word = (data as NSString).substring(with: result.rangeAt(0))
-                var wordToReturn = word
-                if sortedReferences.isEmpty == false && line == sortedReferences[0].line && column == sortedReferences[0].column {
-                    sortedReferences.remove(at: 0)
-                    wordToReturn = (obfuscationData.obfuscationDict[word] ?? word)
-                }
-                if word == "\n" {
+            while currentCharIndex < charArray.count && currentReference < sortedReferences.count {
+                let reference = sortedReferences[currentReference]
+                if line == reference.line && column == reference.column {
+                    let originalName = reference.name
+                    let word = obfuscationData.obfuscationDict[originalName] ?? originalName
+                    for i in 1..<originalName.count {
+                        charArray[currentCharIndex + i] = ""
+                    }
+                    charArray[currentCharIndex] = word
+                    currentReference += 1
+                    currentCharIndex += originalName.count
+                    column += originalName.count
+                } else if charArray[currentCharIndex] == "\n" {
                     line += 1
                     column = 1
+                    currentCharIndex += 1
                 } else {
-                    column += word.count
+                    column += 1
+                    currentCharIndex += 1
                 }
-                return wordToReturn
-                }.joined()
+            }
+            let joined = charArray.joined()
             do {
-                try obfuscatedFile.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
+                try joined.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 Logger.log(.fatal(error: error.localizedDescription))
                 exit(error: true)

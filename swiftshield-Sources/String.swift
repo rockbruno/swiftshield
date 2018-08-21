@@ -70,3 +70,9 @@ extension String {
         "\n\nMANUAL MODE:\n\nExample: swiftshield -project-root /app/MyApp -tag myTag\n\nRequired parameters:\n\n-project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\nOptional parameters:\n\n-tag myTag (Custom tag to use. If not provided, '__s' will be used.)\n\n-verbose (Uses verbose mode)"
     }
 }
+
+extension String {
+    var trueName: String {
+        return components(separatedBy: "(").first ?? self
+    }
+}
