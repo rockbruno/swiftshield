@@ -51,7 +51,7 @@ enum LogType {
         case .searchingReferencesOfUsr:
             return "-- Searching for references of the retrieved USRs --"
         case let .foundReference(name, usr, file, line, column):
-            return "Found \(name) (\(usr)) at \(file.name) (L:\(line) C: \(column)"
+            return "Found \(name) (\(usr)) at \(file.name) (L:\(line) C: \(column))"
         case let .overwriting(file):
             return "--- Overwriting \(file.name) ---"
         case let .fatal(error):

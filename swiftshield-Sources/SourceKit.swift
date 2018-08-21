@@ -229,27 +229,30 @@ class SourceKit {
     fileprivate static let structIDString = "source.lang.swift.decl.struct"
     fileprivate static let protocolIDString = "source.lang.swift.decl.protocol"
     fileprivate static let enumIDString = "source.lang.swift.decl.enum"
-    
-    lazy var protocolID = SKApi.sourcekitd_uid_get_from_cstr(SourceKit.protocolIDString)!
-    lazy var structID = SKApi.sourcekitd_uid_get_from_cstr(SourceKit.structIDString)!
-    lazy var classID = SKApi.sourcekitd_uid_get_from_cstr(SourceKit.classIDString)!
-    lazy var enumID = SKApi.sourcekitd_uid_get_from_cstr(SourceKit.enumIDString)!
-    
+    fileprivate static let typealiasIDString = "source.lang.swift.decl.typealias"
+    fileprivate static let instanceMethodIDString = "source.lang.swift.decl.function.method.instance"
+
     func isObjectDeclaration(kind: String) -> Bool {
-        return kind == SourceKit.classIDString || kind == SourceKit.structIDString || kind == SourceKit.enumIDString || kind == SourceKit.protocolIDString
-    }
-    
-    func isObjectReference(kind: String) -> Bool {
-        return isObjectDeclaration(kind: kind) || kind.contains("ref.class") || kind.contains("ref.struct") || kind.contains("ref.enum") || kind.contains("ref.protocol")
+        return kind == SourceKit.classIDString || kind == SourceKit.structIDString || kind == SourceKit.enumIDString || kind == SourceKit.protocolIDString || kind == SourceKit.typealiasIDString
     }
 
-    /** references */
-    lazy var classVarID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.ref.function.var.class")!
-    lazy var classMethodID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.ref.function.method.class")!
-    lazy var initID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.ref.function.constructor")!
-    lazy var varID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.ref.var.instance")!
-    lazy var methodID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.ref.function.method.instance")!
-    lazy var elementID = SKApi.sourcekitd_uid_get_from_cstr("source.lang.swift.ref.enumelement")!
+    func isReference(kind: String) -> Bool {
+        return declarationType(for: kind) != nil || kind.contains("ref.class") || kind.contains("ref.struct") || kind.contains("ref.enum") || kind.contains("ref.protocol") || kind.contains("ref.typealias") || kind.contains("ref.function.method")
+    }
+
+    func declarationType(for kind: String) -> DeclarationType? {
+        switch kind {
+        case SourceKit.classIDString,
+             SourceKit.structIDString,
+             SourceKit.protocolIDString,
+             SourceKit.typealiasIDString:
+            return .object
+        case SourceKit.instanceMethodIDString:
+            return .method
+        default:
+            return nil
+        }
+    }
 
     init() {
         SKApi.sourcekitd_initialize()

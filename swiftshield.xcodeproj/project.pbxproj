@@ -22,6 +22,7 @@
 		FD895AE01E31142400A753FB /* Protector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADB1E31142400A753FB /* Protector.swift */; };
 		FD895AE11E31142400A753FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADC1E31142400A753FB /* String.swift */; };
 		FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */; };
+		FDC74E78212C49AC00B3E03B /* SourceKitDeclarationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */; };
 		FDFF64D11E5275A000300623 /* Exit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFF64D01E5275A000300623 /* Exit.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,7 @@
 		FD895ADB1E31142400A753FB /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protector.swift; path = "swiftshield-Sources/Protector.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADC1E31142400A753FB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = "swiftshield-Sources/String.swift"; sourceTree = SOURCE_ROOT; };
 		FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjectBuilder.swift; sourceTree = "<group>"; };
+		FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceKitDeclarationType.swift; sourceTree = "<group>"; };
 		FDFF64D01E5275A000300623 /* Exit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exit.swift; path = "swiftshield-Sources/Exit.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */,
+				FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */,
 				FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */,
 				FD4FB0441E5B140E009856B8 /* sourcekitd.h */,
 				FD4FB0521E5B1734009856B8 /* sourcekitd.framework */,
@@ -232,6 +235,7 @@
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
 				FD39B3521EAA9D92009BFCDF /* ObfuscationData.swift in Sources */,
+				FDC74E78212C49AC00B3E03B /* SourceKitDeclarationType.swift in Sources */,
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
 				FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
