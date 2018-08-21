@@ -67,7 +67,6 @@ class SourceKit {
         }
         if kind.contains("ref.class") ||
             kind.contains("ref.struct") ||
-            kind.contains("ref.enumelement") ||
             kind.contains("ref.protocol") ||
             kind.contains("ref.typealias") {
             return .object
@@ -85,8 +84,7 @@ class SourceKit {
         switch kind {
         case SourceKit.classIDString,
              SourceKit.structIDString,
-             SourceKit.protocolIDString,
-             SourceKit.enumCaseIDString:
+             SourceKit.protocolIDString:
             return .object
         case SourceKit.instanceMethodIDString,
              SourceKit.globalInstanceMethodIDString,

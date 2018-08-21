@@ -60,12 +60,11 @@ extension AutomaticSwiftShield {
                 }
                 let name = data.name
                 let usr = data.usr
-                let obfuscatedName = data.obfuscatedName
                 obfuscationData.usrDict.insert(usr)
                 if dict.getString(key: sourceKit.receiverID) == nil {
                     obfuscationData.usrRelationDict[usr] = dict
                 }
-                Logger.log(.foundDeclaration(name: name, usr: usr, newName: obfuscatedName))
+                Logger.log(.foundDeclaration(name: name, usr: usr))
             }
             obfuscationData.indexedFiles.append((file, resp))
         }
@@ -90,8 +89,9 @@ extension AutomaticSwiftShield {
             return nil
         }
         guard let protected = obfuscationData.obfuscationDict[name] else {
-            let newName = String.random(length: self.protectedClassNameSize)
+            let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
             obfuscationData.obfuscationDict[name] = newName
+            obfuscationData.allObfuscatedNames.insert(newName)
             return (name, usr, newName)
         }
         return (name, usr, protected)
@@ -113,10 +113,17 @@ extension AutomaticSwiftShield {
                 let line = dict.getInt(key: SK.lineID)
                 let column = dict.getInt(key: SK.colID)
                 if obfuscationData.usrDict.contains(usr) {
+                    //Operators only get indexed as such if they are declared in a global scope
+                    //Unfortunately, most people use public static func
+                    //So we avoid obfuscating methods with small names to prevent obfuscating operators.
+                    guard SK.referenceType(kind: kind) != .method || name.count > 4 else {
+                        return
+                    }
                     guard self.isReferencingInternalMethod(kind: kind, dict: dict, obfuscationData: obfuscationData, sourceKit: SK) == false else {
                         return
                     }
-                    Logger.log(.foundReference(name: name, usr: usr, at: file, line: line, column: column))
+                    let newName = obfuscationData.obfuscationDict[name] ?? name
+                    Logger.log(.foundReference(name: name, usr: usr, at: file, line: line, column: column, newName: newName))
                     let reference = ReferenceData(name: name, line: line, column: column, file: file, usr: usr)
                     obfuscationData.add(reference: reference, toFile: file)
                 }
@@ -167,13 +174,17 @@ extension AutomaticSwiftShield {
                 if line == reference.line && column == reference.column {
                     let originalName = reference.name
                     let word = obfuscationData.obfuscationDict[originalName] ?? originalName
-                    for i in 1..<originalName.count {
+                    let wasInternalKeyword = charArray[currentCharIndex] == "`"
+                    for i in 1..<(originalName.count + (wasInternalKeyword ? 2 : 0)) {
                         charArray[currentCharIndex + i] = ""
                     }
                     charArray[currentCharIndex] = word
                     currentReference += 1
                     currentCharIndex += originalName.count
                     column += originalName.count
+                    if wasInternalKeyword {
+                        charArray[currentCharIndex] = ""
+                    }
                 } else if charArray[currentCharIndex] == "\n" {
                     line += 1
                     column = 1

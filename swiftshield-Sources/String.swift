@@ -30,7 +30,7 @@ extension String {
         return regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
     }
 
-    static func random(length: Int) -> String {
+    static func random(length: Int, excluding: Set<String>) -> String {
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let numbers : NSString = "0123456789"
         let len = UInt32(letters.length)
@@ -41,7 +41,7 @@ extension String {
             var nextChar = characters.character(at: Int(rand))
             randomString += NSString(characters: &nextChar, length: 1) as String
         }
-        return randomString
+        return excluding.contains(randomString) ? random(length: length, excluding: excluding) : randomString
     }
 }
 
