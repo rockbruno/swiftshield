@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD1C89CB212C986600F05C4D /* TTY.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CA212C986600F05C4D /* TTY.swift */; };
+		FD1C89CD212C988100F05C4D /* SourceKit+Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */; };
+		FD1C89CF212C989B00F05C4D /* DynamicLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CE212C989B00F05C4D /* DynamicLink.swift */; };
+		FD1C89D1212C98B100F05C4D /* SKAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89D0212C98B100F05C4D /* SKAPI.swift */; };
 		FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */; };
 		FD39B3521EAA9D92009BFCDF /* ObfuscationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B3501EAA9D92009BFCDF /* ObfuscationData.swift */; };
 		FD39B3531EAA9D92009BFCDF /* ReferenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B3511EAA9D92009BFCDF /* ReferenceData.swift */; };
@@ -28,6 +32,10 @@
 
 /* Begin PBXFileReference section */
 		FD0B10941E2F8ACD00AED458 /* swiftshield */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = swiftshield; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD1C89CA212C986600F05C4D /* TTY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTY.swift; sourceTree = "<group>"; };
+		FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SourceKit+Variant.swift"; sourceTree = "<group>"; };
+		FD1C89CE212C989B00F05C4D /* DynamicLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLink.swift; sourceTree = "<group>"; };
+		FD1C89D0212C98B100F05C4D /* SKAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKAPI.swift; sourceTree = "<group>"; };
 		FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceKit.swift; path = "swiftshield-Sources/SourceKit.swift"; sourceTree = SOURCE_ROOT; };
 		FD39B3501EAA9D92009BFCDF /* ObfuscationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObfuscationData.swift; path = "swiftshield-Sources/ObfuscationData.swift"; sourceTree = SOURCE_ROOT; };
 		FD39B3511EAA9D92009BFCDF /* ReferenceData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReferenceData.swift; path = "swiftshield-Sources/ReferenceData.swift"; sourceTree = SOURCE_ROOT; };
@@ -121,6 +129,10 @@
 			isa = PBXGroup;
 			children = (
 				FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */,
+				FD1C89CE212C989B00F05C4D /* DynamicLink.swift */,
+				FD1C89D0212C98B100F05C4D /* SKAPI.swift */,
+				FD1C89CA212C986600F05C4D /* TTY.swift */,
+				FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */,
 				FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */,
 				FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */,
 				FD4FB0441E5B140E009856B8 /* sourcekitd.h */,
@@ -226,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD895AE11E31142400A753FB /* String.swift in Sources */,
+				FD1C89CF212C989B00F05C4D /* DynamicLink.swift in Sources */,
 				FD895ADE1E31142400A753FB /* Array.swift in Sources */,
 				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,
 				FD39B3561EAA9D9B009BFCDF /* AutomaticSwiftShield.swift in Sources */,
@@ -234,9 +247,12 @@
 				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
+				FD1C89D1212C98B100F05C4D /* SKAPI.swift in Sources */,
+				FD1C89CB212C986600F05C4D /* TTY.swift in Sources */,
 				FD39B3521EAA9D92009BFCDF /* ObfuscationData.swift in Sources */,
 				FDC74E78212C49AC00B3E03B /* SourceKitDeclarationType.swift in Sources */,
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
+				FD1C89CD212C988100F05C4D /* SourceKit+Variant.swift in Sources */,
 				FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
 				FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */,
