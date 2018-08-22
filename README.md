@@ -133,7 +133,7 @@ swiftshield -project-root /app/MyApp
 
 ## License
 
-SwiftShield is released under the MIT license. See LICENSE for details.
+SwiftShield is released under the GNU GPL v3.0 license. See LICENSE for details.
 
 
 ## Thanks
