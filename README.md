@@ -85,6 +85,8 @@ Download the [latest release](https://github.com/rockbruno/swiftshield/releases)
 
 ## Running SwiftShield
 
+(Take a look at the Example project to see an example of what SwiftShield is capable of!)
+
 # Automatic mode
 
 ```
