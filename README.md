@@ -17,7 +17,7 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 ## 🤖 Automatic mode (Swift only)
 
-With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool, [which doesn't refactor everything yet](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md). While the specific cases on the document won't be obfuscated, SwiftShield will obfuscate all Swift classes and methods that can be reverse-engineered.
+With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool, [which doesn't refactor everything yet](SOURCEKITISSUES.md). While the specific cases on the document won't be obfuscated, SwiftShield will obfuscate all Swift classes and methods that can be reverse-engineered.
 
 
 ## 🛡 Manual mode (Swift/OBJ-C)
@@ -80,7 +80,7 @@ Manual mode:
 
 **Warning:** SwiftShield **irreversibly overwrites** all your source files. Ideally, you should have it run only on your CI server, and on release builds.
 
-Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here to see how to setup SwiftShield.](https://github.com/rockbruno/swiftshield/blob/master/USAGE.md)
+Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here to see how to setup SwiftShield.](USAGE.md)
 
 
 ## Running SwiftShield
