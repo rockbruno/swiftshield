@@ -23,3 +23,5 @@ This will prevent that script from running after your project gets obfuscated.
 By default, CocoaPods sources are locked. SwiftShield needs them to be unlocked in order to be able to obfuscate your project. To unlock your project, you can run, for example:
 
 `chmod -R 774 PATHTOPROJECTFOLDER`
+
+You can now run SwiftShield with the commands provided at [README.md](README.md).
