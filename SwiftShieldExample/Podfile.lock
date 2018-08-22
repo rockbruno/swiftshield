@@ -1,0 +1,20 @@
+PODS:
+  - Cartography (3.0.2)
+  - Unbox (3.0.0)
+
+DEPENDENCIES:
+  - Cartography
+  - Unbox
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Cartography
+    - Unbox
+
+SPEC CHECKSUMS:
+  Cartography: 231190d7d0b3107ce8d67c54189f059a509b3760
+  Unbox: 9ed33b2a31f7a8a049f54b94d40c4a52a28c4d9d
+
+PODFILE CHECKSUM: 9e662292939e8e0f4497487f381d85e1e3b48385
+
+COCOAPODS: 1.5.3

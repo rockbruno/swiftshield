@@ -3,12 +3,13 @@ import Foundation
 final class ManualSwiftShield: Protector {
     let tag: String
 
-    init(basePath: String, tag: String) {
+    init(basePath: String, tag: String, protectedClassNameSize: Int) {
         self.tag = tag
-        super.init(basePath: basePath)
+        super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize)
     }
 
     override func protect() -> ObfuscationData {
+        Logger.log(.tag(tag: tag))
         let files = getSourceFiles()
         Logger.log(.scanningDeclarations)
         var obfsData = ObfuscationData()

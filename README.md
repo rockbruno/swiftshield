@@ -70,7 +70,7 @@ Automatic mode:
 1. Xcode command-line tools
 2. Swift 4.1 (works on other versions, but has different results due to SourceKit)
 3. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine, except when interfacing is involved)
-4. If you use app extensions, for now you will have to manually update their plist's main class with the obfuscated name.
+4. If you use app extensions that use a "main class" property in plists (like Rich Notifications), for now you will have to manually update their plist's main class with the obfuscated name.
 
 Manual mode:
 
@@ -93,19 +93,16 @@ swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xc
 **Required Parameters:**
 
 `-automatic`: Enables automatic mode.
-
 `-project-root`: The root of your project. SwiftShield will use this to search for your project files, storyboards and source files.
-
 `-automatic-project-file`: Your app's main .xcodeproj/.xcworkspace file.
-
 `-automatic-project-scheme myScheme`: The main scheme to build from your `-automatic-project-file`.
 
 **Optional Parameters:**
 
+`-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. This should be the exact name of the imported module (not the target name!). Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
 `-verbose`: Prints additional information.
-
 `-show-sourcekit-queries`: Prints queries sent to SourceKit. Note that they are huge and will absolutely clutter your terminal, so use this only for bug reports and feature development!
-
+`-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
 # Manual mode
 
@@ -119,8 +116,8 @@ swiftshield -project-root /app/MyApp
 **Optional Parameters:**
 
 `-tag myTag`: Uses a custom tag. Default is `__s`.
-
 `-verbose`: Prints additional information.
+`-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
 
 ## Automatic Mode Next Steps
@@ -138,4 +135,4 @@ SwiftShield is released under the GNU GPL v3.0 license. See LICENSE for details.
 
 ## Thanks
 
-Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, and for the guys at SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.
+Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, and to SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.
