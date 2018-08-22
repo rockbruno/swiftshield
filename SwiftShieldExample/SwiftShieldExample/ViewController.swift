@@ -19,11 +19,14 @@ class ViewController: UIViewController {
 
     func render() {
         let view = MyView()
-        view.backgroundColor = .red
+        view.textAlignment = .center
+        view.numberOfLines = 0
+        self.view.addSubview(view)
+        view.backgroundColor = .green
         constrain(view, self.view) { view, superview in
-            view.edges == superview.edges
+            view.edges == inset(superview.edges, 16)
         }
-        let dict: [String: Any] = ["text": String(describing: type(of: self))]
+        let dict: [String: Any] = ["text": "ViewController name: " + String(describing: type(of: self))]
         let box = Unboxer(dictionary: dict)
         let text: String = try! box.unbox(key: "text")
         view.text = text
