@@ -11,6 +11,7 @@ enum LogType {
     case searchingReferencesOfUsr
     case foundReference(name: String, usr: String, at: File, line: Int, column: Int, newName: String)
     case projectError
+    case ignoreModules(modules: Set<String>)
     
     //Shared
     case overwriting(file: File)
@@ -27,6 +28,7 @@ enum LogType {
     
     //Manual
     case scanningDeclarations
+    case tag(tag: String)
     
     //Misc
     case version
@@ -79,13 +81,17 @@ enum LogType {
         case .finished:
             return "Finished."
         case .version:
-            return "SwiftShield 3.1.0"
+            return "SwiftShield 3.1.1"
         case .verbose:
             return "Verbose Mode"
         case .mode:
             return automatic ? "Automatic mode" : "Manual mode"
         case .taggingProjects:
             return "-- Adding SWIFTSHIELDED=true to projects --"
+        case let .tag(tag):
+            return "Using tag: \(tag)"
+        case let .ignoreModules(modules):
+            return "Ignoring modules: \(modules.joined(separator: ", "))"
         }
     }
     

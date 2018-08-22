@@ -1,0 +1,6 @@
+framework module Cartography {
+  umbrella header "Cartography-umbrella.h"
+
+  export *
+  module * { export * }
+}

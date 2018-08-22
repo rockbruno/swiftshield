@@ -16,7 +16,7 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 ## 🤖 Automatic mode (Swift only)
 
-With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies and storyboards). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool, [which doesn't refactor everything yet](https://github.com/rockbruno/swiftshield/blob/master/SOURCEKITISSUES.md). While the specific cases on the document won't be obfuscated, SwiftShield will obfuscate all Swift classes and methods that can be reverse-engineered.
+With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool, [which doesn't refactor everything yet](SOURCEKITISSUES.md). While the specific cases on the document won't be obfuscated, SwiftShield will obfuscate all Swift classes and methods that can be reverse-engineered. Take a look at the Example project to see SwiftShield in action!
 
 
 ## 🛡 Manual mode (Swift/OBJ-C)
@@ -69,7 +69,7 @@ Automatic mode:
 1. Xcode command-line tools
 2. Swift 4.1 (works on other versions, but has different results due to SourceKit)
 3. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine, except when interfacing is involved)
-4. If you use app extensions, for now you will have to manually update their plist's main class with the obfuscated name.
+4. If you use app extensions that use a "main class" property in plists (like Rich Notifications), for now you will have to manually update their plist's main class with the obfuscated name.
 
 Manual mode:
 
@@ -79,7 +79,7 @@ Manual mode:
 
 **Warning:** SwiftShield **irreversibly overwrites** all your source files. Ideally, you should have it run only on your CI server, and on release builds.
 
-Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here to see how to setup SwiftShield.](https://github.com/rockbruno/swiftshield/blob/master/USAGE.md)
+Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here to see how to setup SwiftShield.](USAGE.md)
 
 
 ## Running SwiftShield
@@ -91,20 +91,23 @@ swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xc
 ```
 **Required Parameters:**
 
-`-automatic`: Enables automatic mode.
+- `-automatic`: Enables automatic mode.
 
-`-project-root`: The root of your project. SwiftShield will use this to search for your project files, storyboards and source files.
+- `-project-root`: The root of your project. SwiftShield will use this to search for your project files, storyboards and source files.
 
-`-automatic-project-file`: Your app's main .xcodeproj/.xcworkspace file.
+- `-automatic-project-file`: Your app's main .xcodeproj/.xcworkspace file.
 
-`-automatic-project-scheme myScheme`: The main scheme to build from your `-automatic-project-file`.
+- `-automatic-project-scheme myScheme`: The main scheme to build from your `-automatic-project-file`.
 
 **Optional Parameters:**
 
-`-verbose`: Prints additional information.
+- `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. This should be the exact name of the imported module (not the target name!). Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
 
-`-show-sourcekit-queries`: Prints queries sent to SourceKit. Note that they are huge and will absolutely clutter your terminal, so use this only for bug reports and feature development!
+- `-verbose`: Prints additional information.
 
+- `-show-sourcekit-queries`: Prints queries sent to SourceKit. Note that they are huge and will absolutely clutter your terminal, so use this only for bug reports and feature development!
+
+- `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
 # Manual mode
 
@@ -113,13 +116,15 @@ swiftshield -project-root /app/MyApp
 ```
 **Required Parameters:**
 
-`-project-root`: The root of your project. SwiftShield will use this to search for your project files, storyboards and source files.
+- `-project-root`: The root of your project. SwiftShield will use this to search for your project files, storyboards and source files.
 
 **Optional Parameters:**
 
-`-tag myTag`: Uses a custom tag. Default is `__s`.
+- `-tag`: Uses a custom tag. Default is `__s`.
 
-`-verbose`: Prints additional information.
+- `-verbose`: Prints additional information.
+
+- `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
 
 ## Automatic Mode Next Steps
@@ -137,4 +142,4 @@ SwiftShield is released under the GNU GPL v3.0 license. See LICENSE for details.
 
 ## Thanks
 
-Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, and for the guys at SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.
+Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, and to SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.

@@ -66,8 +66,8 @@ extension String {
     }
 
     static var helpText: String {
-        return "\n\n-- Instructions --\n\nAUTOMATIC MODE:\n\nExample: swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xcworkspace -automatic-project-scheme MyApp-AppStore \n\nRequired parameters:\n\n-automatic -project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\n-automatic-project-file PATH_TO_PROJECT_FILE \n\n-automatic-project-scheme SCHEME_NAME_TO_BUILD\n\nOptional parameters:\n\n-verbose (Uses verbose mode)\n\n-show-sourcekit-queries (Prints queries made to SourceKit)" +
-        "\n\nMANUAL MODE:\n\nExample: swiftshield -project-root /app/MyApp -tag myTag\n\nRequired parameters:\n\n-project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\nOptional parameters:\n\n-tag myTag (Custom tag to use. If not provided, '__s' will be used.)\n\n-verbose (Uses verbose mode)"
+        return "\n\n-- Instructions (See the rockbruno/swiftshield for more details) --\n\nAUTOMATIC MODE:\n\nExample: swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xcworkspace -automatic-project-scheme MyApp-AppStore \n\nRequired parameters:\n\n-automatic -project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\n-automatic-project-file PATH_TO_PROJECT_FILE \n\n-automatic-project-scheme SCHEME_NAME_TO_BUILD\n\nOptional parameters:\n\n-verbose (Uses verbose mode)\n\n-show-sourcekit-queries (Prints queries made to SourceKit)\n\n-ignore-modules MyLib,MyAppExtension (Prevents obfuscation of certain modules)\n\n-obfuscation-character-count 32 (Obfuscated name size)" +
+        "\n\nMANUAL MODE:\n\nExample: swiftshield -project-root /app/MyApp -tag myTag\n\nRequired parameters:\n\n-project-root PATH_TO_PROJECTS_ROOT_FOLDER \n\nOptional parameters:\n\n-tag myTag (Custom tag to use. If not provided, '__s' will be used.)\n\n-verbose (Uses verbose mode)\n\n-obfuscation-character-count 32 (Obfuscated name size)"
     }
 }
 

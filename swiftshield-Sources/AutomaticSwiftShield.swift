@@ -4,15 +4,21 @@ final class AutomaticSwiftShield: Protector {
 
     let projectToBuild: String
     let schemeToBuild: String
+    let modulesToIgnore: Set<String>
 
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
     }
 
-    init(basePath: String, projectToBuild: String = "", schemeToBuild: String = "") {
+    init(basePath: String,
+         projectToBuild: String,
+         schemeToBuild: String,
+         modulesToIgnore: Set<String>,
+         protectedClassNameSize: Int) {
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
-        super.init(basePath: basePath)
+        self.modulesToIgnore = modulesToIgnore
+        super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize)
         if self.schemeToBuild.isEmpty || self.projectToBuild.isEmpty {
             Logger.log(.helpText)
             exit(error: true)
@@ -20,12 +26,17 @@ final class AutomaticSwiftShield: Protector {
     }
 
     override func protect() -> ObfuscationData {
+        if modulesToIgnore.isEmpty == false {
+            Logger.log(.ignoreModules(modules: modulesToIgnore))
+        }
         guard isWorkspace || projectToBuild.hasSuffix(".xcodeproj") else {
             Logger.log(.projectError)
             exit(error: true)
         }
-        let modules = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild).getModulesAndCompilerArguments()
-        let obfuscationData = index(modules: modules)
+        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild)
+        let modules = projectBuilder.getModulesAndCompilerArguments()
+        let modulesToObfuscate = modules.filter { modulesToIgnore.contains($0.name) == false }
+        let obfuscationData = index(modules: modulesToObfuscate)
         if obfuscationData.obfuscationDict.isEmpty {
             Logger.log(.foundNothingError)
             exit(error: true)
