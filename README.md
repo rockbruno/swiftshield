@@ -101,7 +101,7 @@ swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xc
 
 **Optional Parameters:**
 
-- `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. This should be the exact name of the imported module (not the target name!). Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
+- `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. This should be the exact name of the imported module (not the target name!). This might result in wrong behaviour if the ignored module uses storyboards/xibs, as these are obfuscated separatedly for now. Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
 
 - `-verbose`: Prints additional information.
 
