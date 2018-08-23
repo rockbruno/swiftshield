@@ -1,22 +1,56 @@
-//
-//  SourceKit.swift
-//  refactord
-//
-//  Created by John Holdsworth on 19/12/2015.
-//  Copyright © 2015 John Holdsworth. All rights reserved.
-//
-//  $Id: //depot/Refactorator/refactord/SourceKit.swift#25 $
-//
-//  Repo: https://github.com/johnno1962/Refactorator
-//
-
 import Foundation
 
-/** Thanks to: https://github.com/jpsim/SourceKitten/blob/master/Source/SourceKittenFramework/library_wrapper_sourcekitd.swift **/
+final class SourceKit {
+    fileprivate static let swiftLangPrefix = "source.lang.swift"
 
-let SKApi = SKAPI()
+    init() {
+        SKApi.sourcekitd_initialize()
+    }
 
-class SourceKit {
+    func referenceType(kind: String) -> DeclarationType? {
+        return declarationType(for: kind) ?? declarationType(kind: kind, firstSuffix: ".ref.")
+    }
+
+    func declarationType(for kind: String) -> DeclarationType? {
+        return declarationType(kind: kind, firstSuffix: ".decl.")
+    }
+
+    func declarationType(kind: String, firstSuffix: String) -> DeclarationType? {
+        let prefix = SourceKit.swiftLangPrefix + firstSuffix
+        guard kind.hasPrefix(prefix) else {
+            return nil
+        }
+        let prefixIndex = kind.index(kind.startIndex, offsetBy: prefix.count)
+        let kindSuffix = String(kind[prefixIndex...])
+        print(kind)
+        switch kindSuffix {
+        case "class",
+             "struct",
+             "protocol":
+            return .object
+        case "var.instance",
+             "var.class":
+            return .property
+        case "function.free",
+             "function.method.instance",
+             "function.method.static",
+             "function.method.class":
+            return .method
+        default:
+            return nil
+        }
+    }
+
+    //
+    //
+    //
+    //
+    // John's SKAPI Requests
+    //
+    //
+    //
+    //
+
     /** request types */
     private lazy var indexRequestID = SKApi.sourcekitd_uid_get_from_cstr("source.request.indexsource")!
     private lazy var requestID = SKApi.sourcekitd_uid_get_from_cstr("key.request")!
@@ -41,78 +75,14 @@ class SourceKit {
     lazy var colID = SKApi.sourcekitd_uid_get_from_cstr("key.column")!
     lazy var usrID = SKApi.sourcekitd_uid_get_from_cstr("key.usr")!
 
-    /** declarations */
-
-    fileprivate static let swiftLangPrefix = "source.lang.swift"
-    fileprivate static let classIDString = "source.lang.swift.decl.class"
-    fileprivate static let structIDString = "source.lang.swift.decl.struct"
-    fileprivate static let protocolIDString = "source.lang.swift.decl.protocol"
-    fileprivate static let enumIDString = "source.lang.swift.decl.enum"
-    fileprivate static let enumCaseIDString = "source.lang.swift.decl.enumelement"
-    fileprivate static let typealiasIDString = "source.lang.swift.decl.typealias"
-    fileprivate static let associatedTypeIDString = "source.lang.swift.decl.associatedtype"
-
-    fileprivate static let instanceMethodIDString = "source.lang.swift.decl.function.method.instance"
-    fileprivate static let globalInstanceMethodIDString = "source.lang.swift.decl.function.free"
-    fileprivate static let staticMethodIDString = "source.lang.swift.decl.function.method.static"
-    fileprivate static let classMethodIDString = "source.lang.swift.decl.function.method.class"
-
-    fileprivate static let instancePropertyIDString = "source.lang.swift.decl.var.instance"
-    fileprivate static let classPropertyIDString = "source.lang.swift.decl.var.class"
-
-    init() {
-        SKApi.sourcekitd_initialize()
-    }
-
-    func referenceType(kind: String) -> DeclarationType? {
-        if let type = declarationType(for: kind) {
-            return type
-        }
-        if kind.contains("ref.class") ||
-            kind.contains("ref.struct") ||
-            kind.contains("ref.protocol") ||
-            kind.contains("ref.typealias") {
-            return .object
-        } else if kind.contains("ref.var.instance") ||
-            kind.contains("ref.var.class") {
-            return .property
-        } else if kind.contains("ref.function.method.instance") ||
-            kind.contains("ref.function.free") ||
-            kind.contains("ref.function.method.static") ||
-            kind.contains("ref.function.method.class") {
-            return .method
-        } else {
-            return nil
-        }
-    }
-
-    func declarationType(for kind: String) -> DeclarationType? {
-        switch kind {
-        case SourceKit.classIDString,
-             SourceKit.structIDString,
-             SourceKit.protocolIDString:
-            return .object
-        case SourceKit.instancePropertyIDString,
-             SourceKit.classPropertyIDString:
-            return .property
-        case SourceKit.instanceMethodIDString,
-             SourceKit.globalInstanceMethodIDString,
-             SourceKit.staticMethodIDString,
-             SourceKit.classMethodIDString:
-            return .method
-        default:
-            return nil
-        }
-    }
-
     func array(argv: [String]) -> sourcekitd_object_t {
         let objects = argv.map { SKApi.sourcekitd_request_string_create($0) }
-        return SKApi.sourcekitd_request_array_create(objects, objects.count)
+        return SKApi.sourcekitd_request_array_create(objects, objects.count)!
     }
 
     func error(resp: sourcekitd_response_t) -> String? {
         if SKApi.sourcekitd_response_is_error(resp) {
-            return String(cString: SKApi.sourcekitd_response_error_get_description(resp))
+            return String(cString: SKApi.sourcekitd_response_error_get_description(resp)!)
         }
         return nil
     }
