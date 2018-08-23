@@ -127,7 +127,7 @@ extension AutomaticSwiftShield {
                     //Operators only get indexed as such if they are declared in a global scope
                     //Unfortunately, most people use public static func
                     //So we avoid obfuscating methods with small names to prevent obfuscating operators.
-                    guard SK.referenceType(kind: kind) != .method || name.count > 4 else {
+                    if SK.referenceType(kind: kind) == .method && name.count <= 4 {
                         return
                     }
                     guard self.isReferencingInternalMethod(kind: kind, dict: dict, obfuscationData: obfuscationData, sourceKit: SK) == false else {

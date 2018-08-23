@@ -81,7 +81,7 @@ enum LogType {
         case .finished:
             return "Finished."
         case .version:
-            return "SwiftShield 3.1.1"
+            return "SwiftShield 3.2.0"
         case .verbose:
             return "Verbose Mode"
         case .mode:
