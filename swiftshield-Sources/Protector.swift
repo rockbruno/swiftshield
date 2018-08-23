@@ -38,6 +38,7 @@ class Protector {
                 }
                 Logger.log(.protectedReference(originalName: `class`, protectedName: protectedClass))
                 overwrittenData = overwrittenData.replacingOccurrences(of: Storyboard.customClass(class: `class`), with: Storyboard.customClass(class: protectedClass))
+                overwrittenData = overwrittenData.replacingOccurrences(of: Storyboard.actionSelector(method: `class`), with: Storyboard.actionSelector(method: protectedClass))
             }
             guard overwrittenData != data else {
                 Logger.log(.fileNotModified(file: file))
