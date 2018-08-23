@@ -27,9 +27,9 @@ final class SourceKit {
              "struct",
              "protocol":
             return .object
-        case "var.instance",
-             "var.class":
-            return .property
+//        case "var.instance",
+//             "var.class":
+//            return .property
         case "function.free",
              "function.method.instance",
              "function.method.static",

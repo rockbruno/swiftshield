@@ -206,9 +206,9 @@ extension AutomaticSwiftShield {
                     currentCharIndex += 1
                 }
             }
-            let joined = charArray.joined()
+            let obfuscatedFile = charArray.joined()
             do {
-                try joined.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
+                try obfuscatedFile.write(toFile: file.path, atomically: false, encoding: .utf8)
             } catch {
                 Logger.log(.fatal(error: error.localizedDescription))
                 exit(error: true)

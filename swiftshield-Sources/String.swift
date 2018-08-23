@@ -66,7 +66,7 @@ extension String {
     }
 
     static var storyboardClassNameRegex: String {
-        return "(?<=customClass=\").*?(?=\")"
+        return "((?<=customClass=\").*?(?=\" customModule)|(?<=action selector=\").*?(?=:\"))"
     }
 
     static var helpText: String {
