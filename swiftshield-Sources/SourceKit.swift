@@ -57,6 +57,9 @@ class SourceKit {
     fileprivate static let staticMethodIDString = "source.lang.swift.decl.function.method.static"
     fileprivate static let classMethodIDString = "source.lang.swift.decl.function.method.class"
 
+    fileprivate static let instancePropertyIDString = "source.lang.swift.decl.var.instance"
+    fileprivate static let classPropertyIDString = "source.lang.swift.decl.var.class"
+
     init() {
         SKApi.sourcekitd_initialize()
     }
@@ -70,6 +73,9 @@ class SourceKit {
             kind.contains("ref.protocol") ||
             kind.contains("ref.typealias") {
             return .object
+        } else if kind.contains("ref.var.instance") ||
+            kind.contains("ref.var.class") {
+            return .property
         } else if kind.contains("ref.function.method.instance") ||
             kind.contains("ref.function.free") ||
             kind.contains("ref.function.method.static") ||
@@ -86,6 +92,9 @@ class SourceKit {
              SourceKit.structIDString,
              SourceKit.protocolIDString:
             return .object
+        case SourceKit.instancePropertyIDString,
+             SourceKit.classPropertyIDString:
+            return .property
         case SourceKit.instanceMethodIDString,
              SourceKit.globalInstanceMethodIDString,
              SourceKit.staticMethodIDString,
