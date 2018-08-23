@@ -13,6 +13,7 @@ final class ManualSwiftShield: Protector {
         let files = getSourceFiles()
         Logger.log(.scanningDeclarations)
         var obfsData = ObfuscationData()
+        obfsData.storyboardToObfuscate = getStoryboardsAndXibs()
         files.forEach { protect(file: $0, obfsData: &obfsData) }
         return obfsData
     }

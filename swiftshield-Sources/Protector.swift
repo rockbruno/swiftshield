@@ -23,7 +23,7 @@ class Protector {
 
     func protectStoryboards(data obfuscationData: ObfuscationData) {
         Logger.log(.overwritingStoryboards)
-        for file in getStoryboardsAndXibs() {
+        for file in obfuscationData.storyboardToObfuscate {
             Logger.log(.checking(file: file))
             //TODO: We can do the index approach here as well instead of replacingOccurences.
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)
@@ -38,6 +38,9 @@ class Protector {
                 }
                 Logger.log(.protectedReference(originalName: `class`, protectedName: protectedClass))
                 overwrittenData = overwrittenData.replacingOccurrences(of: Storyboard.customClass(class: `class`), with: Storyboard.customClass(class: protectedClass))
+                if `class`.count > 4 {
+                    overwrittenData = overwrittenData.replacingOccurrences(of: Storyboard.actionSelector(method: `class`), with: Storyboard.actionSelector(method: protectedClass))
+                }
             }
             guard overwrittenData != data else {
                 Logger.log(.fileNotModified(file: file))
