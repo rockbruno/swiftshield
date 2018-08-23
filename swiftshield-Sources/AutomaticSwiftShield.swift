@@ -115,7 +115,7 @@ extension AutomaticSwiftShield {
             let dict = SKApi.sourcekitd_response_get_value(indexResponse)
             SK.recurseOver(childID: SK.entitiesID, resp: dict, block: { dict in
                 let kind = dict.getUUIDString(key: SK.kindID)
-                guard SK.referenceType(kind: kind) != nil else {
+                guard let type = SK.referenceType(kind: kind) else {
                     return
                 }
                 guard let usr = dict.getString(key: SK.usrID), let name = dict.getString(key: SK.nameID)?.trueName else {
@@ -127,10 +127,10 @@ extension AutomaticSwiftShield {
                     //Operators only get indexed as such if they are declared in a global scope
                     //Unfortunately, most people use public static func
                     //So we avoid obfuscating methods with small names to prevent obfuscating operators.
-                    if SK.referenceType(kind: kind) == .method && name.count <= 4 {
+                    if type == .method && name.count <= 4 {
                         return
                     }
-                    guard self.isReferencingInternalMethod(kind: kind, dict: dict, obfuscationData: obfuscationData, sourceKit: SK) == false else {
+                    guard self.isReferencingInternal(type: type, kind: kind, dict: dict, obfuscationData: obfuscationData, sourceKit: SK) == false else {
                         return
                     }
                     let newName = obfuscationData.obfuscationDict[name] ?? name
@@ -143,15 +143,15 @@ extension AutomaticSwiftShield {
         overwriteFiles(obfuscationData: obfuscationData)
     }
 
-    private func isReferencingInternalMethod(kind: String, dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> Bool {
-        guard sourceKit.referenceType(kind: kind) == .method else {
+    private func isReferencingInternal(type: SourceKit.DeclarationType, kind: String, dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> Bool {
+        guard type == .method || type == .property else {
             return false
         }
         guard let usr = dict.getString(key: sourceKit.usrID) else {
             return false
         }
         if let relDict = obfuscationData.usrRelationDict[usr], relDict.data != dict.data {
-            return isReferencingInternalMethod(kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
+            return isReferencingInternal(type: type, kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
         }
         var isReference = false
         sourceKit.recurseOver(childID: sourceKit.relatedID, resp: dict) { dict in
@@ -164,7 +164,7 @@ extension AutomaticSwiftShield {
             if obfuscationData.usrDict.contains(usr) == false {
                 isReference = true
             } else if let relDict = obfuscationData.usrRelationDict[usr] {
-                isReference = self.isReferencingInternalMethod(kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
+                isReference = self.isReferencingInternal(type: type, kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
             }
         }
         return isReference
