@@ -23,7 +23,7 @@ class Protector {
 
     func protectStoryboards(data obfuscationData: ObfuscationData) {
         Logger.log(.overwritingStoryboards)
-        for file in getStoryboardsAndXibs() {
+        for file in obfuscationData.storyboardToObfuscate {
             Logger.log(.checking(file: file))
             //TODO: We can do the index approach here as well instead of replacingOccurences.
             let data = try! String(contentsOfFile: file.path, encoding: .utf8)

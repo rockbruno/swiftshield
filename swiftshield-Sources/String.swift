@@ -10,6 +10,10 @@ import Foundation
 
 typealias RegexClosure = ((NSTextCheckingResult) -> String?)
 
+func firstMatch(for regex: String, in text: String) -> String? {
+    return matches(for: regex, in: text).first
+}
+
 func matches(for regex: String, in text: String) -> [String] {
     do {
         let regex = try NSRegularExpression(pattern: regex)

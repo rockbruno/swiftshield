@@ -2,12 +2,14 @@ import Cocoa
 
 struct Module {
     let name: String
-    let files: [File]
+    let sourceFiles: [File]
+    let xibFiles: [File]
     let compilerArguments: [String]
     
-    init(name: String, files: [File], compilerArguments: [String]) {
+    init(name: String, sourceFiles: [File], xibFiles: [File], compilerArguments: [String]) {
         self.name = name
-        self.files = files
+        self.sourceFiles = sourceFiles
+        self.xibFiles = xibFiles
         self.compilerArguments = compilerArguments
     }
 }

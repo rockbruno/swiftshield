@@ -1,6 +1,10 @@
 import Foundation
 
 struct XcodeProjectBuilder {
+
+    private typealias MutableModuleData = (source: [File], xibs: [File], args: [String])
+    private typealias MutableModuleDictionary = [String: MutableModuleData]
+
     let projectToBuild: String
     let schemeToBuild: String
 
@@ -28,34 +32,42 @@ struct XcodeProjectBuilder {
         let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
         guard let output = String(data: outdata, encoding: .utf8) else {
             Logger.log(.compilerArgumentsError)
-            exit(1)
+            exit(error: true)
         }
         return parseModulesFrom(xcodeBuildOutput: output)
     }
 
     func parseModulesFrom(xcodeBuildOutput output: String) -> [Module] {
         let lines = output.components(separatedBy: "\n")
-        var modules: [Module] = []
+        var modules: MutableModuleDictionary = [:]
         for line in lines {
-            guard line.contains("-module-name") else {
-                continue
+            if let moduleName = firstMatch(for: "(?<=-module-name ).*?(?= )", in: line) {
+                parseMergeSwiftModulePhase(line: line, moduleName: moduleName, modules: &modules)
+            } else if let moduleName = firstMatch(for: "(?<=--module ).*?(?= )", in: line) {
+                parseCompileXibPhase(line: line, moduleName: moduleName, modules: &modules)
             }
-            let moduleName = matches(for: "(?<=-module-name ).*?(?= )", in: line)[0]
-            guard modules.contains(where: {$0.name == moduleName}) == false else {
-                continue
-            }
-            Logger.log(.found(module: moduleName))
-            let fullRelevantArguments = matches(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line)[0]
-            let spacedFolderPlaceholder = "\u{0}"
-            let relevantArguments = fullRelevantArguments.replacingOccurrences(of: "\\ ", with: spacedFolderPlaceholder)
-                                                         .components(separatedBy: " ")
-                                                         .map { $0.replacingOccurrences(of: spacedFolderPlaceholder, with: " ")}
-            let files = parseModuleFiles(from: relevantArguments)
-            let compilerArguments = parseCompilerArguments(from: relevantArguments)
-            let module = Module(name: moduleName, files: files, compilerArguments: compilerArguments)
-            modules.append(module)
         }
-        return modules
+        return modules.map {
+            Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, compilerArguments: $0.value.args)
+        }
+    }
+
+    private func parseMergeSwiftModulePhase(line: String, moduleName: String, modules: inout MutableModuleDictionary) {
+        guard modules[moduleName]?.args.isEmpty != false else {
+            return
+        }
+        guard let fullRelevantArguments = firstMatch(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line) else {
+            return
+        }
+        Logger.log(.found(module: moduleName))
+        let spacedFolderPlaceholder = "\u{0}"
+        let relevantArguments = fullRelevantArguments.replacingOccurrences(of: "\\ ", with: spacedFolderPlaceholder)
+            .components(separatedBy: " ")
+            .map { $0.replacingOccurrences(of: spacedFolderPlaceholder, with: " ")}
+        let files = parseModuleFiles(from: relevantArguments)
+        let compilerArguments = parseCompilerArguments(from: relevantArguments)
+        modules[moduleName, default: ([], [], [])].source = files
+        modules[moduleName]?.args = compilerArguments
     }
 
     private func parseModuleFiles(from relevantArguments: [String]) -> [File] {
@@ -93,5 +105,16 @@ struct XcodeProjectBuilder {
         }
         args.append(contentsOf: ["-D", "DEBUG"])
         return args.compactMap { $0 }
+    }
+
+    private func parseCompileXibPhase(line: String, moduleName: String, modules: inout MutableModuleDictionary) {
+        guard let xibPath = firstMatch(for: "(?=)[^ ]*$", in: line) else {
+            return
+        }
+        guard xibPath.hasSuffix(".xib") || xibPath.hasSuffix(".storyboard") else {
+            return
+        }
+        let file = File(filePath: xibPath)
+        modules[moduleName, default: ([], [], [])].xibs.append(file)
     }
 }

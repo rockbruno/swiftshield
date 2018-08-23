@@ -22,7 +22,6 @@ final class SourceKit {
         }
         let prefixIndex = kind.index(kind.startIndex, offsetBy: prefix.count)
         let kindSuffix = String(kind[prefixIndex...])
-        print(kind)
         switch kindSuffix {
         case "class",
              "struct",

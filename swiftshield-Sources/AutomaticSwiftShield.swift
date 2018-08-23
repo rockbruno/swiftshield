@@ -37,6 +37,7 @@ final class AutomaticSwiftShield: Protector {
         let modules = projectBuilder.getModulesAndCompilerArguments()
         let modulesToObfuscate = modules.filter { modulesToIgnore.contains($0.name) == false }
         let obfuscationData = index(modules: modulesToObfuscate)
+        obfuscationData.storyboardToObfuscate = modulesToObfuscate.flatMap { $0.xibFiles }
         if obfuscationData.obfuscationDict.isEmpty {
             Logger.log(.foundNothingError)
             exit(error: true)
@@ -52,7 +53,7 @@ extension AutomaticSwiftShield {
         let obfuscationData = ObfuscationData()
         var fileDataArray: [(file: File, module: Module)] = []
         for module in modules {
-            for file in module.files {
+            for file in module.sourceFiles {
                 fileDataArray.append((file, module))
             }
         }
