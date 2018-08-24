@@ -65,13 +65,14 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 ### Automatic mode:
 
-If one or more modules of your app fail to satify these conditions, you can avoid obfuscating them with the `-ignore-modules` argument.
+If one or more modules/extensions of your app fail to satify these conditions, you can avoid obfuscating them with the `-ignore-modules` argument.
 
 1. No logic based on class/property names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
 2. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine, except when interfacing is involved)
-3. If you use app extensions that use a "main class" property in plists (like Rich Notifications), for now you will have to manually update their plist's main class with the obfuscated name.
 4. Latest Swift version and Xcode command line tools (works on all versions, but might have different results due to different SourceKit versions)
 5. Make sure your project doesn't contain one of [SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require some manual fixing afterwards.
+
+If your project contains app extensions that use the `NSPrincipalClass` or `NSExtensionPrincipalClass` properties in their `Info.plist` (like Rich Notifications), you'll have to manually update such properties with the obfuscated name. This is going to be automated in future releases, but you can also avoid this by not obfuscating the extensions with `-ignore-modules`.
 
 ### Manual mode:
 
