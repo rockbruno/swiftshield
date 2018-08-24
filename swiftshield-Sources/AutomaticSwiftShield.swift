@@ -139,7 +139,7 @@ extension AutomaticSwiftShield {
                     }
                     let newName = obfuscationData.obfuscationDict[name] ?? name
                     Logger.log(.foundReference(name: name, usr: usr, at: file, line: line, column: column, newName: newName))
-                    let reference = ReferenceData(name: name, line: line, column: column, file: file, usr: usr)
+                    let reference = ReferenceData(name: name, line: line, column: column)
                     obfuscationData.add(reference: reference, toFile: file)
                 }
             })

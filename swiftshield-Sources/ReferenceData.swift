@@ -4,15 +4,11 @@ class ReferenceData {
     let name: String
     let line: Int
     let column: Int
-    let file: File
-    let usr: String
     
-    init(name: String, line: Int, column: Int, file: File, usr: String) {
+    init(name: String, line: Int, column: Int) {
         self.name = name
         self.line = line
         self.column = column
-        self.file = file
-        self.usr = usr
     }
 }
 

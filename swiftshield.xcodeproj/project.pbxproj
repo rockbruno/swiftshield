@@ -22,6 +22,8 @@
 		FD1BEDAB21303B7000105411 /* ExpectedMockXib.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BEDAA21303B7000105411 /* ExpectedMockXib.txt */; };
 		FD1BEDAE21303DCA00105411 /* ExpectedMockXibIgnoringMainModule.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BEDAD21303DCA00105411 /* ExpectedMockXibIgnoringMainModule.txt */; };
 		FD1BEDB22130491200105411 /* AutomaticSwiftShieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1BEDB12130491200105411 /* AutomaticSwiftShieldTests.swift */; };
+		FD1BEDB421304E2B00105411 /* MockOriginalFile.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BEDB321304E2A00105411 /* MockOriginalFile.txt */; };
+		FD1BEDB62130506B00105411 /* MockObfuscatedFile.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BEDB52130506A00105411 /* MockObfuscatedFile.txt */; };
 		FD1C89CB212C986600F05C4D /* TTY.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CA212C986600F05C4D /* TTY.swift */; };
 		FD1C89CD212C988100F05C4D /* SourceKit+Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */; };
 		FD1C89CF212C989B00F05C4D /* DynamicLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CE212C989B00F05C4D /* DynamicLink.swift */; };
@@ -81,6 +83,8 @@
 		FD1BEDAA21303B7000105411 /* ExpectedMockXib.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ExpectedMockXib.txt; sourceTree = "<group>"; };
 		FD1BEDAD21303DCA00105411 /* ExpectedMockXibIgnoringMainModule.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ExpectedMockXibIgnoringMainModule.txt; sourceTree = "<group>"; };
 		FD1BEDB12130491200105411 /* AutomaticSwiftShieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticSwiftShieldTests.swift; sourceTree = "<group>"; };
+		FD1BEDB321304E2A00105411 /* MockOriginalFile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MockOriginalFile.txt; sourceTree = "<group>"; };
+		FD1BEDB52130506A00105411 /* MockObfuscatedFile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MockObfuscatedFile.txt; sourceTree = "<group>"; };
 		FD1C89CA212C986600F05C4D /* TTY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTY.swift; sourceTree = "<group>"; };
 		FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SourceKit+Variant.swift"; sourceTree = "<group>"; };
 		FD1C89CE212C989B00F05C4D /* DynamicLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLink.swift; sourceTree = "<group>"; };
@@ -207,6 +211,8 @@
 			isa = PBXGroup;
 			children = (
 				FD1BEDB12130491200105411 /* AutomaticSwiftShieldTests.swift */,
+				FD1BEDB321304E2A00105411 /* MockOriginalFile.txt */,
+				FD1BEDB52130506A00105411 /* MockObfuscatedFile.txt */,
 			);
 			path = AutomaticSwiftShieldTests;
 			sourceTree = "<group>";
@@ -380,6 +386,8 @@
 				FD1BED9A21302EA200105411 /* MockXib.txt in Resources */,
 				FD1BEDAE21303DCA00105411 /* ExpectedMockXibIgnoringMainModule.txt in Resources */,
 				FD5315DA212F8C4C001EA977 /* XcodeOutput.txt in Resources */,
+				FD1BEDB62130506B00105411 /* MockObfuscatedFile.txt in Resources */,
+				FD1BEDB421304E2B00105411 /* MockOriginalFile.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
