@@ -1,6 +1,6 @@
 import Foundation
 
-final class AutomaticSwiftShield: Protector {
+class AutomaticSwiftShield: Protector {
 
     let projectToBuild: String
     let schemeToBuild: String
@@ -26,31 +26,33 @@ final class AutomaticSwiftShield: Protector {
     }
 
     override func protect() -> ObfuscationData {
-        if modulesToIgnore.isEmpty == false {
-            Logger.log(.ignoreModules(modules: modulesToIgnore))
-        }
         guard isWorkspace || projectToBuild.hasSuffix(".xcodeproj") else {
             Logger.log(.projectError)
             exit(error: true)
         }
-        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild)
+        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore)
         let modules = projectBuilder.getModulesAndCompilerArguments()
-        let modulesToObfuscate = modules.filter { modulesToIgnore.contains($0.name) == false }
-        let obfuscationData = index(modules: modulesToObfuscate)
-        obfuscationData.storyboardToObfuscate = modulesToObfuscate.flatMap { $0.xibFiles }
+        let obfuscationData = getObfuscationData(from: modules)
+        index(modules: modules, obfuscationData: obfuscationData)
         if obfuscationData.obfuscationDict.isEmpty {
             Logger.log(.foundNothingError)
             exit(error: true)
         }
-        obfuscateReferences(obfuscationData: obfuscationData)
+        findReferencesInIndexed(obfuscationData: obfuscationData)
+        overwriteFiles(obfuscationData: obfuscationData)
         return obfuscationData
     }
-}
 
-extension AutomaticSwiftShield {
-    func index(modules: [Module]) -> ObfuscationData {
-        let sourceKit = SourceKit()
+    func getObfuscationData(from modules: [Module]) -> ObfuscationData {
         let obfuscationData = ObfuscationData()
+        obfuscationData.storyboardsToObfuscate = modules.flatMap { $0.xibFiles }
+        obfuscationData.moduleNames = Set(modules.compactMap { $0.name })
+        return obfuscationData
+    }
+
+    func index(modules: [Module], obfuscationData: ObfuscationData) {
+        let sourceKit = SourceKit()
+        let obfuscationData = getObfuscationData(from: modules)
         var fileDataArray: [(file: File, module: Module)] = []
         for module in modules {
             for file in module.sourceFiles {
@@ -80,9 +82,10 @@ extension AutomaticSwiftShield {
             }
             obfuscationData.indexedFiles.append((file, resp))
         }
-        return obfuscationData
     }
+}
 
+extension AutomaticSwiftShield {
     private func index(sourceKit: SourceKit, file: File, args: sourcekitd_object_t) -> sourcekitd_response_t {
         let resp = sourceKit.indexFile(filePath: file.path, compilerArgs: args)
         if let error = sourceKit.error(resp: resp) {
@@ -109,10 +112,10 @@ extension AutomaticSwiftShield {
         return (name, usr, protected)
     }
 
-    func obfuscateReferences(obfuscationData: ObfuscationData) {
+    func findReferencesInIndexed(obfuscationData: ObfuscationData) {
         let SK = SourceKit()
         Logger.log(.searchingReferencesOfUsr)
-        for (file,indexResponse) in obfuscationData.indexedFiles {
+        for (file, indexResponse) in obfuscationData.indexedFiles {
             let dict = SKApi.sourcekitd_response_get_value(indexResponse)
             SK.recurseOver(childID: SK.entitiesID, resp: dict, block: { dict in
                 let kind = dict.getUUIDString(key: SK.kindID)
@@ -141,7 +144,6 @@ extension AutomaticSwiftShield {
                 }
             })
         }
-        overwriteFiles(obfuscationData: obfuscationData)
     }
 
     private func isReferencingInternal(type: SourceKit.DeclarationType, kind: String, dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> Bool {
@@ -173,40 +175,9 @@ extension AutomaticSwiftShield {
 
     func overwriteFiles(obfuscationData: ObfuscationData) {
         for (file,references) in obfuscationData.referencesDict {
-            var sortedReferences = references.filterDuplicates { $0.line == $1.line && $0.column == $1.column }.sorted(by: lesserPosition)
-            var currentReference = 0
-            var line = 1
-            var column = 1
-            let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-            var charArray = Array(data).map(String.init)
-            var currentCharIndex = 0
             Logger.log(.overwriting(file: file))
-            while currentCharIndex < charArray.count && currentReference < sortedReferences.count {
-                let reference = sortedReferences[currentReference]
-                if line == reference.line && column == reference.column {
-                    let originalName = reference.name
-                    let word = obfuscationData.obfuscationDict[originalName] ?? originalName
-                    let wasInternalKeyword = charArray[currentCharIndex] == "`"
-                    for i in 1..<(originalName.count + (wasInternalKeyword ? 2 : 0)) {
-                        charArray[currentCharIndex + i] = ""
-                    }
-                    charArray[currentCharIndex] = word
-                    currentReference += 1
-                    currentCharIndex += originalName.count
-                    column += originalName.count
-                    if wasInternalKeyword {
-                        charArray[currentCharIndex] = ""
-                    }
-                } else if charArray[currentCharIndex] == "\n" {
-                    line += 1
-                    column = 1
-                    currentCharIndex += 1
-                } else {
-                    column += 1
-                    currentCharIndex += 1
-                }
-            }
-            let obfuscatedFile = charArray.joined()
+            let data = try! String(contentsOfFile: file.path, encoding: .utf8)
+            let obfuscatedFile = generateObfuscatedFile(fromString: data, references: references, obfuscationData: obfuscationData)
             do {
                 try obfuscatedFile.write(toFile: file.path, atomically: false, encoding: .utf8)
             } catch {
@@ -214,5 +185,40 @@ extension AutomaticSwiftShield {
                 exit(error: true)
             }
         }
+    }
+
+    func generateObfuscatedFile(fromString data: String, references: [ReferenceData], obfuscationData: ObfuscationData) -> String {
+        var sortedReferences = references.filterDuplicates { $0.line == $1.line && $0.column == $1.column }.sorted(by: lesserPosition)
+        var currentReference = 0
+        var line = 1
+        var column = 1
+        var charArray = Array(data).map(String.init)
+        var currentCharIndex = 0
+        while currentCharIndex < charArray.count && currentReference < sortedReferences.count {
+            let reference = sortedReferences[currentReference]
+            if line == reference.line && column == reference.column {
+                let originalName = reference.name
+                let word = obfuscationData.obfuscationDict[originalName] ?? originalName
+                let wasInternalKeyword = charArray[currentCharIndex] == "`"
+                for i in 1..<(originalName.count + (wasInternalKeyword ? 2 : 0)) {
+                    charArray[currentCharIndex + i] = ""
+                }
+                charArray[currentCharIndex] = word
+                currentReference += 1
+                currentCharIndex += originalName.count
+                column += originalName.count
+                if wasInternalKeyword {
+                    charArray[currentCharIndex] = ""
+                }
+            } else if charArray[currentCharIndex] == "\n" {
+                line += 1
+                column = 1
+                currentCharIndex += 1
+            } else {
+                column += 1
+                currentCharIndex += 1
+            }
+        }
+        return charArray.joined()
     }
 }
