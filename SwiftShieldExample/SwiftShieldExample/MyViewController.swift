@@ -4,7 +4,7 @@ import Unbox
 
 final class MyView: UILabel {}
 
-class ViewController: UIViewController {
+class MyViewController: UIViewController {
     struct Foo {
         func barbar(view: MyView) -> ViewController {
             print(view)
