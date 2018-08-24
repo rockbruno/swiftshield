@@ -6,9 +6,9 @@ final class MyView: UILabel {}
 
 class MyViewController: UIViewController {
     struct Foo {
-        func barbar(view: MyView) -> ViewController {
+        func barbar(view: MyView) -> MyViewController {
             print(view)
-            return ViewController(nibName: nil, bundle: nil)
+            return MyViewController(nibName: nil, bundle: nil)
         }
     }
 
