@@ -78,16 +78,16 @@ If your project contains app extensions that use the `NSPrincipalClass` or `NSEx
 
 1. Make sure your tags aren't used on things that are not supposed to be obfuscated, like hardcoded strings.
 
-## Installation
+## ⚙️ Installation
 
 **Warning:** SwiftShield **irreversibly overwrites** all your source files. Ideally, you should have it run only on your CI server, and on release builds.
 
 Download the [latest release](https://github.com/rockbruno/swiftshield/releases) from this repository and [click here to see how to setup SwiftShield.](USAGE.md)
 
 
-## Running SwiftShield
+## 🛫 Running SwiftShield
 
-# Automatic mode
+### Automatic mode
 
 ```
 swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xcworkspace -automatic-project-scheme MyApp-AppStore
@@ -112,7 +112,7 @@ swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xc
 
 - `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
-# Manual mode
+### Manual mode
 
 ```
 swiftshield -project-root /app/MyApp
@@ -130,7 +130,7 @@ swiftshield -project-root /app/MyApp
 - `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
 
-## Automatic Mode Next Steps
+## ✅ Automatic Mode Next Steps
 
 - [X] Method names
 - [ ] Properties
