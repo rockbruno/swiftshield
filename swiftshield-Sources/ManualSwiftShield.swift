@@ -13,7 +13,7 @@ final class ManualSwiftShield: Protector {
         let files = getSourceFiles()
         Logger.log(.scanningDeclarations)
         var obfsData = ObfuscationData()
-        obfsData.storyboardToObfuscate = getStoryboardsAndXibs()
+        obfsData.storyboardsToObfuscate = getStoryboardsAndXibs()
         files.forEach { protect(file: $0, obfsData: &obfsData) }
         return obfsData
     }
@@ -33,8 +33,8 @@ final class ManualSwiftShield: Protector {
     private func obfuscateReferences(fileString data: String, obfsData: inout ObfuscationData) -> String {
         var currentIndex = data.startIndex
         let matches = data.match(regex: String.regexFor(tag: tag))
-        return matches.flatMap { result in
-            let word = (data as NSString).substring(with: result.rangeAt(0))
+        return matches.compactMap { result in
+            let word = (data as NSString).substring(with: result.range(at: 0))
             let protectedName: String = {
                 guard let protected = obfsData.obfuscationDict[word] else {
                     let protected = String.random(length: protectedClassNameSize, excluding: obfsData.allObfuscatedNames)
@@ -47,7 +47,7 @@ final class ManualSwiftShield: Protector {
             Logger.log(.protectedReference(originalName: word, protectedName: protectedName))
             let range: Range = currentIndex..<data.index(data.startIndex, offsetBy: result.range.location)
             currentIndex = data.index(range.upperBound, offsetBy: result.range.length)
-            return data.substring(with: range) + protectedName
-        }.joined() + (currentIndex < data.endIndex ? data.substring(with: currentIndex..<data.endIndex) : "")
+            return data[range] + protectedName
+        }.joined() + (currentIndex < data.endIndex ? data[currentIndex..<data.endIndex] : "")
     }
 }

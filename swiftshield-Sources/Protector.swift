@@ -23,36 +23,44 @@ class Protector {
 
     func protectStoryboards(data obfuscationData: ObfuscationData) {
         Logger.log(.overwritingStoryboards)
-        for file in obfuscationData.storyboardToObfuscate {
+        for file in obfuscationData.storyboardsToObfuscate {
             Logger.log(.checking(file: file))
-            //TODO: We can do the index approach here as well instead of replacingOccurences.
-            let data = try! String(contentsOfFile: file.path, encoding: .utf8)
-            let matches = data.match(regex: String.storyboardClassNameRegex)
-            let retrievedClasses = matches.flatMap { result in
-                (data as NSString).substring(with: result.rangeAt(0))
-            }
-            var overwrittenData = data
-            for `class` in retrievedClasses.removeDuplicates() {
-                guard let protectedClass = obfuscationData.obfuscationDict[`class`] else {
-                    continue
-                }
-                Logger.log(.protectedReference(originalName: `class`, protectedName: protectedClass))
-                overwrittenData = overwrittenData.replacingOccurrences(of: Storyboard.customClass(class: `class`), with: Storyboard.customClass(class: protectedClass))
-                if `class`.count > 4 {
-                    overwrittenData = overwrittenData.replacingOccurrences(of: Storyboard.actionSelector(method: `class`), with: Storyboard.actionSelector(method: protectedClass))
-                }
-            }
-            guard overwrittenData != data else {
-                Logger.log(.fileNotModified(file: file))
-                continue
-            }
+            let data = try! Data(contentsOf: URL(fileURLWithPath: file.path))
+            let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+            obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfuscationData)
+            let obfuscatedFile = xmlDoc.xml
             Logger.log(.saving(file: file))
             do {
-                try overwrittenData.write(toFile: file.path, atomically: false, encoding: String.Encoding.utf8)
+                try obfuscatedFile.write(toFile: file.path, atomically: true, encoding: .utf8)
             } catch {
                 Logger.log(.fatal(error: error.localizedDescription))
                 exit(error: true)
             }
+        }
+    }
+
+    func obfuscateIBXML(element: AEXMLElement, currentModule: String? = nil, obfuscationData: ObfuscationData, idToXML: [String: AEXMLElement] = [:]) {
+        var idToXML = idToXML
+        let supportedModules = obfuscationData.moduleNames
+        let currentModule: String = element.attributes["customModule"] ?? currentModule ?? ""
+        if let identifier = element.attributes["id"] {
+            idToXML[identifier] = element
+        }
+        if supportedModules?.contains(currentModule) != false {
+            if let customClass = element.attributes["customClass"], let protectedClass = obfuscationData.obfuscationDict[customClass] {
+                Logger.log(.protectedReference(originalName: customClass, protectedName: protectedClass))
+                element.attributes["customClass"] = protectedClass
+            }
+        }
+        if element.name == "action", let actionSelector = element.attributes["selector"], let trueName = actionSelector.components(separatedBy: ":").first, trueName.count > 4, let protectedClass = obfuscationData.obfuscationDict[trueName] {
+            let actionModule = idToXML[element.attributes["destination"] ?? ""]?.attributes["customModule"] ?? ""
+            if supportedModules?.contains(actionModule) != false {
+                Logger.log(.protectedReference(originalName: trueName, protectedName: protectedClass))
+                element.attributes["selector"] = protectedClass + ":"
+            }
+        }
+        for child in element.children {
+            obfuscateIBXML(element: child, currentModule: currentModule, obfuscationData: obfuscationData, idToXML: idToXML)
         }
     }
 
@@ -67,8 +75,8 @@ class Protector {
                 let data = try String(contentsOfFile: path, encoding: .utf8)
                 var shouldInject = true
                 let matches = data.match(regex: pbxProjRegex)
-                let newProject = matches.flatMap { result in
-                    let currentLine = (data as NSString).substring(with: result.rangeAt(0))
+                let newProject = matches.compactMap { result in
+                    let currentLine = (data as NSString).substring(with: result.range(at: 0))
                     guard shouldInject else {
                         return currentLine + "\n"
                     }
@@ -78,7 +86,7 @@ class Protector {
                         return "\t\t" + injectedLine + "\n" + currentLine + "\n"
                     }
                     return currentLine + "\n"
-                    }.joined()
+                }.joined()
                 try newProject.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 Logger.log(.fatal(error: error.localizedDescription))

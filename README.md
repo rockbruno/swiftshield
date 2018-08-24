@@ -14,6 +14,7 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 }
 ```
 
+
 ## 🤖 Automatic mode (Swift only)
 
 With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool, [which doesn't refactor everything yet](SOURCEKITISSUES.md). While the specific cases on the document won't be obfuscated, SwiftShield will obfuscate all Swift classes and methods that can be reverse-engineered. Take a look at the Example project to see SwiftShield in action!
@@ -45,6 +46,7 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 ## 💥 Dealing with encrypted crash logs / analytics
 
 After succesfully encrypting your project, SwiftShield generates a `conversionMap.txt` file with all the changes it made to your project, allowing you to pinpoint what an encrypted object really is.
+
 ````
 //
 //  SwiftShield
@@ -61,17 +63,18 @@ SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 
 ## 🚨 Requirements
 
+### Automatic mode:
+
+If one or more modules/extensions of your app fail to satify these conditions, you can avoid obfuscating them with the `-ignore-modules` argument.
+
 1. No logic based on class/property names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
-2. A Xcode version that has a project structure like Xcode 9.3 (which is pretty much every Xcode version for now)
+2. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine, except when interfacing is involved)
+4. Latest Swift version and Xcode command line tools (works on all versions, but might have different results due to different SourceKit versions)
+5. Make sure your project doesn't contain one of [SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require some manual fixing afterwards.
 
-Automatic mode:
+If your project contains app extensions that use the `NSPrincipalClass` or `NSExtensionPrincipalClass` properties in their `Info.plist` (like Rich Notifications), you'll have to manually update such properties with the obfuscated name. This is going to be automated in future releases, but you can also avoid this by not obfuscating the extensions with `-ignore-modules`.
 
-1. Xcode command-line tools
-2. Swift 4.1 (works on other versions, but has different results due to SourceKit)
-3. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine, except when interfacing is involved)
-4. If you use app extensions that use a "main class" property in plists (like Rich Notifications), for now you will have to manually update their plist's main class with the obfuscated name.
-
-Manual mode:
+### Manual mode:
 
 1. Make sure your tags aren't used on things that are not supposed to be obfuscated, like hardcoded strings.
 
@@ -101,7 +104,7 @@ swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xc
 
 **Optional Parameters:**
 
-- `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. This should be the exact name of the imported module (not the target name!). This might result in wrong behaviour if the ignored module uses storyboards/xibs, as these are obfuscated separatedly for now. Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
+- `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. Note that this should be the exact name of the imported module (not the target name!). Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
 
 - `-verbose`: Prints additional information.
 

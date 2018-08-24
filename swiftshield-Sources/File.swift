@@ -1,20 +1,23 @@
 import Foundation
 
-class File: Hashable {
+struct File {
     let path: String
+
     var name: String {
         return (path as NSString).lastPathComponent
     }
     
+    init(filePath: String) {
+        self.path = filePath
+    }
+}
+
+extension File: Hashable {
     var hashValue: Int {
         return path.hashValue
     }
-    
-    public static func ==(lhs: File, rhs: File) -> Bool {
+
+    static func ==(lhs: File, rhs: File) -> Bool {
         return lhs.path == rhs.path
-    }
-    
-    init(filePath: String) {
-        self.path = filePath
     }
 }

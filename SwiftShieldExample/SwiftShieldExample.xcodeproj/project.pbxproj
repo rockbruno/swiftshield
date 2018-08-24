@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		690E9FDA54E33AE150456400 /* Pods_SwiftShieldExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906E79CBAAED7E65DB3DE1FF /* Pods_SwiftShieldExample.framework */; };
 		FD5360EF212DFC21004FB44F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5360EE212DFC21004FB44F /* AppDelegate.swift */; };
-		FD5360F1212DFC21004FB44F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5360F0212DFC21004FB44F /* ViewController.swift */; };
+		FD5360F1212DFC21004FB44F /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5360F0212DFC21004FB44F /* MyViewController.swift */; };
 		FD5360F4212DFC21004FB44F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD5360F2212DFC21004FB44F /* Main.storyboard */; };
 		FD5360F6212DFC23004FB44F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD5360F5212DFC23004FB44F /* Assets.xcassets */; };
 		FD5360F9212DFC23004FB44F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD5360F7212DFC23004FB44F /* LaunchScreen.storyboard */; };
@@ -21,7 +21,7 @@
 		BD814D94DFF5C577F98E325F /* Pods-SwiftShieldExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftShieldExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample.release.xcconfig"; sourceTree = "<group>"; };
 		FD5360EB212DFC21004FB44F /* SwiftShieldExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftShieldExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD5360EE212DFC21004FB44F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FD5360F0212DFC21004FB44F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FD5360F0212DFC21004FB44F /* MyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyViewController.swift; sourceTree = "<group>"; };
 		FD5360F3212DFC21004FB44F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FD5360F5212DFC23004FB44F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD5360F8212DFC23004FB44F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -79,7 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				FD5360EE212DFC21004FB44F /* AppDelegate.swift */,
-				FD5360F0212DFC21004FB44F /* ViewController.swift */,
+				FD5360F0212DFC21004FB44F /* MyViewController.swift */,
 				FD5360F2212DFC21004FB44F /* Main.storyboard */,
 				FD5360F5212DFC23004FB44F /* Assets.xcassets */,
 				FD5360F7212DFC23004FB44F /* LaunchScreen.storyboard */,
@@ -202,7 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD5360F1212DFC21004FB44F /* ViewController.swift in Sources */,
+				FD5360F1212DFC21004FB44F /* MyViewController.swift in Sources */,
 				FD5360EF212DFC21004FB44F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

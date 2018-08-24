@@ -1,0 +1,12 @@
+class AAAAA: BBBBB {
+
+    @IBAction func FFFFF(_ sender: Any) {}
+    public static func ++++(lhs: AAAAA, rhs: AAAAA) {}
+
+    public var CCCCC: DDDDD = ""
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print(AAAAA.EEEEE())
+    }
+}

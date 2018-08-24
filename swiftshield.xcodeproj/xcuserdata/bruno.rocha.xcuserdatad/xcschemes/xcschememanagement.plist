@@ -4,6 +4,13 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>SwiftShieldTests.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>swiftshield.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -13,6 +20,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>FD0B10931E2F8ACD00AED458</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD5315D0212F872D001EA977</key>
 		<dict>
 			<key>primary</key>
 			<true/>

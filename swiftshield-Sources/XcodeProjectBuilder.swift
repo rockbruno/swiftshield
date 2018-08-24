@@ -7,17 +7,22 @@ struct XcodeProjectBuilder {
 
     let projectToBuild: String
     let schemeToBuild: String
+    let modulesToIgnore: Set<String>
 
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
     }
 
-    init(projectToBuild: String, schemeToBuild: String) {
+    init(projectToBuild: String, schemeToBuild: String, modulesToIgnore: Set<String>) {
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
+        self.modulesToIgnore = modulesToIgnore
     }
 
     func getModulesAndCompilerArguments() -> [Module] {
+        if modulesToIgnore.isEmpty == false {
+            Logger.log(.ignoreModules(modules: modulesToIgnore))
+        }
         Logger.log(.buildingProject)
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
@@ -47,7 +52,7 @@ struct XcodeProjectBuilder {
                 parseCompileXibPhase(line: line, moduleName: moduleName, modules: &modules)
             }
         }
-        return modules.map {
+        return modules.filter { modulesToIgnore.contains($0.key) == false }.map {
             Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, compilerArguments: $0.value.args)
         }
     }
