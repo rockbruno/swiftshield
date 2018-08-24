@@ -1,9 +1,17 @@
 # Current known SourceKit issues that prevent SwiftShield from obfuscating *everything*
 
-The following types are currently disabled in SwiftShield due to SourceKit bugs.
+# SourceKit Bugs
 
 - [(SR-8616)](https://bugs.swift.org/browse/SR-8616) `is` pattern: Matched type won't index if the left element is an optional (`if [].first is Foo`). For now, you can overcome this by not using the optionals directly.
-- [(SR-8617)](https://bugs.swift.org/browse/SR-8617) Enum names: Explicitly using an enum type in pattern matching prevents it from getting indexed (`case MyEnum.myCase` - MyEnum isn't indexed)
-- Typealiases: Not always indexed (`typealias Foo = UIImage | extension Foo {}` - Foo is ignored and indexed as UIImage)
-- Enum cases: Although they are correctly indexed, some enums like `CodingKeys` are not meant to be changed.
-- Operator overloading: Operators only get indexed as such if they are declared in a global scope. Since most people use `public static func`, they get indexed as regular methods. To prevent operators from being obfuscated, methods with names shorter than four characters don't get obfuscated.
+- [(SR-8617)](https://bugs.swift.org/browse/SR-8617) Enum names: Explicitly using an enum type in pattern matching prevents it from getting indexed (`if case MyClass.MyEnum.myCase {}` - `myCase` will be indexed, but `MyClass` won't.)
+- Emoji Strings: Although SourceKit has no real bugs regarding emojis, it does treat them differently: While SourceKit treats emojis as several characters, Swift treats them as a single one - which will prevent SwiftShield from knowing the correct position of the references after said emoji. While a solution isn't found, you can avoid this by not using emojis.
+
+# Types that won't be obfuscated
+
+The following types and cases might be working correctly in SourceKit, but are currently disabled for other reasons.
+
+- Typealiases and Associated Types: Not always indexed (`typealias Foo = UIImage | extension Foo {}` - Foo is ignored and indexed as UIImage). Note that these can't be reverse-engineered as they are purely an editor thing, so no action is required!
+- Enum cases and names: Although they are correctly indexed, some enums like `CodingKeys` are not meant to be changed. This will be activated again once the way to determine if an enum is related to internal frameworks is implemented.
+- Methods with names under four characters: Operators only get indexed as such if they are declared in a global scope. Since most people use `public static func`, they get indexed as regular methods. To prevent operators from being obfuscated, methods with names shorter than four characters won't get obfuscated.
+- Properties: Not implemented yet!
+- Module names: Not implemented yet!

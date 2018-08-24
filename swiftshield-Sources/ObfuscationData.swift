@@ -9,8 +9,4 @@ final class ObfuscationData {
     var allObfuscatedNames: Set<String> = []
     var storyboardsToObfuscate: [File] = []
     var moduleNames: Set<String>? = nil
-
-    func add(reference: ReferenceData, toFile file: File) {
-        referencesDict[file, default: []].append(reference)
-    }
 }

@@ -34,11 +34,11 @@ class AutomaticSwiftShield: Protector {
         let modules = projectBuilder.getModulesAndCompilerArguments()
         let obfuscationData = getObfuscationData(from: modules)
         index(modules: modules, obfuscationData: obfuscationData)
-        if obfuscationData.obfuscationDict.isEmpty {
+        findReferencesInIndexed(obfuscationData: obfuscationData)
+        if obfuscationData.referencesDict.isEmpty {
             Logger.log(.foundNothingError)
             exit(error: true)
         }
-        findReferencesInIndexed(obfuscationData: obfuscationData)
         overwriteFiles(obfuscationData: obfuscationData)
         return obfuscationData
     }
@@ -52,7 +52,6 @@ class AutomaticSwiftShield: Protector {
 
     func index(modules: [Module], obfuscationData: ObfuscationData) {
         let sourceKit = SourceKit()
-        let obfuscationData = getObfuscationData(from: modules)
         var fileDataArray: [(file: File, module: Module)] = []
         for module in modules {
             for file in module.sourceFiles {
@@ -116,6 +115,7 @@ extension AutomaticSwiftShield {
         let SK = SourceKit()
         Logger.log(.searchingReferencesOfUsr)
         for (file, indexResponse) in obfuscationData.indexedFiles {
+            print("HERE")
             let dict = SKApi.sourcekitd_response_get_value(indexResponse)
             SK.recurseOver(childID: SK.entitiesID, resp: dict, block: { dict in
                 let kind = dict.getUUIDString(key: SK.kindID)
@@ -140,7 +140,7 @@ extension AutomaticSwiftShield {
                     let newName = obfuscationData.obfuscationDict[name] ?? name
                     Logger.log(.foundReference(name: name, usr: usr, at: file, line: line, column: column, newName: newName))
                     let reference = ReferenceData(name: name, line: line, column: column)
-                    obfuscationData.add(reference: reference, toFile: file)
+                    obfuscationData.referencesDict[file, default: []].append(reference)
                 }
             })
         }
