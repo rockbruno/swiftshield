@@ -8,24 +8,34 @@ func loadFile(_ name: String, ofType type: String) -> Data {
 
 class StoryboardObfuscationTests: XCTestCase {
     func testStoryboardObfuscation() {
-        let data = loadFile("MockXib", ofType: "txt")
-        var xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         let obfsData = ObfuscationData()
-        obfsData.obfuscationDict["ClassFromMainModule"] = "AAAAClass"
-        obfsData.obfuscationDict["ViewFromMainModule"] = "AAAAClass2"
-        obfsData.obfuscationDict["selectorFromMainModule"] = "AAAASelector"
-        obfsData.obfuscationDict["ClassFromOtherModule"] = "BBBBClass"
-        obfsData.obfuscationDict["AnotherClassFromOtherModule"] = "BBBBClass2"
-        obfsData.obfuscationDict["ClassFromThirdModule"] = "CCCCClass"
+        obfsData.obfuscationDict["ViewController"] = "AAAAClass"
+        obfsData.obfuscationDict["MainModuleView"] = "AAAAClass2"
+        obfsData.obfuscationDict["ThirdModuleView"] = "CCCCClass"
+        obfsData.obfuscationDict["OtherModuleButton"] = "BBBBClass"
+        obfsData.obfuscationDict["otherModuleButtonMethod"] = "AAAASelector"
+
+        var data = loadFile("MockStoryboard", ofType: "txt")
+        var xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         Protector(basePath: "abc").obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfsData)
-        let data2 = loadFile("ExpectedMockXib", ofType: "txt")
-        let xmlDoc2 = try! AEXMLDocument(xml: data2, options: AEXMLOptions())
+        data = loadFile("ExpectedMockStoryboard", ofType: "txt")
+        var xmlDoc2 = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         XCTAssertEqual(xmlDoc.xml, xmlDoc2.xml)
+
+        data = loadFile("MockStoryboard", ofType: "txt")
         xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         obfsData.moduleNames = ["OtherModule", "ThirdModule"]
-        let data3 = loadFile("ExpectedMockXibIgnoringMainModule", ofType: "txt")
-        let xmlDoc3 = try! AEXMLDocument(xml: data3, options: AEXMLOptions())
+        data = loadFile("ExpectedMockStoryboardIgnoringMainModule", ofType: "txt")
+        xmlDoc2 = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         Protector(basePath: "abc").obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfsData)
-        XCTAssertEqual(xmlDoc.xml, xmlDoc3.xml)
+        XCTAssertEqual(xmlDoc.xml, xmlDoc2.xml)
+
+        data = loadFile("MockXib", ofType: "txt")
+        xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+        obfsData.moduleNames = nil
+        data = loadFile("ExpectedMockXib", ofType: "txt")
+        xmlDoc2 = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+        Protector(basePath: "abc").obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfsData)
+        XCTAssertEqual(xmlDoc.xml, xmlDoc2.xml)
     }
 }
