@@ -130,6 +130,11 @@ swiftshield -project-root /app/MyApp
 - `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
 
+## 🤝 Contributing
+
+Contributions to SwiftShield are more than welcome! There's no contribution guidelines for now, so you're free to use the Issues tab to discuss future features and improvements.
+
+
 ## ✅ Automatic Mode Next Steps
 
 - [X] Method names
