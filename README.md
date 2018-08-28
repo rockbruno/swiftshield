@@ -96,7 +96,7 @@ swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xc
 
 - `-automatic`: Enables automatic mode.
 
-- `-project-root`: The root of your project. SwiftShield will use this to search for your project files, storyboards and source files.
+- `-project-root`: The root of your project. SwiftShield will use this to search for your project files.
 
 - `-automatic-project-file`: Your app's main .xcodeproj/.xcworkspace file.
 
