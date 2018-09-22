@@ -1,6 +1,6 @@
 import Foundation
 
-struct File {
+class File {
     let path: String
 
     var name: String {

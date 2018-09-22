@@ -17,8 +17,8 @@ struct Module {
 extension Module: Equatable {
     static func ==(lhs: Module, rhs: Module) -> Bool {
         return lhs.name == rhs.name &&
-               lhs.sourceFiles == rhs.sourceFiles &&
-               lhs.xibFiles == rhs.xibFiles &&
-               lhs.compilerArguments == rhs.compilerArguments
+               Set(lhs.sourceFiles) == Set(rhs.sourceFiles) &&
+               Set(lhs.xibFiles) == Set(rhs.xibFiles) &&
+               Set(lhs.compilerArguments) == Set(rhs.compilerArguments)
     }
 }
