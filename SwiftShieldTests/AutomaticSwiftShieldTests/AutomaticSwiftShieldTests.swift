@@ -53,8 +53,8 @@ class AutomaticSwiftShieldTests: XCTestCase {
         protector.obfuscateNSPrincipalClassPlists(obfuscationData: obfuscationData)
         let expectedPlistData = loadFile("MockPlistObfuscatedPrincipalClass", ofType: "plist")
         let expectedPlistString = String(data: expectedPlistData, encoding: .utf8)!
-        print(file.writtenData)
-        print(expectedPlistString)
-        XCTAssertEqual(file.writtenData, expectedPlistString)
+        let origXml = try! AEXMLDocument(xml: file.writtenData)
+        let expectedXml = try! AEXMLDocument(xml: expectedPlistString)
+        XCTAssertEqual(origXml.xml, expectedXml.xml)
     }
 }
