@@ -4,9 +4,9 @@ final class MockFile: File {
     let data: String
     var writtenData: String = ""
 
-    init(data: String) {
-        self.data = data
-        super.init(filePath: "")
+    init(data: String? = nil, path: String = "") {
+        self.data = data ?? ""
+        super.init(filePath: path)
     }
 
     override func read() -> String {

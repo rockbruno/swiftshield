@@ -45,12 +45,7 @@ class Protector {
             obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfuscationData)
             let obfuscatedFile = xmlDoc.xml
             Logger.log(.saving(file: file))
-            do {
-                try obfuscatedFile.write(toFile: file.path, atomically: true, encoding: .utf8)
-            } catch {
-                Logger.log(.fatal(error: error.localizedDescription))
-                exit(error: true)
-            }
+            file.write(obfuscatedFile)
         }
     }
 
@@ -118,13 +113,13 @@ class Protector {
         return
     }
 
-    func writeToFile(data: ObfuscationData, path: String, fileName: String) {
+    func writeToFile(data: ObfuscationData, path: String) {
         Logger.log(.generatingConversionMap)
         let output = Protector.mapData(from: data)
         let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output/\(path)"
         try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         do {
-            try output.write(toFile: path + "/\(fileName)", atomically: false, encoding: String.Encoding.utf8)
+            try output.write(toFile: path + "/conversionMap.txt", atomically: false, encoding: String.Encoding.utf8)
         } catch {
             Logger.log(.fatal(error: error.localizedDescription))
             exit(error: true)

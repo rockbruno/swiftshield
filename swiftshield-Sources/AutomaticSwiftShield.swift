@@ -39,6 +39,7 @@ class AutomaticSwiftShield: Protector {
             Logger.log(.foundNothingError)
             exit(error: true)
         }
+        obfuscateNSPrincipalClassPlists(obfuscationData: obfuscationData)
         overwriteFiles(obfuscationData: obfuscationData)
         return obfuscationData
     }
@@ -80,15 +81,14 @@ class AutomaticSwiftShield: Protector {
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH.mm.ss"
         let dateString = dateFormatter.string(from: Date())
-        let path = "\(schemeToBuild) \(dateString)"
-        let fileSuffix: String
+        let path: String
         if let plist = (data as? AutomaticObfuscationData)?.mainPlist {
-            let version = getBinaryPlistVersionAndNumber(plist)
-            fileSuffix = " \(version.0) \(version.1)"
+            let version = getPlistVersionAndNumber(plist)
+            path = "\(schemeToBuild) \(version.0) \(version.1) \(dateString)"
         } else {
-            fileSuffix = ""
+            path = "\(schemeToBuild) \(dateString)"
         }
-        writeToFile(data: data, path: path, fileName: "conversionMap\(fileSuffix).txt")
+        writeToFile(data: data, path: path)
     }
 }
 
@@ -224,11 +224,36 @@ extension AutomaticSwiftShield {
         return charArray.joined()
     }
 
-    func getBinaryPlistVersionAndNumber(_ plist: File) -> (String, String) {
+    func obfuscateNSPrincipalClassPlists(obfuscationData: AutomaticObfuscationData) {
+        for plist in obfuscationData.plists {
+            let data = try! Data(contentsOf: URL(fileURLWithPath: plist.path))
+            let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+            obfuscateNSPrincipalClass(plistXml: xmlDoc, obfuscationData: obfuscationData)
+            plist.write(xmlDoc.xml)
+        }
+    }
+
+    private func obfuscateNSPrincipalClass(plistXml: AEXMLElement, obfuscationData: AutomaticObfuscationData) {
+        let children = plistXml.children
+        for i in 0..<children.count {
+            if children[i].value == "NSExtensionPrincipalClass" ||
+               children[i].value == "WKExtensionDelegateClassName" ||
+               children[i].value == "CLKComplicationPrincipalClass" {
+                let moduleName = "$(PRODUCT_MODULE_NAME)"
+                let currentName = (children[i+1].value ?? "")
+                                  .components(separatedBy: "\(moduleName).")
+                                  .last ?? ""
+                let protectedName = obfuscationData.obfuscationDict[currentName] ?? currentName
+                children[i+1].value = moduleName + "." + protectedName
+            } else {
+                obfuscateNSPrincipalClass(plistXml: children[i], obfuscationData: obfuscationData)
+            }
+        }
+    }
+
+    func getPlistVersionAndNumber(_ plist: File) -> (String, String) {
         let data = try! Data(contentsOf: URL(fileURLWithPath: plist.path))
-        let plist = try! PropertyListSerialization.propertyList(from: data, options: [], format: nil)
-        let xmlPlist = try! PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
-        let xmlDoc = try! AEXMLDocument(xml: xmlPlist, options: AEXMLOptions())
+        let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         guard let children = xmlDoc.root.children.first?.children else {
             return ("", "")
         }
