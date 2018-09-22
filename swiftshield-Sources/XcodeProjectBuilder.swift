@@ -2,7 +2,7 @@ import Foundation
 
 struct XcodeProjectBuilder {
 
-    private typealias MutableModuleData = (source: [File], xibs: [File], args: [String])
+    private typealias MutableModuleData = (source: [File], xibs: [File], plist: File?, args: [String])
     private typealias MutableModuleDictionary = [String: MutableModuleData]
 
     let projectToBuild: String
@@ -50,10 +50,14 @@ struct XcodeProjectBuilder {
                 parseMergeSwiftModulePhase(line: line, moduleName: moduleName, modules: &modules)
             } else if let moduleName = firstMatch(for: "(?<=--module ).*?(?= )", in: line) {
                 parseCompileXibPhase(line: line, moduleName: moduleName, modules: &modules)
+            } else if line.hasPrefix("ProcessInfoPlistFile") {
+                parsePlistPhase(line: line, modules: &modules)
             }
         }
         return modules.filter { modulesToIgnore.contains($0.key) == false }.map {
-            Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, compilerArguments: $0.value.args)
+            Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, plist: $0.value.plist, compilerArguments: $0.value.args)
+        }.sorted {
+            $0.name < $1.name
         }
     }
 
@@ -65,13 +69,12 @@ struct XcodeProjectBuilder {
             return
         }
         Logger.log(.found(module: moduleName))
-        let spacedFolderPlaceholder = "\u{0}"
-        let relevantArguments = fullRelevantArguments.replacingOccurrences(of: "\\ ", with: spacedFolderPlaceholder)
+        let relevantArguments = fullRelevantArguments.replacingEscapedSpaces
             .components(separatedBy: " ")
-            .map { $0.replacingOccurrences(of: spacedFolderPlaceholder, with: " ")}
+            .map { $0.removingPlaceholder }
         let files = parseModuleFiles(from: relevantArguments)
         let compilerArguments = parseCompilerArguments(from: relevantArguments)
-        modules[moduleName, default: ([], [], [])].source = files
+        modules[moduleName, default: ([], [], nil, [])].source = files
         modules[moduleName]?.args = compilerArguments
     }
 
@@ -113,13 +116,32 @@ struct XcodeProjectBuilder {
     }
 
     private func parseCompileXibPhase(line: String, moduleName: String, modules: inout MutableModuleDictionary) {
+        let line = line.replacingEscapedSpaces
         guard let xibPath = firstMatch(for: "(?=)[^ ]*$", in: line) else {
             return
         }
         guard xibPath.hasSuffix(".xib") || xibPath.hasSuffix(".storyboard") else {
             return
         }
-        let file = File(filePath: xibPath)
-        modules[moduleName, default: ([], [], [])].xibs.append(file)
+        let file = File(filePath: xibPath.removingPlaceholder)
+        modules[moduleName, default: ([], [], nil, [])].xibs.append(file)
+    }
+
+    private func parsePlistPhase(line: String, modules: inout MutableModuleDictionary) {
+        let line = line.replacingEscapedSpaces
+        guard let outputPlistPath = firstMatch(for: "(?=)[^ ]*$", in: line) else {
+            return
+        }
+        guard outputPlistPath.hasSuffix(".plist") else {
+            return
+        }
+        guard let inputPlistPath = firstMatch(for: "(?<=ProcessInfoPlistFile ).*(?= .*)", in: line) else {
+            return
+        }
+        let moduleName = URL(fileURLWithPath: outputPlistPath.removingPlaceholder)
+                            .deletingLastPathComponent()
+                            .lastPathComponent
+        let file = File(filePath: inputPlistPath.removingPlaceholder)
+        modules[moduleName, default: ([], [], nil, [])].plist = file
     }
 }

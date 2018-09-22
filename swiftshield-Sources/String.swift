@@ -79,3 +79,17 @@ extension String {
         return components(separatedBy: "(").first ?? self
     }
 }
+
+extension String {
+    private var spacedFolderPlaceholder: String {
+        return "\u{0}"
+    }
+
+    var replacingEscapedSpaces: String {
+        return replacingOccurrences(of: "\\ ", with: spacedFolderPlaceholder)
+    }
+
+    var removingPlaceholder: String {
+        return replacingOccurrences(of: spacedFolderPlaceholder, with: " ")
+    }
+}
