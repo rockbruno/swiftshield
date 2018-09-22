@@ -83,7 +83,7 @@ class AutomaticSwiftShield: Protector {
         let path = "\(schemeToBuild) \(dateString)"
         let fileSuffix: String
         if let plist = (data as? AutomaticObfuscationData)?.mainPlist {
-            let version = getPlistVersionAndNumber(plist)
+            let version = getBinaryPlistVersionAndNumber(plist)
             fileSuffix = " \(version.0) \(version.1)"
         } else {
             fileSuffix = ""
@@ -224,9 +224,11 @@ extension AutomaticSwiftShield {
         return charArray.joined()
     }
 
-    func getPlistVersionAndNumber(_ plist: File) -> (String, String) {
+    func getBinaryPlistVersionAndNumber(_ plist: File) -> (String, String) {
         let data = try! Data(contentsOf: URL(fileURLWithPath: plist.path))
-        let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+        let plist = try! PropertyListSerialization.propertyList(from: data, options: [], format: nil)
+        let xmlPlist = try! PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+        let xmlDoc = try! AEXMLDocument(xml: xmlPlist, options: AEXMLOptions())
         guard let children = xmlDoc.root.children.first?.children else {
             return ("", "")
         }
