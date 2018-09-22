@@ -27,7 +27,6 @@ func matches(for regex: String, in text: String) -> [String] {
 }
 
 extension String {
-
     func match(regex: String) -> [NSTextCheckingResult] {
         let regex = try! NSRegularExpression(pattern: regex, options: [.caseInsensitive])
         let nsString = self as NSString

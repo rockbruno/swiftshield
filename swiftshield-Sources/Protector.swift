@@ -8,6 +8,21 @@ class Protector {
     let basePath: String
     let protectedClassNameSize: Int
 
+    static func mapData(from obfuscationData: ObfuscationData) -> String {
+        var output = ""
+        output += "//\n"
+        output += "//  SwiftShield\n"
+        output += "//  Conversion Map\n"
+        output += "//\n"
+        output += "\n"
+        output += "Data:"
+        output += "\n"
+        for (k,v) in obfuscationData.obfuscationDict {
+            output += "\n\(k) ===> \(v)"
+        }
+        return output
+    }
+
     init(basePath: String, protectedClassNameSize: Int = 25) {
         self.basePath = basePath
         self.protectedClassNameSize = protectedClassNameSize
@@ -97,23 +112,14 @@ class Protector {
 
     func writeToFile(data: ObfuscationData) {
         Logger.log(.generatingConversionMap)
-        var output = ""
-        output += "//\n"
-        output += "//  SwiftShield\n"
-        output += "//  Conversion Map\n"
-        output += "//\n"
-        output += "\n"
-        output += "Data:"
-        output += "\n"
-        for (k,v) in data.obfuscationDict {
-            output += "\n\(k) ===> \(v)"
-        }
+        let output = Protector.mapData(from: data)
         let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output"
         try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
         do {
             try output.write(toFile: path + "/conversionMap.txt", atomically: false, encoding: String.Encoding.utf8)
         } catch {
             Logger.log(.fatal(error: error.localizedDescription))
+            exit(error: true)
         }
     }
 }

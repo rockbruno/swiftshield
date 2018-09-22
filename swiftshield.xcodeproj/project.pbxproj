@@ -61,6 +61,9 @@
 		FD531601212F8E77001EA977 /* sourcekitd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4FB0521E5B1734009856B8 /* sourcekitd.framework */; };
 		FD531602212F8F46001EA977 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD71E31141500A753FB /* main.swift */; };
 		FD531604212F909F001EA977 /* DeclarationTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD531603212F909F001EA977 /* DeclarationTypeTests.swift */; };
+		FD833C832156666400CDF875 /* Deobfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C822156666400CDF875 /* Deobfuscator.swift */; };
+		FD833C842156672C00CDF875 /* Deobfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C822156666400CDF875 /* Deobfuscator.swift */; };
+		FD833C87215669AD00CDF875 /* DeobfuscatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C86215669AD00CDF875 /* DeobfuscatorTests.swift */; };
 		FD895AD01E3113FA00A753FB /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ACF1E3113FA00A753FB /* File.swift */; };
 		FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD11E31140C00A753FB /* Storyboard.swift */; };
 		FD895AD61E31141100A753FB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD51E31141100A753FB /* Logger.swift */; };
@@ -68,6 +71,8 @@
 		FD895ADE1E31142400A753FB /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD91E31142400A753FB /* Array.swift */; };
 		FD895AE01E31142400A753FB /* Protector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADB1E31142400A753FB /* Protector.swift */; };
 		FD895AE11E31142400A753FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADC1E31142400A753FB /* String.swift */; };
+		FD9BE54E215675C400E25A25 /* NSTextCheckingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9BE54D215675C400E25A25 /* NSTextCheckingResult.swift */; };
+		FD9BE54F215676AB00E25A25 /* NSTextCheckingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9BE54D215675C400E25A25 /* NSTextCheckingResult.swift */; };
 		FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */; };
 		FDC74E78212C49AC00B3E03B /* SourceKitDeclarationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */; };
 		FDFF64D11E5275A000300623 /* Exit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFF64D01E5275A000300623 /* Exit.swift */; };
@@ -107,6 +112,8 @@
 		FD5315D5212F872E001EA977 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FD5315D9212F8C4C001EA977 /* XcodeOutput.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = XcodeOutput.txt; sourceTree = "<group>"; };
 		FD531603212F909F001EA977 /* DeclarationTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeclarationTypeTests.swift; sourceTree = "<group>"; };
+		FD833C822156666400CDF875 /* Deobfuscator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deobfuscator.swift; sourceTree = "<group>"; };
+		FD833C86215669AD00CDF875 /* DeobfuscatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeobfuscatorTests.swift; sourceTree = "<group>"; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD11E31140C00A753FB /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = "swiftshield-Sources/Storyboard.swift"; sourceTree = SOURCE_ROOT; };
 		FD895AD51E31141100A753FB /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = "swiftshield-Sources/Logger.swift"; sourceTree = SOURCE_ROOT; };
@@ -114,6 +121,7 @@
 		FD895AD91E31142400A753FB /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = "swiftshield-Sources/Array.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADB1E31142400A753FB /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protector.swift; path = "swiftshield-Sources/Protector.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADC1E31142400A753FB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = "swiftshield-Sources/String.swift"; sourceTree = SOURCE_ROOT; };
+		FD9BE54D215675C400E25A25 /* NSTextCheckingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextCheckingResult.swift; sourceTree = "<group>"; };
 		FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjectBuilder.swift; sourceTree = "<group>"; };
 		FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceKitDeclarationType.swift; sourceTree = "<group>"; };
 		FDFF64D01E5275A000300623 /* Exit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exit.swift; path = "swiftshield-Sources/Exit.swift"; sourceTree = SOURCE_ROOT; };
@@ -237,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				FD895ADC1E31142400A753FB /* String.swift */,
+				FD9BE54D215675C400E25A25 /* NSTextCheckingResult.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -260,6 +269,7 @@
 		FD5315D2212F872D001EA977 /* SwiftShieldTests */ = {
 			isa = PBXGroup;
 			children = (
+				FD833C85215669A100CDF875 /* DeobfuscatorTests */,
 				FD1BEDB0213048FD00105411 /* AutomaticSwiftShieldTests */,
 				FD1BEDAF2130403900105411 /* ProjectBuilderTests */,
 				FD1BEDAC21303DB100105411 /* StoryboardTests */,
@@ -272,6 +282,7 @@
 		FD53F6EF1E302E5D00E94CDA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FD833C812156664C00CDF875 /* Deobfuscator */,
 				FD53F6F21E303BF300E94CDA /* File */,
 				FD0B109E1E2F8C0500AED458 /* Protector */,
 				FD34D4E41EA933C60002A273 /* Modes */,
@@ -289,6 +300,22 @@
 				FD895AD11E31140C00A753FB /* Storyboard.swift */,
 			);
 			name = File;
+			sourceTree = "<group>";
+		};
+		FD833C812156664C00CDF875 /* Deobfuscator */ = {
+			isa = PBXGroup;
+			children = (
+				FD833C822156666400CDF875 /* Deobfuscator.swift */,
+			);
+			name = Deobfuscator;
+			sourceTree = "<group>";
+		};
+		FD833C85215669A100CDF875 /* DeobfuscatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				FD833C86215669AD00CDF875 /* DeobfuscatorTests.swift */,
+			);
+			path = DeobfuscatorTests;
 			sourceTree = "<group>";
 		};
 		FDD0B6161E5B097E00715DDF /* Frameworks */ = {
@@ -351,12 +378,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0940;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Bruno Rocha";
 				TargetAttributes = {
 					FD0B10931E2F8ACD00AED458 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = WZ2UP2QF9G;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
 					FD5315D0212F872D001EA977 = {
@@ -418,6 +446,7 @@
 				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD1BEDA8213034E100105411 /* Document.swift in Sources */,
+				FD833C832156666400CDF875 /* Deobfuscator.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
 				FD1C89D1212C98B100F05C4D /* SKAPI.swift in Sources */,
 				FD1C89CB212C986600F05C4D /* TTY.swift in Sources */,
@@ -425,6 +454,7 @@
 				FD39B3521EAA9D92009BFCDF /* ObfuscationData.swift in Sources */,
 				FD1BEDA2213034E100105411 /* Parser.swift in Sources */,
 				FDC74E78212C49AC00B3E03B /* SourceKitDeclarationType.swift in Sources */,
+				FD9BE54E215675C400E25A25 /* NSTextCheckingResult.swift in Sources */,
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
 				FD1C89CD212C988100F05C4D /* SourceKit+Variant.swift in Sources */,
 				FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */,
@@ -450,6 +480,7 @@
 				FD5315F5212F8E68001EA977 /* Logger.swift in Sources */,
 				FD5315F6212F8E68001EA977 /* Exit.swift in Sources */,
 				FD531602212F8F46001EA977 /* main.swift in Sources */,
+				FD833C842156672C00CDF875 /* Deobfuscator.swift in Sources */,
 				FD5315F0212F8E68001EA977 /* SKAPI.swift in Sources */,
 				FD5315F9212F8E68001EA977 /* ReferenceData.swift in Sources */,
 				FD531600212F8E68001EA977 /* ManualSwiftShield.swift in Sources */,
@@ -459,6 +490,7 @@
 				FD1BEDA5213034E100105411 /* Element.swift in Sources */,
 				FD1BEDA3213034E100105411 /* Parser.swift in Sources */,
 				FD5315F4212F8E68001EA977 /* String.swift in Sources */,
+				FD9BE54F215676AB00E25A25 /* NSTextCheckingResult.swift in Sources */,
 				FD1BEDA9213034E100105411 /* Document.swift in Sources */,
 				FD5315FA212F8E68001EA977 /* Module.swift in Sources */,
 				FD5315F7212F8E68001EA977 /* File.swift in Sources */,
@@ -466,6 +498,7 @@
 				FD5315FD212F8E68001EA977 /* Protector.swift in Sources */,
 				FD5315FF212F8E68001EA977 /* XcodeProjectBuilder.swift in Sources */,
 				FD1BEDA7213034E100105411 /* Error.swift in Sources */,
+				FD833C87215669AD00CDF875 /* DeobfuscatorTests.swift in Sources */,
 				FD5315EE212F8E68001EA977 /* SourceKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,15 +515,24 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -530,15 +572,24 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -558,6 +609,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
 		};
@@ -573,7 +625,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFTSHIELDED = true;
 				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -589,7 +641,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFTSHIELDED = true;
 				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -620,7 +672,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -651,7 +703,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

@@ -10,6 +10,24 @@ struct File {
     init(filePath: String) {
         self.path = filePath
     }
+
+    func read() -> String {
+        do {
+            return try String(contentsOfFile: path, encoding: .utf8)
+        } catch {
+            Logger.log(.fatal(error: error.localizedDescription))
+            exit(error: true)
+        }
+    }
+
+    func write(_ text: String) {
+        do {
+            try text.write(toFile: path, atomically: false, encoding: .utf8)
+        } catch {
+            Logger.log(.fatal(error: error.localizedDescription))
+            exit(error: true)
+        }
+    }
 }
 
 extension File: Hashable {

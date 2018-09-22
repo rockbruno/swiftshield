@@ -1,8 +1,20 @@
 import Foundation
 
-if CommandLine.arguments.contains("-h") {
+if CommandLine.arguments.contains("-help") {
     Logger.log(.helpText)
     exit()
+}
+
+if let filePathToDeobfuscate = UserDefaults.standard.string(forKey: "deobfuscate") {
+    if let mapFilePath = UserDefaults.standard.string(forKey: "deobfuscate-map") {
+        let file = File(filePath: filePathToDeobfuscate)
+        let mapFile = File(filePath: mapFilePath)
+        Deobfuscator.deobfuscate(file: file, mapFile: mapFile)
+        exit()
+    } else {
+        Logger.log(.helpText)
+        exit(error: true)
+    }
 }
 
 Logger.verbose = CommandLine.arguments.contains("-verbose")

@@ -176,14 +176,9 @@ extension AutomaticSwiftShield {
     func overwriteFiles(obfuscationData: ObfuscationData) {
         for (file,references) in obfuscationData.referencesDict {
             Logger.log(.overwriting(file: file))
-            let data = try! String(contentsOfFile: file.path, encoding: .utf8)
+            let data = file.read()
             let obfuscatedFile = generateObfuscatedFile(fromString: data, references: references, obfuscationData: obfuscationData)
-            do {
-                try obfuscatedFile.write(toFile: file.path, atomically: false, encoding: .utf8)
-            } catch {
-                Logger.log(.fatal(error: error.localizedDescription))
-                exit(error: true)
-            }
+            file.write(obfuscatedFile)
         }
     }
 
