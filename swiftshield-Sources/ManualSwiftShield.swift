@@ -50,4 +50,11 @@ final class ManualSwiftShield: Protector {
             return data[range] + protectedName
         }.joined() + (currentIndex < data.endIndex ? data[currentIndex..<data.endIndex] : "")
     }
+
+    override func writeToFile(data: ObfuscationData) {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = dateFormatter.string(from: Date())
+        writeToFile(data: data, path: "Manual \(dateString)", fileName: "conversionMap.txt")
+    }
 }

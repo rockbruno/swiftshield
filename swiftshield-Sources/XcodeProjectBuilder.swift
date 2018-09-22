@@ -56,8 +56,6 @@ struct XcodeProjectBuilder {
         }
         return modules.filter { modulesToIgnore.contains($0.key) == false }.map {
             Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, plist: $0.value.plist, compilerArguments: $0.value.args)
-        }.sorted {
-            $0.name < $1.name
         }
     }
 

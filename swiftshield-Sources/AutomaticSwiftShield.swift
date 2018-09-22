@@ -47,6 +47,8 @@ class AutomaticSwiftShield: Protector {
         let obfuscationData = ObfuscationData()
         obfuscationData.storyboardsToObfuscate = modules.flatMap { $0.xibFiles }
         obfuscationData.moduleNames = Set(modules.compactMap { $0.name })
+        obfuscationData.plists = modules.compactMap { $0.plist }
+        obfuscationData.mainPlist = modules.last?.plist
         return obfuscationData
     }
 
@@ -81,6 +83,21 @@ class AutomaticSwiftShield: Protector {
             }
             obfuscationData.indexedFiles.append((file, resp))
         }
+    }
+
+    override func writeToFile(data: ObfuscationData) {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = dateFormatter.string(from: Date())
+        let path = "\(schemeToBuild) \(dateString)"
+        let fileSuffix: String
+        if let plist = data.mainPlist {
+            let version = getPlistVersionAndNumber(plist)
+            fileSuffix = " \(version.0) \(version.1)"
+        } else {
+            fileSuffix = ""
+        }
+        writeToFile(data: data, path: path, fileName: "conversionMap\(fileSuffix).txt")
     }
 }
 
@@ -215,5 +232,23 @@ extension AutomaticSwiftShield {
             }
         }
         return charArray.joined()
+    }
+
+    func getPlistVersionAndNumber(_ plist: File) -> (String, String) {
+        let data = try! Data(contentsOf: URL(fileURLWithPath: plist.path))
+        let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+        guard let children = xmlDoc.root.children.first?.children else {
+            return ("", "")
+        }
+        var shortVersion = ""
+        var version = ""
+        for i in 0..<children.count {
+            if children[i].value == "CFBundleShortVersionString" {
+                shortVersion = children[i+1].value ?? ""
+            } else if children[i].value == "CFBundleVersion" {
+                version = children[i+1].value ?? ""
+            }
+        }
+        return (shortVersion, version)
     }
 }

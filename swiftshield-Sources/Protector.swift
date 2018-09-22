@@ -111,12 +111,17 @@ class Protector {
     }
 
     func writeToFile(data: ObfuscationData) {
+        // Must be called from a subclass!
+        return
+    }
+
+    func writeToFile(data: ObfuscationData, path: String, fileName: String) {
         Logger.log(.generatingConversionMap)
         let output = Protector.mapData(from: data)
-        let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output"
-        try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
+        let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output/\(path)"
+        try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         do {
-            try output.write(toFile: path + "/conversionMap.txt", atomically: false, encoding: String.Encoding.utf8)
+            try output.write(toFile: path + "/\(fileName)", atomically: false, encoding: String.Encoding.utf8)
         } catch {
             Logger.log(.fatal(error: error.localizedDescription))
             exit(error: true)

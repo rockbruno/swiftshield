@@ -1,9 +1,13 @@
 import XCTest
 
-func loadFile(_ name: String, ofType type: String) -> Data {
+func path(for name: String, ofType type: String) -> String {
     let bundle = Bundle(for: StoryboardObfuscationTests.self)
-    let path = bundle.path(forResource: name, ofType: type)!
-    return try! Data(contentsOf: URL(fileURLWithPath: path))
+    return bundle.path(forResource: name, ofType: type)!
+}
+
+func loadFile(_ name: String, ofType type: String) -> Data {
+    let filePath = path(for: name, ofType: type)
+    return try! Data(contentsOf: URL(fileURLWithPath: filePath))
 }
 
 class StoryboardObfuscationTests: XCTestCase {

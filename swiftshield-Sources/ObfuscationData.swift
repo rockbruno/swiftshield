@@ -9,4 +9,6 @@ final class ObfuscationData {
     var allObfuscatedNames: Set<String> = []
     var storyboardsToObfuscate: [File] = []
     var moduleNames: Set<String>? = nil
+    var plists: [File] = []
+    var mainPlist: File?
 }
