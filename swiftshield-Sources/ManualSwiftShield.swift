@@ -12,9 +12,8 @@ final class ManualSwiftShield: Protector {
         Logger.log(.tag(tag: tag))
         let files = getSourceFiles()
         Logger.log(.scanningDeclarations)
-        var obfsData = ObfuscationData()
-        obfsData.storyboardsToObfuscate = getStoryboardsAndXibs()
-        files.forEach { protect(file: $0, obfsData: &obfsData) }
+        var obfsData = ObfuscationData(files: files, storyboards: getStoryboardsAndXibs())
+        obfsData.files.forEach { protect(file: $0, obfsData: &obfsData) }
         return obfsData
     }
 
@@ -39,7 +38,6 @@ final class ManualSwiftShield: Protector {
                 guard let protected = obfsData.obfuscationDict[word] else {
                     let protected = String.random(length: protectedClassNameSize, excluding: obfsData.allObfuscatedNames)
                     obfsData.obfuscationDict[word] = protected
-                    obfsData.allObfuscatedNames.insert(protected)
                     return protected
                 }
                 return protected

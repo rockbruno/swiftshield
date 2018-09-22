@@ -1,13 +1,14 @@
 import Foundation
 
-struct XcodeProjectBuilder {
-
-    private typealias MutableModuleData = (source: [File], xibs: [File], plist: File?, args: [String])
-    private typealias MutableModuleDictionary = [String: MutableModuleData]
-
+final class XcodeProjectBuilder {
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
+
+    private typealias MutableModuleData = (name: String, source: [File], xibs: [File], plist: File?, args: [String])
+    private typealias MutableModuleDictionary = [String: MutableModuleData]
+
+    private var moduleFoundOrder = [MutableModuleData]()
 
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
@@ -43,6 +44,7 @@ struct XcodeProjectBuilder {
     }
 
     func parseModulesFrom(xcodeBuildOutput output: String) -> [Module] {
+        moduleFoundOrder = []
         let lines = output.components(separatedBy: "\n")
         var modules: MutableModuleDictionary = [:]
         for line in lines {
@@ -54,8 +56,8 @@ struct XcodeProjectBuilder {
                 parsePlistPhase(line: line, modules: &modules)
             }
         }
-        return modules.filter { modulesToIgnore.contains($0.key) == false }.map {
-            Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, plist: $0.value.plist, compilerArguments: $0.value.args)
+        return moduleFoundOrder.filter { modulesToIgnore.contains($0.name) == false }.map {
+            Module(name: $0.name, sourceFiles: $0.source, xibFiles: $0.xibs, plist: $0.plist, compilerArguments: $0.args)
         }
     }
 
@@ -72,7 +74,7 @@ struct XcodeProjectBuilder {
             .map { $0.removingPlaceholder }
         let files = parseModuleFiles(from: relevantArguments)
         let compilerArguments = parseCompilerArguments(from: relevantArguments)
-        modules[moduleName, default: ([], [], nil, [])].source = files
+        set(sourceFiles: files, to: moduleName, modules: &modules)
         modules[moduleName]?.args = compilerArguments
     }
 
@@ -122,7 +124,7 @@ struct XcodeProjectBuilder {
             return
         }
         let file = File(filePath: xibPath.removingPlaceholder)
-        modules[moduleName, default: ([], [], nil, [])].xibs.append(file)
+        add(xib: file, to: moduleName, modules: &modules)
     }
 
     private func parsePlistPhase(line: String, modules: inout MutableModuleDictionary) {
@@ -140,6 +142,32 @@ struct XcodeProjectBuilder {
                             .deletingLastPathComponent()
                             .lastPathComponent
         let file = File(filePath: inputPlistPath.removingPlaceholder)
-        modules[moduleName, default: ([], [], nil, [])].plist = file
+        set(plist: file, to: moduleName, modules: &modules)
+    }
+}
+
+extension XcodeProjectBuilder {
+    private func add(xib: File, to moduleName: String, modules: inout MutableModuleDictionary) {
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.xibs.append(xib)
+    }
+
+    private func set(sourceFiles: [File], to moduleName: String, modules: inout MutableModuleDictionary) {
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.source = sourceFiles
+    }
+
+    private func set(plist: File, to moduleName: String, modules: inout MutableModuleDictionary) {
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.plist = plist
+    }
+
+    private func registerFoundModuleIfNeeded(_ moduleName: String, modules: inout MutableModuleDictionary) {
+        guard modules[moduleName] == nil else {
+            return
+        }
+        let moduleData: MutableModuleData = (moduleName, [], [], nil, [])
+        moduleFoundOrder.append(moduleData)
+        modules[moduleName] = moduleData
     }
 }

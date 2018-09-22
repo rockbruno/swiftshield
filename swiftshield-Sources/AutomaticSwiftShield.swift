@@ -32,8 +32,8 @@ class AutomaticSwiftShield: Protector {
         }
         let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore)
         let modules = projectBuilder.getModulesAndCompilerArguments()
-        let obfuscationData = getObfuscationData(from: modules)
-        index(modules: modules, obfuscationData: obfuscationData)
+        let obfuscationData = AutomaticObfuscationData(modules: modules)
+        index(obfuscationData: obfuscationData)
         findReferencesInIndexed(obfuscationData: obfuscationData)
         if obfuscationData.referencesDict.isEmpty {
             Logger.log(.foundNothingError)
@@ -43,19 +43,10 @@ class AutomaticSwiftShield: Protector {
         return obfuscationData
     }
 
-    func getObfuscationData(from modules: [Module]) -> ObfuscationData {
-        let obfuscationData = ObfuscationData()
-        obfuscationData.storyboardsToObfuscate = modules.flatMap { $0.xibFiles }
-        obfuscationData.moduleNames = Set(modules.compactMap { $0.name })
-        obfuscationData.plists = modules.compactMap { $0.plist }
-        obfuscationData.mainPlist = modules.last?.plist
-        return obfuscationData
-    }
-
-    func index(modules: [Module], obfuscationData: ObfuscationData) {
+    func index(obfuscationData: AutomaticObfuscationData) {
         let sourceKit = SourceKit()
         var fileDataArray: [(file: File, module: Module)] = []
-        for module in modules {
+        for module in obfuscationData.modules {
             for file in module.sourceFiles {
                 fileDataArray.append((file, module))
             }
@@ -87,11 +78,11 @@ class AutomaticSwiftShield: Protector {
 
     override func writeToFile(data: ObfuscationData) {
         let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH.mm.ss"
         let dateString = dateFormatter.string(from: Date())
         let path = "\(schemeToBuild) \(dateString)"
         let fileSuffix: String
-        if let plist = data.mainPlist {
+        if let plist = (data as? AutomaticObfuscationData)?.mainPlist {
             let version = getPlistVersionAndNumber(plist)
             fileSuffix = " \(version.0) \(version.1)"
         } else {
@@ -122,13 +113,12 @@ extension AutomaticSwiftShield {
         guard let protected = obfuscationData.obfuscationDict[name] else {
             let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
             obfuscationData.obfuscationDict[name] = newName
-            obfuscationData.allObfuscatedNames.insert(newName)
             return (name, usr, newName)
         }
         return (name, usr, protected)
     }
 
-    func findReferencesInIndexed(obfuscationData: ObfuscationData) {
+    func findReferencesInIndexed(obfuscationData: AutomaticObfuscationData) {
         let SK = SourceKit()
         Logger.log(.searchingReferencesOfUsr)
         for (file, indexResponse) in obfuscationData.indexedFiles {
@@ -163,7 +153,7 @@ extension AutomaticSwiftShield {
         }
     }
 
-    private func isReferencingInternal(type: SourceKit.DeclarationType, kind: String, dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> Bool {
+    private func isReferencingInternal(type: SourceKit.DeclarationType, kind: String, dict: sourcekitd_variant_t, obfuscationData: AutomaticObfuscationData, sourceKit: SourceKit) -> Bool {
         guard type == .method || type == .property else {
             return false
         }
@@ -190,7 +180,7 @@ extension AutomaticSwiftShield {
         return isReference
     }
 
-    func overwriteFiles(obfuscationData: ObfuscationData) {
+    func overwriteFiles(obfuscationData: AutomaticObfuscationData) {
         for (file,references) in obfuscationData.referencesDict {
             Logger.log(.overwriting(file: file))
             let data = file.read()

@@ -38,7 +38,7 @@ class Protector {
 
     func protectStoryboards(data obfuscationData: ObfuscationData) {
         Logger.log(.overwritingStoryboards)
-        for file in obfuscationData.storyboardsToObfuscate {
+        for file in obfuscationData.storyboards {
             Logger.log(.checking(file: file))
             let data = try! Data(contentsOf: URL(fileURLWithPath: file.path))
             let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
@@ -54,9 +54,12 @@ class Protector {
         }
     }
 
-    func obfuscateIBXML(element: AEXMLElement, currentModule: String? = nil, obfuscationData: ObfuscationData, idToXML: [String: AEXMLElement] = [:]) {
+    func obfuscateIBXML(element: AEXMLElement,
+                        currentModule: String? = nil,
+                        obfuscationData: ObfuscationData,
+                        idToXML: [String: AEXMLElement] = [:]) {
         var idToXML = idToXML
-        let supportedModules = obfuscationData.moduleNames
+        let supportedModules = (obfuscationData as? AutomaticObfuscationData)?.moduleNames
         let currentModule: String = element.attributes["customModule"] ?? currentModule ?? ""
         if let identifier = element.attributes["id"] {
             idToXML[identifier] = element
