@@ -7,7 +7,11 @@ struct Module: Equatable {
     let compilerArguments: [String]
     let plist: File?
     
-    init(name: String, sourceFiles: [File], xibFiles: [File], plist: File?, compilerArguments: [String]) {
+    init(name: String,
+         sourceFiles: [File] = [],
+         xibFiles: [File] = [],
+         plist: File? = nil,
+         compilerArguments: [String] = []) {
         self.name = name
         self.sourceFiles = sourceFiles
         self.xibFiles = xibFiles

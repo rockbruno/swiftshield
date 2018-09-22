@@ -5,10 +5,8 @@ final class XcodeProjectBuilder {
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
 
-    private typealias MutableModuleData = (name: String, source: [File], xibs: [File], plist: File?, args: [String])
-    private typealias MutableModuleDictionary = [String: MutableModuleData]
-
-    private var moduleFoundOrder = [MutableModuleData]()
+    private typealias MutableModuleData = (source: [File], xibs: [File], plist: File?, args: [String])
+    private typealias MutableModuleDictionary = OrderedDictionary<String, MutableModuleData>
 
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
@@ -44,7 +42,6 @@ final class XcodeProjectBuilder {
     }
 
     func parseModulesFrom(xcodeBuildOutput output: String) -> [Module] {
-        moduleFoundOrder = []
         let lines = output.components(separatedBy: "\n")
         var modules: MutableModuleDictionary = [:]
         for line in lines {
@@ -56,8 +53,8 @@ final class XcodeProjectBuilder {
                 parsePlistPhase(line: line, modules: &modules)
             }
         }
-        return moduleFoundOrder.filter { modulesToIgnore.contains($0.name) == false }.map {
-            Module(name: $0.name, sourceFiles: $0.source, xibFiles: $0.xibs, plist: $0.plist, compilerArguments: $0.args)
+        return modules.filter { modulesToIgnore.contains($0.key) == false }.map {
+            Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, plist: $0.value.plist, compilerArguments: $0.value.args)
         }
     }
 
@@ -75,7 +72,7 @@ final class XcodeProjectBuilder {
         let files = parseModuleFiles(from: relevantArguments)
         let compilerArguments = parseCompilerArguments(from: relevantArguments)
         set(sourceFiles: files, to: moduleName, modules: &modules)
-        modules[moduleName]?.args = compilerArguments
+        set(compilerArgs: compilerArguments, to: moduleName, modules: &modules)
     }
 
     private func parseModuleFiles(from relevantArguments: [String]) -> [File] {
@@ -129,19 +126,25 @@ final class XcodeProjectBuilder {
 
     private func parsePlistPhase(line: String, modules: inout MutableModuleDictionary) {
         let line = line.replacingEscapedSpaces
-        guard let outputPlistPath = firstMatch(for: "(?=)[^ ]*$", in: line) else {
+        guard let plistPath = firstMatch(for: "(?<=ProcessInfoPlistFile ).*(?= .*)", in: line) else {
             return
         }
-        guard outputPlistPath.hasSuffix(".plist") else {
+        guard plistPath.hasSuffix(".plist") else {
             return
         }
-        guard let inputPlistPath = firstMatch(for: "(?<=ProcessInfoPlistFile ).*(?= .*)", in: line) else {
-            return
+        let moduleNamePath = URL(fileURLWithPath: plistPath.removingPlaceholder)
+                                .deletingLastPathComponent()
+                                .lastPathComponent
+        let moduleName: String
+        if moduleNamePath.hasSuffix(".framework") {
+            moduleName = String(moduleNamePath.prefix(moduleNamePath.count - 10))
+        } else if moduleNamePath.hasSuffix(".app") {
+            moduleName = String(moduleNamePath.prefix(moduleNamePath.count - 4))
+        } else {
+            print("Fatal: Unrecognized plist pattern")
+            exit(error: true)
         }
-        let moduleName = URL(fileURLWithPath: outputPlistPath.removingPlaceholder)
-                            .deletingLastPathComponent()
-                            .lastPathComponent
-        let file = File(filePath: inputPlistPath.removingPlaceholder)
+        let file = File(filePath: plistPath.removingPlaceholder)
         set(plist: file, to: moduleName, modules: &modules)
     }
 }
@@ -162,12 +165,16 @@ extension XcodeProjectBuilder {
         modules[moduleName]?.plist = plist
     }
 
+    private func set(compilerArgs: [String], to moduleName: String, modules: inout MutableModuleDictionary) {
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.args = compilerArgs
+    }
+
     private func registerFoundModuleIfNeeded(_ moduleName: String, modules: inout MutableModuleDictionary) {
         guard modules[moduleName] == nil else {
             return
         }
-        let moduleData: MutableModuleData = (moduleName, [], [], nil, [])
-        moduleFoundOrder.append(moduleData)
+        let moduleData: MutableModuleData = ([], [], nil, [])
         modules[moduleName] = moduleData
     }
 }

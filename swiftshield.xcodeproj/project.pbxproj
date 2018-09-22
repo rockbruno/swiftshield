@@ -61,6 +61,8 @@
 		FD531601212F8E77001EA977 /* sourcekitd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4FB0521E5B1734009856B8 /* sourcekitd.framework */; };
 		FD531602212F8F46001EA977 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD71E31141500A753FB /* main.swift */; };
 		FD531604212F909F001EA977 /* DeclarationTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD531603212F909F001EA977 /* DeclarationTypeTests.swift */; };
+		FD742A2E2156B55200EE8010 /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD742A2D2156B55200EE8010 /* OrderedDictionary.swift */; };
+		FD742A2F2156B58300EE8010 /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD742A2D2156B55200EE8010 /* OrderedDictionary.swift */; };
 		FD833C832156666400CDF875 /* Deobfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C822156666400CDF875 /* Deobfuscator.swift */; };
 		FD833C842156672C00CDF875 /* Deobfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C822156666400CDF875 /* Deobfuscator.swift */; };
 		FD833C87215669AD00CDF875 /* DeobfuscatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C86215669AD00CDF875 /* DeobfuscatorTests.swift */; };
@@ -114,6 +116,7 @@
 		FD5315D5212F872E001EA977 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FD5315D9212F8C4C001EA977 /* XcodeOutput.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = XcodeOutput.txt; sourceTree = "<group>"; };
 		FD531603212F909F001EA977 /* DeclarationTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeclarationTypeTests.swift; sourceTree = "<group>"; };
+		FD742A2D2156B55200EE8010 /* OrderedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedDictionary.swift; sourceTree = "<group>"; };
 		FD833C822156666400CDF875 /* Deobfuscator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deobfuscator.swift; sourceTree = "<group>"; };
 		FD833C86215669AD00CDF875 /* DeobfuscatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeobfuscatorTests.swift; sourceTree = "<group>"; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
@@ -337,6 +340,7 @@
 				FD1BED8D21302D6800105411 /* AEXML */,
 				FD895AD51E31141100A753FB /* Logger.swift */,
 				FDFF64D01E5275A000300623 /* Exit.swift */,
+				FD742A2D2156B55200EE8010 /* OrderedDictionary.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -454,6 +458,7 @@
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
 				FD1BEDA8213034E100105411 /* Document.swift in Sources */,
 				FD833C832156666400CDF875 /* Deobfuscator.swift in Sources */,
+				FD742A2E2156B55200EE8010 /* OrderedDictionary.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
 				FD1C89D1212C98B100F05C4D /* SKAPI.swift in Sources */,
 				FD1C89CB212C986600F05C4D /* TTY.swift in Sources */,
@@ -502,6 +507,7 @@
 				FD1BEDA9213034E100105411 /* Document.swift in Sources */,
 				FD5315FA212F8E68001EA977 /* Module.swift in Sources */,
 				FD5315F7212F8E68001EA977 /* File.swift in Sources */,
+				FD742A2F2156B58300EE8010 /* OrderedDictionary.swift in Sources */,
 				FD531604212F909F001EA977 /* DeclarationTypeTests.swift in Sources */,
 				FD5315FD212F8E68001EA977 /* Protector.swift in Sources */,
 				FD5315FF212F8E68001EA977 /* XcodeProjectBuilder.swift in Sources */,

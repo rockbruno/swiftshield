@@ -33,9 +33,8 @@ class StoryboardObfuscationTests: XCTestCase {
 
         data = loadFile("MockStoryboard", ofType: "txt")
         xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
-        obfsData = AutomaticObfuscationData()
+        obfsData = AutomaticObfuscationData(modules: [Module(name: "OtherModule"), Module(name: "ThirdModule")])
         obfsData.obfuscationDict = self.obfuscationDict
-        (obfsData as? AutomaticObfuscationData)?.moduleNames = ["OtherModule", "ThirdModule"]
         data = loadFile("ExpectedMockStoryboardIgnoringMainModule", ofType: "txt")
         xmlDoc2 = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         Protector(basePath: "abc").obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfsData)
