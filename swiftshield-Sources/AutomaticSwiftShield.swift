@@ -122,7 +122,6 @@ extension AutomaticSwiftShield {
         let SK = SourceKit()
         Logger.log(.searchingReferencesOfUsr)
         for (file, indexResponse) in obfuscationData.indexedFiles {
-            print("HERE")
             let dict = SKApi.sourcekitd_response_get_value(indexResponse)
             SK.recurseOver(childID: SK.entitiesID, resp: dict, block: { dict in
                 let kind = dict.getUUIDString(key: SK.kindID)

@@ -48,7 +48,7 @@ class AutomaticSwiftShieldTests: XCTestCase {
         let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0)
         let plist = path(for: "MockPlist", ofType: "plist")
         let file = MockFile(path: plist)
-        let obfuscationData = AutomaticObfuscationData(modules: [Module(name: "mock", plist: file)])
+        let obfuscationData = AutomaticObfuscationData(modules: [Module(name: "mock", plists: [file])])
         obfuscationData.obfuscationDict["AClass"] = "ZZZZZ"
         protector.obfuscateNSPrincipalClassPlists(obfuscationData: obfuscationData)
         let expectedPlistData = loadFile("MockPlistObfuscatedPrincipalClass", ofType: "plist")

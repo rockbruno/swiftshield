@@ -30,11 +30,11 @@ final class AutomaticObfuscationData: ObfuscationData {
     }
 
     var plists: [File] {
-        return modules.compactMap { $0.plist }
+        return modules.flatMap { $0.plists }
     }
 
     var mainPlist: File? {
-        return modules.last?.plist
+        return modules.last?.mainPlist
     }
 
     init(modules: [Module] = []) {
