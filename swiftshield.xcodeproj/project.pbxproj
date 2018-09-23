@@ -63,8 +63,8 @@
 		FD531604212F909F001EA977 /* DeclarationTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD531603212F909F001EA977 /* DeclarationTypeTests.swift */; };
 		FD742A2E2156B55200EE8010 /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD742A2D2156B55200EE8010 /* OrderedDictionary.swift */; };
 		FD742A2F2156B58300EE8010 /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD742A2D2156B55200EE8010 /* OrderedDictionary.swift */; };
-		FD742A3B2156D98300EE8010 /* MockPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD742A3A2156D98300EE8010 /* MockPlist.plist */; };
-		FD742A3D2156DA0500EE8010 /* MockPlistObfuscatedPrincipalClass.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD742A3C2156DA0500EE8010 /* MockPlistObfuscatedPrincipalClass.plist */; };
+		FD7D726D21580C4400FDDA1F /* MockPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD7D726B21580C4400FDDA1F /* MockPlist.plist */; };
+		FD7D726E21580C4400FDDA1F /* MockPlistObfuscatedPrincipalClass.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD7D726C21580C4400FDDA1F /* MockPlistObfuscatedPrincipalClass.plist */; };
 		FD833C832156666400CDF875 /* Deobfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C822156666400CDF875 /* Deobfuscator.swift */; };
 		FD833C842156672C00CDF875 /* Deobfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C822156666400CDF875 /* Deobfuscator.swift */; };
 		FD833C87215669AD00CDF875 /* DeobfuscatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD833C86215669AD00CDF875 /* DeobfuscatorTests.swift */; };
@@ -118,8 +118,8 @@
 		FD5315D9212F8C4C001EA977 /* XcodeOutput.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = XcodeOutput.txt; sourceTree = "<group>"; };
 		FD531603212F909F001EA977 /* DeclarationTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeclarationTypeTests.swift; sourceTree = "<group>"; };
 		FD742A2D2156B55200EE8010 /* OrderedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedDictionary.swift; sourceTree = "<group>"; };
-		FD742A3A2156D98300EE8010 /* MockPlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MockPlist.plist; path = SwiftShieldExample/SwiftShieldExample/MockPlist.plist; sourceTree = SOURCE_ROOT; };
-		FD742A3C2156DA0500EE8010 /* MockPlistObfuscatedPrincipalClass.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MockPlistObfuscatedPrincipalClass.plist; path = SwiftShieldExample/SwiftShieldExample/MockPlistObfuscatedPrincipalClass.plist; sourceTree = SOURCE_ROOT; };
+		FD7D726B21580C4400FDDA1F /* MockPlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MockPlist.plist; sourceTree = "<group>"; };
+		FD7D726C21580C4400FDDA1F /* MockPlistObfuscatedPrincipalClass.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MockPlistObfuscatedPrincipalClass.plist; sourceTree = "<group>"; };
 		FD833C822156666400CDF875 /* Deobfuscator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deobfuscator.swift; sourceTree = "<group>"; };
 		FD833C86215669AD00CDF875 /* DeobfuscatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeobfuscatorTests.swift; sourceTree = "<group>"; };
 		FD895ACF1E3113FA00A753FB /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = "swiftshield-Sources/File.swift"; sourceTree = SOURCE_ROOT; };
@@ -236,8 +236,8 @@
 				FD1BEDB12130491200105411 /* AutomaticSwiftShieldTests.swift */,
 				FD1BEDB321304E2A00105411 /* MockOriginalFile.txt */,
 				FD1BEDB52130506A00105411 /* MockObfuscatedFile.txt */,
-				FD742A3A2156D98300EE8010 /* MockPlist.plist */,
-				FD742A3C2156DA0500EE8010 /* MockPlistObfuscatedPrincipalClass.plist */,
+				FD7D726B21580C4400FDDA1F /* MockPlist.plist */,
+				FD7D726C21580C4400FDDA1F /* MockPlistObfuscatedPrincipalClass.plist */,
 			);
 			path = AutomaticSwiftShieldTests;
 			sourceTree = "<group>";
@@ -432,12 +432,12 @@
 				FD1BEDBA21305F8300105411 /* ExpectedMockXib.txt in Resources */,
 				FD1BEDAB21303B7000105411 /* ExpectedMockStoryboard.txt in Resources */,
 				FD1BEDB821305E2000105411 /* MockXib.txt in Resources */,
-				FD742A3D2156DA0500EE8010 /* MockPlistObfuscatedPrincipalClass.plist in Resources */,
+				FD7D726E21580C4400FDDA1F /* MockPlistObfuscatedPrincipalClass.plist in Resources */,
 				FD1BED9A21302EA200105411 /* MockStoryboard.txt in Resources */,
 				FD1BEDAE21303DCA00105411 /* ExpectedMockStoryboardIgnoringMainModule.txt in Resources */,
 				FD5315DA212F8C4C001EA977 /* XcodeOutput.txt in Resources */,
 				FD1BEDB62130506B00105411 /* MockObfuscatedFile.txt in Resources */,
-				FD742A3B2156D98300EE8010 /* MockPlist.plist in Resources */,
+				FD7D726D21580C4400FDDA1F /* MockPlist.plist in Resources */,
 				FD1BEDB421304E2B00105411 /* MockOriginalFile.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
