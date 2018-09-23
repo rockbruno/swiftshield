@@ -12,16 +12,16 @@ final class ManualSwiftShield: Protector {
         Logger.log(.tag(tag: tag))
         let files = getSourceFiles()
         Logger.log(.scanningDeclarations)
-        var obfsData = ObfuscationData(files: files, storyboards: getStoryboardsAndXibs())
-        obfsData.files.forEach { protect(file: $0, obfsData: &obfsData) }
+        let obfsData = ObfuscationData(files: files, storyboards: getStoryboardsAndXibs())
+        obfsData.files.forEach { protect(file: $0, obfsData: obfsData) }
         return obfsData
     }
 
-    private func protect(file: File, obfsData: inout ObfuscationData) {
+    private func protect(file: File, obfsData: ObfuscationData) {
         Logger.log(.checking(file: file))
         do {
             let fileString = try String(contentsOfFile: file.path, encoding: .utf8)
-            let newFile = obfuscateReferences(fileString: fileString, obfsData: &obfsData)
+            let newFile = obfuscateReferences(fileString: fileString, obfsData: obfsData)
             try newFile.write(toFile: file.path, atomically: false, encoding: .utf8)
         } catch {
             Logger.log(.fatal(error: error.localizedDescription))
@@ -29,7 +29,7 @@ final class ManualSwiftShield: Protector {
         }
     }
 
-    private func obfuscateReferences(fileString data: String, obfsData: inout ObfuscationData) -> String {
+    private func obfuscateReferences(fileString data: String, obfsData: ObfuscationData) -> String {
         var currentIndex = data.startIndex
         let matches = data.match(regex: String.regexFor(tag: tag))
         return matches.compactMap { result in
@@ -50,9 +50,6 @@ final class ManualSwiftShield: Protector {
     }
 
     override func writeToFile(data: ObfuscationData) {
-        let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH.mm.ss"
-        let dateString = dateFormatter.string(from: Date())
-        writeToFile(data: data, path: "Manual \(dateString)")
+        writeToFile(data: data, path: "Manual", info: "Manual mode")
     }
 }

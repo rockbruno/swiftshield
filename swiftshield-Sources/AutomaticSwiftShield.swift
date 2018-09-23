@@ -78,17 +78,14 @@ class AutomaticSwiftShield: Protector {
     }
 
     override func writeToFile(data: ObfuscationData) {
-        let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH.mm.ss"
-        let dateString = dateFormatter.string(from: Date())
         let path: String
         if let plist = (data as? AutomaticObfuscationData)?.mainPlist {
             let version = getPlistVersionAndNumber(plist)
-            path = "\(schemeToBuild) \(version.0) \(version.1) \(dateString)"
+            path = "\(schemeToBuild) \(version.0) \(version.1)"
         } else {
-            path = "\(schemeToBuild) \(dateString)"
+            path = "\(schemeToBuild)"
         }
-        writeToFile(data: data, path: path)
+        writeToFile(data: data, path: path, info: "Automatic mode for \(path)")
     }
 }
 

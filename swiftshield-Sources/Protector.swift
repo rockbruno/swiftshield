@@ -8,19 +8,18 @@ class Protector {
     let basePath: String
     let protectedClassNameSize: Int
 
-    static func mapData(from obfuscationData: ObfuscationData) -> String {
-        var output = ""
-        output += "//\n"
-        output += "//  SwiftShield\n"
-        output += "//  Conversion Map\n"
-        output += "//\n"
-        output += "\n"
-        output += "Data:"
-        output += "\n"
-        for (k,v) in obfuscationData.obfuscationDict {
-            output += "\n\(k) ===> \(v)"
+    static func mapData(from obfuscationData: ObfuscationData, info: String) -> String {
+        return """
+        //
+        // SwiftShield Conversion Map
+        // \(info)
+        // Deobfuscate crash logs (or any text file) by running:
+        // swiftshield -deobfuscate CRASH_FILE -deobfuscate_map THIS_FILE
+        //
+
+        """ + obfuscationData.obfuscationDict.reduce("") {
+            $0 + "\n\($1.key) ===> \($1.value)"
         }
-        return output
     }
 
     init(basePath: String, protectedClassNameSize: Int = 25) {
@@ -113,10 +112,13 @@ class Protector {
         return
     }
 
-    func writeToFile(data: ObfuscationData, path: String) {
+    func writeToFile(data: ObfuscationData, path: String, info: String) {
         Logger.log(.generatingConversionMap)
-        let output = Protector.mapData(from: data)
-        let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output/\(path)"
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH.mm.ss"
+        let dateString = dateFormatter.string(from: Date())
+        let output = Protector.mapData(from: data, info: "\(info), \(dateString)")
+        let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output/\(path), \(dateString)"
         try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         do {
             try output.write(toFile: path + "/conversionMap.txt", atomically: false, encoding: String.Encoding.utf8)
