@@ -29,24 +29,30 @@ final class ManualSwiftShield: Protector {
         }
     }
 
-    private func obfuscateReferences(fileString data: String, obfsData: ObfuscationData) -> String {
-        var currentIndex = data.startIndex
-        let matches = data.match(regex: String.regexFor(tag: tag))
-        return matches.compactMap { result in
-            let word = (data as NSString).substring(with: result.range(at: 0))
-            let protectedName: String = {
-                guard let protected = obfsData.obfuscationDict[word] else {
-                    let protected = String.random(length: protectedClassNameSize, excluding: obfsData.allObfuscatedNames)
-                    obfsData.obfuscationDict[word] = protected
+    func obfuscateReferences(fileString content: String, obfsData: ObfuscationData) -> String {
+        let regexString = "[a-zA-Z0-9_$]*\(tag)"
+        var offset = 0
+        var content = content
+        for match in content.match(regex: regexString) {
+            let range = match.adjustingRanges(offset: offset).range
+            let startIndex = content.index(content.startIndex, offsetBy: range.location)
+            let endIndex = content.index(startIndex, offsetBy: range.length)
+            let originalName = String(content[startIndex..<endIndex])
+            let obfuscatedName: String = {
+                guard let protected = obfsData.obfuscationDict[originalName] else {
+                    let protected = String.random(length: protectedClassNameSize,
+                                                  excluding: obfsData.allObfuscatedNames)
+                    obfsData.obfuscationDict[originalName] = protected
                     return protected
                 }
                 return protected
             }()
-            Logger.log(.protectedReference(originalName: word, protectedName: protectedName))
-            let range: Range = currentIndex..<data.index(data.startIndex, offsetBy: result.range.location)
-            currentIndex = data.index(range.upperBound, offsetBy: result.range.length)
-            return data[range] + protectedName
-        }.joined() + (currentIndex < data.endIndex ? data[currentIndex..<data.endIndex] : "")
+            Logger.log(.protectedReference(originalName: originalName,
+                                           protectedName: obfuscatedName))
+            offset += obfuscatedName.count - originalName.count
+            content.replaceSubrange(startIndex..<endIndex, with: obfuscatedName)
+        }
+        return content
     }
 
     override func writeToFile(data: ObfuscationData) {

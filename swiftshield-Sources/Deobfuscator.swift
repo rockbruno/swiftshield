@@ -14,15 +14,23 @@ struct Deobfuscator {
         for match in regex {
             let originalName = match.captureGroup(1, originalString: mapFileContent)
             let obfuscatedName = match.captureGroup(2, originalString: mapFileContent)
-            dictionary[originalName] = obfuscatedName
+            dictionary[obfuscatedName] = originalName
         }
         return dictionary
     }
 
     static func replace(content: String, withContentsOf dictionary: [String: String]) -> String {
+        let regexString = Array(dictionary.keys).joined(separator: "|")
+        var offset = 0
         var content = content
-        for (key, value) in dictionary {
-            content = content.replacingOccurrences(of: value, with: key)
+        for match in content.match(regex: regexString) {
+            let range = match.adjustingRanges(offset: offset).range
+            let startIndex = content.index(content.startIndex, offsetBy: range.location)
+            let endIndex = content.index(startIndex, offsetBy: range.length)
+            let obfuscatedName = String(content[startIndex..<endIndex])
+            let originalName = dictionary[obfuscatedName]!
+            offset += originalName.count - obfuscatedName.count
+            content.replaceSubrange(startIndex..<endIndex, with: originalName)
         }
         return content
     }

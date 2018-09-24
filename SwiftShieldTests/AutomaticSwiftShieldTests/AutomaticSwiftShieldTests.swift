@@ -12,7 +12,7 @@ class AutomaticSwiftShieldTests: XCTestCase {
     func testObfuscator() {
         let obfuscationData = AutomaticObfuscationData()
         obfuscationData.obfuscationDict["ViewController"] = "AAAAA"
-        obfuscationData.obfuscationDict["CustomViewController"] = "BBBBB"
+        obfuscationData.obfuscationDict["CustomViewController"] = "BBBBBBBBBBBBBBBBBBB"
         obfuscationData.obfuscationDict["++++"] = "SHOULDNOTWORK"
         obfuscationData.obfuscationDict["myProperty"] = "CCCCC"
         obfuscationData.obfuscationDict["MyType"] = "DDDDD"

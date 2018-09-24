@@ -77,6 +77,8 @@
 		FD895AE11E31142400A753FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADC1E31142400A753FB /* String.swift */; };
 		FD9BE54E215675C400E25A25 /* NSTextCheckingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9BE54D215675C400E25A25 /* NSTextCheckingResult.swift */; };
 		FD9BE54F215676AB00E25A25 /* NSTextCheckingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9BE54D215675C400E25A25 /* NSTextCheckingResult.swift */; };
+		FD9C67D4215861EF0029EDF5 /* ManualSwiftShieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9C67D3215861EF0029EDF5 /* ManualSwiftShieldTests.swift */; };
+		FD9C67D6215862DB0029EDF5 /* MockManualOriginalFile.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD9C67D5215862DB0029EDF5 /* MockManualOriginalFile.txt */; };
 		FDAA08EE21567C6C0061A52C /* MockFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAA08ED21567C6C0061A52C /* MockFile.swift */; };
 		FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */; };
 		FDC74E78212C49AC00B3E03B /* SourceKitDeclarationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */; };
@@ -130,6 +132,8 @@
 		FD895ADB1E31142400A753FB /* Protector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protector.swift; path = "swiftshield-Sources/Protector.swift"; sourceTree = SOURCE_ROOT; };
 		FD895ADC1E31142400A753FB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = "swiftshield-Sources/String.swift"; sourceTree = SOURCE_ROOT; };
 		FD9BE54D215675C400E25A25 /* NSTextCheckingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextCheckingResult.swift; sourceTree = "<group>"; };
+		FD9C67D3215861EF0029EDF5 /* ManualSwiftShieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSwiftShieldTests.swift; sourceTree = "<group>"; };
+		FD9C67D5215862DB0029EDF5 /* MockManualOriginalFile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MockManualOriginalFile.txt; path = SwiftShieldTests/AutomaticSwiftShieldTests/MockManualOriginalFile.txt; sourceTree = SOURCE_ROOT; };
 		FDAA08ED21567C6C0061A52C /* MockFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFile.swift; sourceTree = "<group>"; };
 		FDB0785120E6BD7B00F744A9 /* XcodeProjectBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjectBuilder.swift; sourceTree = "<group>"; };
 		FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceKitDeclarationType.swift; sourceTree = "<group>"; };
@@ -280,6 +284,7 @@
 		FD5315D2212F872D001EA977 /* SwiftShieldTests */ = {
 			isa = PBXGroup;
 			children = (
+				FD9C67D2215861DE0029EDF5 /* ManualSwiftShieldTests */,
 				FD833C85215669A100CDF875 /* DeobfuscatorTests */,
 				FD1BEDB0213048FD00105411 /* AutomaticSwiftShieldTests */,
 				FD1BEDAF2130403900105411 /* ProjectBuilderTests */,
@@ -328,6 +333,15 @@
 				FDAA08ED21567C6C0061A52C /* MockFile.swift */,
 			);
 			path = DeobfuscatorTests;
+			sourceTree = "<group>";
+		};
+		FD9C67D2215861DE0029EDF5 /* ManualSwiftShieldTests */ = {
+			isa = PBXGroup;
+			children = (
+				FD9C67D3215861EF0029EDF5 /* ManualSwiftShieldTests.swift */,
+				FD9C67D5215862DB0029EDF5 /* MockManualOriginalFile.txt */,
+			);
+			path = ManualSwiftShieldTests;
 			sourceTree = "<group>";
 		};
 		FDD0B6161E5B097E00715DDF /* Frameworks */ = {
@@ -434,6 +448,7 @@
 				FD1BEDB821305E2000105411 /* MockXib.txt in Resources */,
 				FD7D726E21580C4400FDDA1F /* MockPlistObfuscatedPrincipalClass.plist in Resources */,
 				FD1BED9A21302EA200105411 /* MockStoryboard.txt in Resources */,
+				FD9C67D6215862DB0029EDF5 /* MockManualOriginalFile.txt in Resources */,
 				FD1BEDAE21303DCA00105411 /* ExpectedMockStoryboardIgnoringMainModule.txt in Resources */,
 				FD5315DA212F8C4C001EA977 /* XcodeOutput.txt in Resources */,
 				FD1BEDB62130506B00105411 /* MockObfuscatedFile.txt in Resources */,
@@ -489,6 +504,7 @@
 				FD5315F3212F8E68001EA977 /* SourceKitDeclarationType.swift in Sources */,
 				FD1BEDA1213034E100105411 /* Options.swift in Sources */,
 				FD1BED9821302E3800105411 /* StoryboardObfuscationTests.swift in Sources */,
+				FD9C67D4215861EF0029EDF5 /* ManualSwiftShieldTests.swift in Sources */,
 				FD1BEDB22130491200105411 /* AutomaticSwiftShieldTests.swift in Sources */,
 				FD5315F2212F8E68001EA977 /* SourceKit+Variant.swift in Sources */,
 				FD5315EF212F8E68001EA977 /* DynamicLink.swift in Sources */,
