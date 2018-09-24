@@ -61,9 +61,13 @@ AppDelegate ===> uJXJkhVbwdQGNhh
 SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 ````
 
-You can use this file to automatically deobfuscate any kind of text-based crash file by running `swiftshield -deobfuscate CRASH_FILE -deobfuscate-map PATH_TO_CONVERSION_MAP`.
+You can use this file to automatically deobfuscate any kind of text-based crash file by running:
 
-<img src="https://i.imgur.com/cDC6OFa.png" alt="SwiftShield logo" height="172">
+```
+swiftshield -deobfuscate CRASH_FILE -deobfuscate-map PATH_TO_CONVERSION_MAP
+```
+
+<img src="https://i.imgur.com/qMKy84P.png" alt="SwiftShield logo" height="172">
 
 ## 🚨 Requirements
 
