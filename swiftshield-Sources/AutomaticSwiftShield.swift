@@ -223,8 +223,11 @@ extension AutomaticSwiftShield {
 
     func obfuscateNSPrincipalClassPlists(obfuscationData: AutomaticObfuscationData) {
         for plist in obfuscationData.plists {
-            let data = try! Data(contentsOf: URL(fileURLWithPath: plist.path))
-            let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+            guard let data = try? Data(contentsOf: URL(fileURLWithPath: plist.path)),
+                  let xmlDoc = try? AEXMLDocument(xml: data, options: AEXMLOptions()) else {
+                Logger.log(.plistError(info: "Failed to open \(plist.path)"))
+                exit(error: true)
+            }
             obfuscateNSPrincipalClass(plistXml: xmlDoc, obfuscationData: obfuscationData)
             plist.write(xmlDoc.xml)
         }
@@ -249,8 +252,11 @@ extension AutomaticSwiftShield {
     }
 
     func getPlistVersionAndNumber(_ plist: File) -> (String, String)? {
-        let data = try! Data(contentsOf: URL(fileURLWithPath: plist.path))
-        let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: plist.path)),
+              let xmlDoc = try? AEXMLDocument(xml: data, options: AEXMLOptions()) else {
+            Logger.log(.plistError(info: "Failed to open \(plist.path)"))
+            exit(error: true)
+        }
         guard let children = xmlDoc.root.children.first?.children else {
             return nil
         }

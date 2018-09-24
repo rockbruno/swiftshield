@@ -12,6 +12,7 @@ enum LogType {
     case foundReference(name: String, usr: String, at: File, line: Int, column: Int, newName: String)
     case projectError
     case ignoreModules(modules: Set<String>)
+    case plistError(info: String)
 
     //Shared
     case overwriting(file: File)
@@ -100,6 +101,8 @@ enum LogType {
             return "Deobfuscating..."
         case let .foundObfuscatedReference(ref, original):
             return "Found \(ref) (\(original))"
+        case let .plistError(info):
+            return "Fatal Plist Error: \(info)"
         }
     }
 

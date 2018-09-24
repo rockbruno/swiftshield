@@ -139,9 +139,7 @@ final class XcodeProjectBuilder {
         }
         let compiledPlistPath = regex.captureGroup(1, originalString: line)
         guard compiledPlistPath.hasSuffix(".plist") else {
-            print("Fatal: Plist row has no .plist")
-            print("Line:")
-            print(line)
+            Logger.log(.plistError(info: "Plist row has no .plist!\nLine:\n\(line)"))
             exit(error: true)
         }
         let plistPath = regex.captureGroup(2, originalString: line)
@@ -150,9 +148,7 @@ final class XcodeProjectBuilder {
                                 .deletingLastPathComponent()
                                 .lastPathComponent
         guard let moduleName = moduleNamePath.components(separatedBy: ".").first else {
-            print("Fatal: Failed to extract module name from PlistFile row (unrecognized pattern)")
-            print("Line:")
-            print(line)
+            Logger.log(.plistError(info: "Failed to extract module name from PlistFile row (unrecognized pattern)\nLine:\n\(line)"))
             exit(error: true)
         }
         let file = File(filePath: folder.removingPlaceholder + "/" + plistPath.removingPlaceholder)
