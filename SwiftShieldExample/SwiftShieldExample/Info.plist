@@ -41,5 +41,21 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSExtensionPrincipalClass</key>
+    <string>$(PRODUCT_MODULE_NAME).AClass</string>
+    <key>WKExtensionDelegateClassName</key>
+    <string>$(PRODUCT_MODULE_NAME).AClass</string>
+    <key>CLKComplicationPrincipalClass</key>
+    <string>$(PRODUCT_MODULE_NAME).AClass</string>
+    <key>New item</key>
+    <dict>
+        <key>NSExtensionPrincipalClass</key>
+        <string>$(PRODUCT_MODULE_NAME).AClass</string>
+        <key>New item</key>
+        <dict>
+            <key>WKExtensionDelegateClassName</key>
+            <string>$(PRODUCT_MODULE_NAME).AClass</string>
+        </dict>
+    </dict>
 </dict>
 </plist>

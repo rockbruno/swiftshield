@@ -12,17 +12,16 @@ final class ManualSwiftShield: Protector {
         Logger.log(.tag(tag: tag))
         let files = getSourceFiles()
         Logger.log(.scanningDeclarations)
-        var obfsData = ObfuscationData()
-        obfsData.storyboardsToObfuscate = getStoryboardsAndXibs()
-        files.forEach { protect(file: $0, obfsData: &obfsData) }
+        let obfsData = ObfuscationData(files: files, storyboards: getStoryboardsAndXibs())
+        obfsData.files.forEach { protect(file: $0, obfsData: obfsData) }
         return obfsData
     }
 
-    private func protect(file: File, obfsData: inout ObfuscationData) {
+    private func protect(file: File, obfsData: ObfuscationData) {
         Logger.log(.checking(file: file))
         do {
             let fileString = try String(contentsOfFile: file.path, encoding: .utf8)
-            let newFile = obfuscateReferences(fileString: fileString, obfsData: &obfsData)
+            let newFile = obfuscateReferences(fileString: fileString, obfsData: obfsData)
             try newFile.write(toFile: file.path, atomically: false, encoding: .utf8)
         } catch {
             Logger.log(.fatal(error: error.localizedDescription))
@@ -30,24 +29,33 @@ final class ManualSwiftShield: Protector {
         }
     }
 
-    private func obfuscateReferences(fileString data: String, obfsData: inout ObfuscationData) -> String {
-        var currentIndex = data.startIndex
-        let matches = data.match(regex: String.regexFor(tag: tag))
-        return matches.compactMap { result in
-            let word = (data as NSString).substring(with: result.range(at: 0))
-            let protectedName: String = {
-                guard let protected = obfsData.obfuscationDict[word] else {
-                    let protected = String.random(length: protectedClassNameSize, excluding: obfsData.allObfuscatedNames)
-                    obfsData.obfuscationDict[word] = protected
-                    obfsData.allObfuscatedNames.insert(protected)
+    func obfuscateReferences(fileString content: String, obfsData: ObfuscationData) -> String {
+        let regexString = "[a-zA-Z0-9_$]*\(tag)"
+        var offset = 0
+        var content = content
+        for match in content.match(regex: regexString) {
+            let range = match.adjustingRanges(offset: offset).range
+            let startIndex = content.index(content.startIndex, offsetBy: range.location)
+            let endIndex = content.index(startIndex, offsetBy: range.length)
+            let originalName = String(content[startIndex..<endIndex])
+            let obfuscatedName: String = {
+                guard let protected = obfsData.obfuscationDict[originalName] else {
+                    let protected = String.random(length: protectedClassNameSize,
+                                                  excluding: obfsData.allObfuscatedNames)
+                    obfsData.obfuscationDict[originalName] = protected
                     return protected
                 }
                 return protected
             }()
-            Logger.log(.protectedReference(originalName: word, protectedName: protectedName))
-            let range: Range = currentIndex..<data.index(data.startIndex, offsetBy: result.range.location)
-            currentIndex = data.index(range.upperBound, offsetBy: result.range.length)
-            return data[range] + protectedName
-        }.joined() + (currentIndex < data.endIndex ? data[currentIndex..<data.endIndex] : "")
+            Logger.log(.protectedReference(originalName: originalName,
+                                           protectedName: obfuscatedName))
+            offset += obfuscatedName.count - originalName.count
+            content.replaceSubrange(startIndex..<endIndex, with: obfuscatedName)
+        }
+        return content
+    }
+
+    override func writeToFile(data: ObfuscationData) {
+        writeToFile(data: data, path: "Manual", info: "Manual mode")
     }
 }

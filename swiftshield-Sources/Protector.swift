@@ -8,6 +8,20 @@ class Protector {
     let basePath: String
     let protectedClassNameSize: Int
 
+    static func mapData(from obfuscationData: ObfuscationData, info: String) -> String {
+        return """
+        //
+        // SwiftShield Conversion Map
+        // \(info)
+        // Deobfuscate crash logs (or any text file) by running:
+        // swiftshield -deobfuscate CRASH_FILE -deobfuscate_map THIS_FILE
+        //
+
+        """ + obfuscationData.obfuscationDict.reduce("") {
+            $0 + "\n\($1.key) ===> \($1.value)"
+        }
+    }
+
     init(basePath: String, protectedClassNameSize: Int = 25) {
         self.basePath = basePath
         self.protectedClassNameSize = protectedClassNameSize
@@ -23,25 +37,23 @@ class Protector {
 
     func protectStoryboards(data obfuscationData: ObfuscationData) {
         Logger.log(.overwritingStoryboards)
-        for file in obfuscationData.storyboardsToObfuscate {
+        for file in obfuscationData.storyboards {
             Logger.log(.checking(file: file))
             let data = try! Data(contentsOf: URL(fileURLWithPath: file.path))
             let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
             obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfuscationData)
             let obfuscatedFile = xmlDoc.xml
             Logger.log(.saving(file: file))
-            do {
-                try obfuscatedFile.write(toFile: file.path, atomically: true, encoding: .utf8)
-            } catch {
-                Logger.log(.fatal(error: error.localizedDescription))
-                exit(error: true)
-            }
+            file.write(obfuscatedFile)
         }
     }
 
-    func obfuscateIBXML(element: AEXMLElement, currentModule: String? = nil, obfuscationData: ObfuscationData, idToXML: [String: AEXMLElement] = [:]) {
+    func obfuscateIBXML(element: AEXMLElement,
+                        currentModule: String? = nil,
+                        obfuscationData: ObfuscationData,
+                        idToXML: [String: AEXMLElement] = [:]) {
         var idToXML = idToXML
-        let supportedModules = obfuscationData.moduleNames
+        let supportedModules = (obfuscationData as? AutomaticObfuscationData)?.moduleNames
         let currentModule: String = element.attributes["customModule"] ?? currentModule ?? ""
         if let identifier = element.attributes["id"] {
             idToXML[identifier] = element
@@ -96,24 +108,23 @@ class Protector {
     }
 
     func writeToFile(data: ObfuscationData) {
+        // Must be called from a subclass!
+        return
+    }
+
+    func writeToFile(data: ObfuscationData, path: String, info: String) {
         Logger.log(.generatingConversionMap)
-        var output = ""
-        output += "//\n"
-        output += "//  SwiftShield\n"
-        output += "//  Conversion Map\n"
-        output += "//\n"
-        output += "\n"
-        output += "Data:"
-        output += "\n"
-        for (k,v) in data.obfuscationDict {
-            output += "\n\(k) ===> \(v)"
-        }
-        let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output"
-        try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH.mm.ss"
+        let dateString = dateFormatter.string(from: Date())
+        let output = Protector.mapData(from: data, info: "\(info), \(dateString)")
+        let path = basePath + (basePath.last == "/" ? "" : "/") + "swiftshield-output/\(path), \(dateString)"
+        try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         do {
             try output.write(toFile: path + "/conversionMap.txt", atomically: false, encoding: String.Encoding.utf8)
         } catch {
             Logger.log(.fatal(error: error.localizedDescription))
+            exit(error: true)
         }
     }
 }

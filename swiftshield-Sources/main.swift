@@ -1,6 +1,6 @@
 import Foundation
 
-if CommandLine.arguments.contains("-h") {
+if CommandLine.arguments.contains("-help") {
     Logger.log(.helpText)
     exit()
 }
@@ -8,10 +8,24 @@ if CommandLine.arguments.contains("-h") {
 Logger.verbose = CommandLine.arguments.contains("-verbose")
 SKAPI.verbose = CommandLine.arguments.contains("-show-sourcekit-queries")
 
-let automatic = CommandLine.arguments.contains("-automatic")
-
 Logger.log(.version)
 Logger.log(.verbose)
+
+if let filePathToDeobfuscate = UserDefaults.standard.string(forKey: "deobfuscate") {
+    if let mapFilePath = UserDefaults.standard.string(forKey: "deobfuscate-map") {
+        let file = File(filePath: filePathToDeobfuscate)
+        let mapFile = File(filePath: mapFilePath)
+        Logger.log(.deobfuscatorStarted)
+        Deobfuscator.deobfuscate(file: file, mapFile: mapFile)
+        exit()
+    } else {
+        Logger.log(.helpText)
+        exit(error: true)
+    }
+}
+
+let automatic = CommandLine.arguments.contains("-automatic")
+
 Logger.log(.mode)
 
 let basePath = UserDefaults.standard.string(forKey: "project-root") ?? ""

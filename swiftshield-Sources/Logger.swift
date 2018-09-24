@@ -12,7 +12,8 @@ enum LogType {
     case foundReference(name: String, usr: String, at: File, line: Int, column: Int, newName: String)
     case projectError
     case ignoreModules(modules: Set<String>)
-    
+    case plistError(info: String)
+
     //Shared
     case overwriting(file: File)
     case fatal(error: String)
@@ -25,17 +26,21 @@ enum LogType {
     case foundNothingError
     case taggingProjects
     case finished
-    
+
     //Manual
     case scanningDeclarations
     case tag(tag: String)
-    
+
+    //Deobfuscator
+    case deobfuscatorStarted
+    case foundObfuscatedReference(ref: String, original: String)
+
     //Misc
     case version
     case verbose
     case helpText
     case mode
-    
+
     var description: String {
         switch self {
         case .buildingProject:
@@ -81,7 +86,7 @@ enum LogType {
         case .finished:
             return "Finished."
         case .version:
-            return "SwiftShield 3.2.1"
+            return "SwiftShield 3.3.0"
         case .verbose:
             return "Verbose Mode"
         case .mode:
@@ -92,12 +97,18 @@ enum LogType {
             return "Using tag: \(tag)"
         case let .ignoreModules(modules):
             return "Ignoring modules: \(modules.joined(separator: ", "))"
+        case .deobfuscatorStarted:
+            return "Deobfuscating..."
+        case let .foundObfuscatedReference(ref, original):
+            return "Found \(ref) (\(original))"
+        case let .plistError(info):
+            return "Fatal Plist Error: \(info)"
         }
     }
-    
+
     var verbose: Bool {
         switch self {
-        case .fileNotModified(_), .saving(_), .found(_), .verbose:
+        case .fileNotModified, .saving, .found, .foundObfuscatedReference, .verbose:
             return true
         default:
             return false

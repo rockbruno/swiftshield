@@ -1,0 +1,12 @@
+class ViewController__s: CustomVC__s {
+
+    @IBAction func myMethod__s(_ sender: Any) {}
+    public static func ++++(lhs: ViewController__s, rhs: ViewController__s) {}
+
+    public var myProperty__s: MyType__s = ""
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print(ViewController__s.fakeMethod__s())
+    }
+}

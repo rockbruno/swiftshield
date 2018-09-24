@@ -9,18 +9,10 @@
 import XCTest
 
 class AutomaticSwiftShieldTests: XCTestCase {
-    func testObfuscationDataCreation() {
-        let modules: [Module] = [Module(name: "test", sourceFiles: [], xibFiles: [File(filePath: "/Users/bruno.rocha/Desktop/test/test/BLABLA.xib"), File(filePath: "/Users/bruno.rocha/Desktop/test/test/Base.lproj/LaunchScreen.storyboard"), File(filePath: "/Users/bruno.rocha/Desktop/test/test/Base.lproj/Main.storyboard")], compilerArguments: []), Module(name: "MyLib", sourceFiles: [], xibFiles: [File(filePath: "/Users/bruno.rocha/Desktop/test/RapiddoUtils/Sources/Assets/StatusLine.xib")], compilerArguments: [])]
-        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0)
-        let obfuscationData = protector.getObfuscationData(from: modules)
-        XCTAssertEqual(obfuscationData.storyboardsToObfuscate, modules.flatMap { $0.xibFiles })
-        XCTAssertEqual(obfuscationData.moduleNames, ["test", "MyLib"])
-    }
-
     func testObfuscator() {
-        let obfuscationData = ObfuscationData()
+        let obfuscationData = AutomaticObfuscationData()
         obfuscationData.obfuscationDict["ViewController"] = "AAAAA"
-        obfuscationData.obfuscationDict["CustomViewController"] = "BBBBB"
+        obfuscationData.obfuscationDict["CustomViewController"] = "BBBBBBBBBBBBBBBBBBB"
         obfuscationData.obfuscationDict["++++"] = "SHOULDNOTWORK"
         obfuscationData.obfuscationDict["myProperty"] = "CCCCC"
         obfuscationData.obfuscationDict["MyType"] = "DDDDD"
@@ -41,5 +33,28 @@ class AutomaticSwiftShieldTests: XCTestCase {
         let expectedFileData = loadFile("MockObfuscatedFile", ofType: "txt")
         let expectedFile = String(data: expectedFileData, encoding: .utf8)!
         XCTAssertEqual(obfuscatedFile, expectedFile)
+    }
+
+    func testPlistExtractor() {
+        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0)
+        let plist = path(for: "MockPlist", ofType: "plist")
+        let file = File(filePath: plist)
+        let data = protector.getPlistVersionAndNumber(file)!
+        XCTAssertEqual("1.0", data.0)
+        XCTAssertEqual("1", data.1)
+    }
+
+    func testPlistPrincipalClassObfuscation() {
+        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0)
+        let plist = path(for: "MockPlist", ofType: "plist")
+        let file = MockFile(path: plist)
+        let obfuscationData = AutomaticObfuscationData(modules: [Module(name: "mock", plists: [file])])
+        obfuscationData.obfuscationDict["AClass"] = "ZZZZZ"
+        protector.obfuscateNSPrincipalClassPlists(obfuscationData: obfuscationData)
+        let expectedPlistData = loadFile("MockPlistObfuscatedPrincipalClass", ofType: "plist")
+        let expectedPlistString = String(data: expectedPlistData, encoding: .utf8)!
+        let origXml = try! AEXMLDocument(xml: file.writtenData)
+        let expectedXml = try! AEXMLDocument(xml: expectedPlistString)
+        XCTAssertEqual(origXml.xml, expectedXml.xml)
     }
 }

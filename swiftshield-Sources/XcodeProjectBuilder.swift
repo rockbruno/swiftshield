@@ -1,13 +1,12 @@
 import Foundation
 
-struct XcodeProjectBuilder {
-
-    private typealias MutableModuleData = (source: [File], xibs: [File], args: [String])
-    private typealias MutableModuleDictionary = [String: MutableModuleData]
-
+final class XcodeProjectBuilder {
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
+
+    private typealias MutableModuleData = (source: [File], xibs: [File], plists: [File], args: [String])
+    private typealias MutableModuleDictionary = OrderedDictionary<String, MutableModuleData>
 
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
@@ -45,15 +44,23 @@ struct XcodeProjectBuilder {
     func parseModulesFrom(xcodeBuildOutput output: String) -> [Module] {
         let lines = output.components(separatedBy: "\n")
         var modules: MutableModuleDictionary = [:]
-        for line in lines {
+        for (index, line) in lines.enumerated() {
             if let moduleName = firstMatch(for: "(?<=-module-name ).*?(?= )", in: line) {
                 parseMergeSwiftModulePhase(line: line, moduleName: moduleName, modules: &modules)
             } else if let moduleName = firstMatch(for: "(?<=--module ).*?(?= )", in: line) {
                 parseCompileXibPhase(line: line, moduleName: moduleName, modules: &modules)
+            } else if line.hasPrefix("ProcessInfoPlistFile") ||
+                      line.hasPrefix("CopyPlistFile") ||
+                      line.hasPrefix("Preprocess") {
+                parsePlistPhase(line: line + lines[index + 1], modules: &modules)
             }
         }
         return modules.filter { modulesToIgnore.contains($0.key) == false }.map {
-            Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, compilerArguments: $0.value.args)
+            Module(name: $0.key,
+                   sourceFiles: $0.value.source,
+                   xibFiles: $0.value.xibs,
+                   plists: $0.value.plists.removeDuplicates(),
+                   compilerArguments: $0.value.args)
         }
     }
 
@@ -62,17 +69,17 @@ struct XcodeProjectBuilder {
             return
         }
         guard let fullRelevantArguments = firstMatch(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line) else {
-            return
+            print("Fatal: Failed to retrieve \(moduleName) xcodebuild arguments")
+            exit(error: true)
         }
         Logger.log(.found(module: moduleName))
-        let spacedFolderPlaceholder = "\u{0}"
-        let relevantArguments = fullRelevantArguments.replacingOccurrences(of: "\\ ", with: spacedFolderPlaceholder)
+        let relevantArguments = fullRelevantArguments.replacingEscapedSpaces
             .components(separatedBy: " ")
-            .map { $0.replacingOccurrences(of: spacedFolderPlaceholder, with: " ")}
+            .map { $0.removingPlaceholder }
         let files = parseModuleFiles(from: relevantArguments)
         let compilerArguments = parseCompilerArguments(from: relevantArguments)
-        modules[moduleName, default: ([], [], [])].source = files
-        modules[moduleName]?.args = compilerArguments
+        set(sourceFiles: files, to: moduleName, modules: &modules)
+        set(compilerArgs: compilerArguments, to: moduleName, modules: &modules)
     }
 
     private func parseModuleFiles(from relevantArguments: [String]) -> [File] {
@@ -113,13 +120,72 @@ struct XcodeProjectBuilder {
     }
 
     private func parseCompileXibPhase(line: String, moduleName: String, modules: inout MutableModuleDictionary) {
+        let line = line.replacingEscapedSpaces
         guard let xibPath = firstMatch(for: "(?=)[^ ]*$", in: line) else {
             return
         }
         guard xibPath.hasSuffix(".xib") || xibPath.hasSuffix(".storyboard") else {
             return
         }
-        let file = File(filePath: xibPath)
-        modules[moduleName, default: ([], [], [])].xibs.append(file)
+        let file = File(filePath: xibPath.removingPlaceholder)
+        add(xib: file, to: moduleName, modules: &modules)
+    }
+
+    private func parsePlistPhase(line: String, modules: inout MutableModuleDictionary) {
+        let prefix = line.hasPrefix("Preprocess") ? "Preprocess" : "PlistFile"
+        let line = line.replacingEscapedSpaces
+        guard let regex = line.match(regex: "\(prefix) (.*) (.*.plist) *cd (.*)").first else {
+            return
+        }
+        let compiledPlistPath = regex.captureGroup(1, originalString: line)
+        guard compiledPlistPath.hasSuffix(".plist") else {
+            Logger.log(.plistError(info: "Plist row has no .plist!\nLine:\n\(line)"))
+            exit(error: true)
+        }
+        let plistPath = regex.captureGroup(2, originalString: line)
+        let folder = regex.captureGroup(3, originalString: line)
+        let moduleNamePath = URL(fileURLWithPath: compiledPlistPath.removingPlaceholder)
+                                .deletingLastPathComponent()
+                                .lastPathComponent
+        guard let moduleName = moduleNamePath.components(separatedBy: ".").first else {
+            Logger.log(.plistError(info: "Failed to extract module name from PlistFile row (unrecognized pattern)\nLine:\n\(line)"))
+            exit(error: true)
+        }
+        let file = File(filePath: folder.removingPlaceholder + "/" + plistPath.removingPlaceholder)
+        add(plist: file, to: moduleName, modules: &modules)
+    }
+}
+
+extension XcodeProjectBuilder {
+    private func add(xib: File, to moduleName: String, modules: inout MutableModuleDictionary) {
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.xibs.append(xib)
+    }
+
+    private func set(sourceFiles: [File], to moduleName: String, modules: inout MutableModuleDictionary) {
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.source = sourceFiles
+    }
+
+    private func add(plist: File, to moduleName: String, modules: inout MutableModuleDictionary) {
+        guard URL(fileURLWithPath: plist.path).lastPathComponent
+                                              .hasPrefix("Preprocessed-") == false else {
+            return
+        }
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.plists.append(plist)
+    }
+
+    private func set(compilerArgs: [String], to moduleName: String, modules: inout MutableModuleDictionary) {
+        registerFoundModuleIfNeeded(moduleName, modules: &modules)
+        modules[moduleName]?.args = compilerArgs
+    }
+
+    private func registerFoundModuleIfNeeded(_ moduleName: String, modules: inout MutableModuleDictionary) {
+        guard modules[moduleName] == nil else {
+            return
+        }
+        let moduleData: MutableModuleData = ([], [], [], [])
+        modules[moduleName] = moduleData
     }
 }
