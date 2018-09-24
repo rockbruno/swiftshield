@@ -43,14 +43,15 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 ```
 
 
-## 💥 Dealing with encrypted crash logs / analytics
+## 💥 Deobfuscating encrypted Crash logs
 
-After succesfully encrypting your project, SwiftShield generates a `conversionMap.txt` file with all the changes it made to your project, allowing you to pinpoint what an encrypted object really is.
+After succesfully encrypting your project, SwiftShield will generate an output folder containing a `conversionMap.txt` file containing with all the changes it made to your project. allowing you to pinpoint what an encrypted object really is.
 
 ````
 //
 //  SwiftShield
 //  Conversion Map
+//  Automatic mode for MyApp 2.0 153, 2018-09-24 10.23.48
 //
 
 Data:
@@ -60,6 +61,9 @@ AppDelegate ===> uJXJkhVbwdQGNhh
 SuperImportantClassThatShouldBeHidden ===> GDqKGsHjJsWQzdq
 ````
 
+You can use this file to automatically deobfuscate any kind of text-based crash file by running `swiftshield -deobfuscate CRASH_FILE -deobfuscate-map PATH_TO_CONVERSION_MAP`.
+
+<img src="https://i.imgur.com/cDC6OFa.png" alt="SwiftShield logo" height="172">
 
 ## 🚨 Requirements
 
@@ -72,7 +76,7 @@ If one or more modules/extensions of your app fail to satify these conditions, y
 4. Latest Swift version and Xcode command line tools (works on all versions, but might have different results due to different SourceKit versions)
 5. Make sure your project doesn't contain one of [SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require some manual fixing afterwards.
 
-If your project contains app extensions that use the `NSPrincipalClass` or `NSExtensionPrincipalClass` properties in their `Info.plist` (like Rich Notifications), you'll have to manually update such properties with the obfuscated name. This is going to be automated in future releases, but you can also avoid this by not obfuscating the extensions with `-ignore-modules`.
+(App Extensions that use `NSExtensionPrincipalClass` or variants in their `Info.plist` (like Rich Notifications/Watch apps) will have such references obfuscated as well, but will assume that you haven't changed them from their default `$(PRODUCT_MODULE_NAME).ClassName` value. If you modified these plists to point to classes in different modules, you'll have to manually change them after running this tool.)
 
 ### Manual mode:
 
