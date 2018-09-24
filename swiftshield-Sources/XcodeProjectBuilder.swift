@@ -63,7 +63,8 @@ final class XcodeProjectBuilder {
             return
         }
         guard let fullRelevantArguments = firstMatch(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line) else {
-            return
+            print("Fatal: Failed to retrieve \(moduleName) xcodebuild arguments")
+            exit(error: true)
         }
         Logger.log(.found(module: moduleName))
         let relevantArguments = fullRelevantArguments.replacingEscapedSpaces

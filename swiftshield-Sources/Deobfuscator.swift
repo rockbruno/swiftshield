@@ -29,6 +29,7 @@ struct Deobfuscator {
             let endIndex = content.index(startIndex, offsetBy: range.length)
             let obfuscatedName = String(content[startIndex..<endIndex])
             let originalName = dictionary[obfuscatedName]!
+            Logger.log(.foundObfuscatedReference(ref: obfuscatedName, original: originalName))
             offset += originalName.count - obfuscatedName.count
             content.replaceSubrange(startIndex..<endIndex, with: originalName)
         }

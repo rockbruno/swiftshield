@@ -5,10 +5,17 @@ if CommandLine.arguments.contains("-help") {
     exit()
 }
 
+Logger.verbose = CommandLine.arguments.contains("-verbose")
+SKAPI.verbose = CommandLine.arguments.contains("-show-sourcekit-queries")
+
+Logger.log(.version)
+Logger.log(.verbose)
+
 if let filePathToDeobfuscate = UserDefaults.standard.string(forKey: "deobfuscate") {
     if let mapFilePath = UserDefaults.standard.string(forKey: "deobfuscate-map") {
         let file = File(filePath: filePathToDeobfuscate)
         let mapFile = File(filePath: mapFilePath)
+        Logger.log(.deobfuscatorStarted)
         Deobfuscator.deobfuscate(file: file, mapFile: mapFile)
         exit()
     } else {
@@ -17,13 +24,8 @@ if let filePathToDeobfuscate = UserDefaults.standard.string(forKey: "deobfuscate
     }
 }
 
-Logger.verbose = CommandLine.arguments.contains("-verbose")
-SKAPI.verbose = CommandLine.arguments.contains("-show-sourcekit-queries")
-
 let automatic = CommandLine.arguments.contains("-automatic")
 
-Logger.log(.version)
-Logger.log(.verbose)
 Logger.log(.mode)
 
 let basePath = UserDefaults.standard.string(forKey: "project-root") ?? ""
