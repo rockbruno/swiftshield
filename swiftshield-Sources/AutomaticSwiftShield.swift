@@ -78,12 +78,13 @@ class AutomaticSwiftShield: Protector {
     }
 
     override func writeToFile(data: ObfuscationData) {
-        let path: String
-        if let plist = (data as? AutomaticObfuscationData)?.mainPlist {
-            let version = getPlistVersionAndNumber(plist)
-            path = "\(schemeToBuild) \(version.0) \(version.1)"
-        } else {
-            path = "\(schemeToBuild)"
+        var path = "\(schemeToBuild)"
+        for plist in (data as? AutomaticObfuscationData)?.mainModule?.plists ?? [] {
+            guard let version = getPlistVersionAndNumber(plist) else {
+                continue
+            }
+            path += " \(version.0) \(version.1)"
+            break
         }
         writeToFile(data: data, path: path, info: "Automatic mode for \(path)")
     }
@@ -247,14 +248,14 @@ extension AutomaticSwiftShield {
         }
     }
 
-    func getPlistVersionAndNumber(_ plist: File) -> (String, String) {
+    func getPlistVersionAndNumber(_ plist: File) -> (String, String)? {
         let data = try! Data(contentsOf: URL(fileURLWithPath: plist.path))
         let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
         guard let children = xmlDoc.root.children.first?.children else {
-            return ("", "")
+            return nil
         }
-        var shortVersion = ""
-        var version = ""
+        var shortVersion: String? = ""
+        var version: String? = ""
         for i in 0..<children.count {
             if children[i].value == "CFBundleShortVersionString" {
                 shortVersion = children[i+1].value ?? ""
@@ -262,6 +263,9 @@ extension AutomaticSwiftShield {
                 version = children[i+1].value ?? ""
             }
         }
-        return (shortVersion, version)
+        guard let shortVer = shortVersion, let ver = version else {
+            return nil
+        }
+        return (shortVer, ver)
     }
 }

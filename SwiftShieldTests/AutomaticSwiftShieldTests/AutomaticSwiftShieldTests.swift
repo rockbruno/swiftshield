@@ -39,7 +39,7 @@ class AutomaticSwiftShieldTests: XCTestCase {
         let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0)
         let plist = path(for: "MockPlist", ofType: "plist")
         let file = File(filePath: plist)
-        let data = protector.getPlistVersionAndNumber(file)
+        let data = protector.getPlistVersionAndNumber(file)!
         XCTAssertEqual("1.0", data.0)
         XCTAssertEqual("1", data.1)
     }

@@ -49,12 +49,18 @@ final class XcodeProjectBuilder {
                 parseMergeSwiftModulePhase(line: line, moduleName: moduleName, modules: &modules)
             } else if let moduleName = firstMatch(for: "(?<=--module ).*?(?= )", in: line) {
                 parseCompileXibPhase(line: line, moduleName: moduleName, modules: &modules)
-            } else if line.hasPrefix("ProcessInfoPlistFile") || line.hasPrefix("CopyPlistFile") {
+            } else if line.hasPrefix("ProcessInfoPlistFile") ||
+                      line.hasPrefix("CopyPlistFile") ||
+                      line.hasPrefix("Preprocess") {
                 parsePlistPhase(line: line + lines[index + 1], modules: &modules)
             }
         }
         return modules.filter { modulesToIgnore.contains($0.key) == false }.map {
-            Module(name: $0.key, sourceFiles: $0.value.source, xibFiles: $0.value.xibs, plists: $0.value.plists, compilerArguments: $0.value.args)
+            Module(name: $0.key,
+                   sourceFiles: $0.value.source,
+                   xibFiles: $0.value.xibs,
+                   plists: $0.value.plists.removeDuplicates(),
+                   compilerArguments: $0.value.args)
         }
     }
 
@@ -126,14 +132,16 @@ final class XcodeProjectBuilder {
     }
 
     private func parsePlistPhase(line: String, modules: inout MutableModuleDictionary) {
+        let prefix = line.hasPrefix("Preprocess") ? "Preprocess" : "PlistFile"
         let line = line.replacingEscapedSpaces
-        guard let regex = line.match(regex: "PlistFile (.*) (.*.plist) *cd (.*)").first else {
-            print("Fatal: Plist row failed regex")
-            exit(error: true)
+        guard let regex = line.match(regex: "\(prefix) (.*) (.*.plist) *cd (.*)").first else {
+            return
         }
         let compiledPlistPath = regex.captureGroup(1, originalString: line)
         guard compiledPlistPath.hasSuffix(".plist") else {
             print("Fatal: Plist row has no .plist")
+            print("Line:")
+            print(line)
             exit(error: true)
         }
         let plistPath = regex.captureGroup(2, originalString: line)
@@ -141,13 +149,10 @@ final class XcodeProjectBuilder {
         let moduleNamePath = URL(fileURLWithPath: compiledPlistPath.removingPlaceholder)
                                 .deletingLastPathComponent()
                                 .lastPathComponent
-        let moduleName: String
-        if moduleNamePath.hasSuffix(".framework") {
-            moduleName = String(moduleNamePath.prefix(moduleNamePath.count - 10))
-        } else if moduleNamePath.hasSuffix(".app") {
-            moduleName = String(moduleNamePath.prefix(moduleNamePath.count - 4))
-        } else {
-            print("Fatal: Unrecognized plist pattern")
+        guard let moduleName = moduleNamePath.components(separatedBy: ".").first else {
+            print("Fatal: Failed to extract module name from PlistFile row (unrecognized pattern)")
+            print("Line:")
+            print(line)
             exit(error: true)
         }
         let file = File(filePath: folder.removingPlaceholder + "/" + plistPath.removingPlaceholder)
@@ -167,6 +172,10 @@ extension XcodeProjectBuilder {
     }
 
     private func add(plist: File, to moduleName: String, modules: inout MutableModuleDictionary) {
+        guard URL(fileURLWithPath: plist.path).lastPathComponent
+                                              .hasPrefix("Preprocessed-") == false else {
+            return
+        }
         registerFoundModuleIfNeeded(moduleName, modules: &modules)
         modules[moduleName]?.plists.append(plist)
     }
