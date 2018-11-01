@@ -6,8 +6,8 @@ Bugs that are marked as merged are fixed in the Swift repo, but still bugged in 
 
 - **FIXED**: [(SR-8616)](https://bugs.swift.org/browse/SR-8616) `is` pattern: Matched type won't index if the left element is an optional (`if [].first is Foo`). For now, you can overcome this by not using the optionals directly.
 - **FIXED**: [(SR-8617)](https://bugs.swift.org/browse/SR-8617) Enum names: Explicitly using an enum type in pattern matching prevents it from getting indexed (`if case MyClass.MyEnum.myCase {}` - `myCase` will be indexed, but `MyClass` won't.)
-- **IN-REVIEW**: Legacy KeyPaths that include types, such as `#keyPath(Foo.bar)` will not get indexed.
-- **MERGED**: Explicit Swift KeyPaths such as `\Foo.bar` will not index the type portion.
+- **IN-REVIEW**: [(SR-9020)](https://bugs.swift.org/browse/SR-9020) Legacy KeyPaths that include types, such as `#keyPath(Foo.bar)` will not get indexed.
+- **MERGED**: [(SR-9039)](https://bugs.swift.org/browse/SR-9039) Explicit Swift KeyPaths such as `\Foo.bar` will not index the type portion.
 - Emoji Strings: Although SourceKit has no real bugs regarding emojis, it does treat them differently: While SourceKit treats emojis as several characters, Swift treats them as a single one - which will prevent SwiftShield from knowing the correct position of the references after said emoji. While a solution isn't found, you can avoid this by not using emojis.
 
 # Types that won't be obfuscated
