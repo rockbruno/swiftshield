@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.license = { type: 'GNU GPL v3.0', file: 'LICENSE.md' }
   s.summary = 'A tool that protects Swift iOS apps against class-dump attacks.'
   s.homepage = 'https://github.com/rockbruno/swiftshield'
-  s.authors = { 'Bruno Rocha' => 'bruno.rocha@movile.com' }
+  s.authors = { 'Bruno Rocha' => 'brunorochaesilva@gmail.com' }
   s.social_media_url = 'https://twitter.com/rockthebruno'
   s.source = { http: "https://github.com/rockbruno/swiftshield/releases/download/#{s.version}/swiftshield.zip" }
   s.preserve_paths = '*'
