@@ -120,6 +120,12 @@ swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyA
 
 - `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
+- `-ignore-files`: Exclude files from obfuscation (please not this will only obfuscate the class/struct.. name).
+
+- `excluded-prefix-tag`: Exclude properties/variables/classes.. that start with a specific tag.
+
+- `excluded-suffix-tag`: Exclude properties/variables/classes.. that end with a specific tag. 
+
 ### Manual mode
 
 ```
