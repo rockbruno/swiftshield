@@ -98,7 +98,7 @@ Download the [latest release](https://github.com/rockbruno/swiftshield/releases)
 ### Automatic mode
 
 ```
-swiftshield -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xcworkspace -automatic-project-scheme MyApp-AppStore
+swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyApp/MyApp.xcworkspace -automatic-project-scheme MyApp-AppStore
 ```
 **Required Parameters:**
 
