@@ -42,7 +42,7 @@ class AutomaticSwiftShield: Protector {
         let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore)
         let modules = projectBuilder.getModulesAndCompilerArguments()
         let obfuscationData = AutomaticObfuscationData(modules: modules)
-        index(obfuscationData: obfuscationData)
+        index(obfuscationData: obfuscationData, shouldRemoveSuffixTags: false)
         findReferencesInIndexed(obfuscationData: obfuscationData)
         if obfuscationData.referencesDict.isEmpty {
             Logger.log(.foundNothingError)
@@ -53,7 +53,7 @@ class AutomaticSwiftShield: Protector {
         return obfuscationData
     }
 
-    func index(obfuscationData: AutomaticObfuscationData) {
+    func index(obfuscationData: AutomaticObfuscationData, shouldRemoveSuffixTags: Bool) {
         let sourceKit = SourceKit()
         var fileDataArray: [(file: File, module: Module)] = []
         for module in obfuscationData.modules {
@@ -71,7 +71,8 @@ class AutomaticSwiftShield: Protector {
             sourceKit.recurseOver(childID: sourceKit.entitiesID, resp: dict) { [unowned self] dict in
                 guard let data = self.getNameData(from: dict,
                                                   obfuscationData: obfuscationData,
-                                                  sourceKit: sourceKit) else {
+                                                  sourceKit: sourceKit,
+                                                  shouldRemoveSuffixTags: shouldRemoveSuffixTags) else {
                                                     return
                 }
                 let name = data.name
@@ -97,6 +98,20 @@ class AutomaticSwiftShield: Protector {
         }
         writeToFile(data: data, path: path, info: "Automatic mode for \(path)")
     }
+    
+    func removeSuffixTags() {
+        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore)
+        let modules = projectBuilder.getModulesAndCompilerArguments()
+        let obfuscationData = AutomaticObfuscationData(modules: modules)
+        index(obfuscationData: obfuscationData, shouldRemoveSuffixTags: true)
+        findReferencesInIndexed(obfuscationData: obfuscationData)
+        if obfuscationData.referencesDict.isEmpty {
+            Logger.log(.foundNothingError)
+            exit(error: true)
+        }
+        obfuscateNSPrincipalClassPlists(obfuscationData: obfuscationData)
+        overwriteFiles(obfuscationData: obfuscationData)
+    }
 }
 
 extension AutomaticSwiftShield {
@@ -109,7 +124,10 @@ extension AutomaticSwiftShield {
         return resp
     }
 
-    private func getNameData(from dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> (name: String, usr: String, obfuscatedName: String)? {
+    private func getNameData(from dict: sourcekitd_variant_t,
+                             obfuscationData: ObfuscationData,
+                             sourceKit: SourceKit,
+                             shouldRemoveSuffixTags: Bool) -> (name: String, usr: String, obfuscatedName: String)? {
         let kind = dict.getUUIDString(key: sourceKit.kindID)
         guard sourceKit.declarationType(for: kind) != nil else {
             return nil
@@ -122,19 +140,26 @@ extension AutomaticSwiftShield {
             return nil
         }
         
-        if self.excludedPrefixTag != "" && name.hasPrefix(self.excludedPrefixTag) {
+        if self.excludedPrefixTag != "" && name.hasPrefix(self.excludedPrefixTag) && shouldRemoveSuffixTags == false {
             return nil
         }
         
-        if self.excludedSuffixTag != "" && name.hasSuffix(excludedSuffixTag) {
+        if self.excludedSuffixTag != "" && name.hasSuffix(excludedSuffixTag) && shouldRemoveSuffixTags == false {
             return nil
         }
         
         guard let protected = obfuscationData.obfuscationDict[name] else {
-            let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
-            obfuscationData.obfuscationDict[name] = newName
-            return (name, usr, newName)
+            if !shouldRemoveSuffixTags {
+                let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
+                obfuscationData.obfuscationDict[name] = newName
+                return (name, usr, newName)
+            } else {
+                let newName = name.components(separatedBy: self.excludedSuffixTag).first!
+                obfuscationData.obfuscationDict[name] = newName
+                return (name, usr, newName)
+            }
         }
+        
         return (name, usr, protected)
     }
 

@@ -57,4 +57,9 @@ protector.protectStoryboards(data: obfuscationData)
 protector.writeToFile(data: obfuscationData)
 protector.markProjectsAsProtected()
 Logger.log(.finished)
+
+if automatic && CommandLine.arguments.contains("-clear-suffix-tags") {
+    (protector as! AutomaticSwiftShield).removeSuffixTags()
+}
+
 exit()
