@@ -5,7 +5,10 @@ class AutomaticSwiftShield: Protector {
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
-
+    let filesToIgnore: Set<String>
+    let excludedPrefixTag: String
+    let excludedSuffixTag: String
+    
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
     }
@@ -14,10 +17,16 @@ class AutomaticSwiftShield: Protector {
          projectToBuild: String,
          schemeToBuild: String,
          modulesToIgnore: Set<String>,
-         protectedClassNameSize: Int) {
+         classesToIgnore: Set<String>,
+         protectedClassNameSize: Int,
+         excludedPrefixTag: String,
+         excludedSuffixTag: String) {
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
         self.modulesToIgnore = modulesToIgnore
+        self.filesToIgnore = classesToIgnore
+        self.excludedPrefixTag = excludedPrefixTag
+        self.excludedSuffixTag = excludedSuffixTag
         super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize)
         if self.schemeToBuild.isEmpty || self.projectToBuild.isEmpty {
             Logger.log(.helpText)
@@ -108,6 +117,19 @@ extension AutomaticSwiftShield {
         guard let name = dict.getString(key: sourceKit.nameID)?.trueName, let usr = dict.getString(key: sourceKit.usrID) else {
             return nil
         }
+        
+        if self.filesToIgnore.contains(name) {
+            return nil
+        }
+        
+        if self.excludedPrefixTag != "" && name.hasPrefix(self.excludedPrefixTag) {
+            return nil
+        }
+        
+        if self.excludedSuffixTag != "" && name.hasSuffix(excludedSuffixTag) {
+            return nil
+        }
+        
         guard let protected = obfuscationData.obfuscationDict[name] else {
             let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
             obfuscationData.obfuscationDict[name] = newName
