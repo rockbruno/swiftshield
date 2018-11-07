@@ -43,7 +43,7 @@ if automatic {
     
     protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: Set(modulesToIgnore), classesToIgnore: Set(filesToIgnore), protectedClassNameSize: protectedClassNameSize, excludedPrefixTag: excludedPrefixTag, excludedSuffixTag: excludedSuffixTag)
 } else {
-    let tag = UserDefaults.standard.string(forKey: "tag") ?? "UrobqALKMcZxnKnjuhxwhGGvdyCcZyRP"
+    let tag = UserDefaults.standard.string(forKey: "tag") ?? "__s"
     protector = ManualSwiftShield(basePath: basePath, tag: tag, protectedClassNameSize: protectedClassNameSize)
 }
 
