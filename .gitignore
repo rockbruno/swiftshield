@@ -1,2 +1,5 @@
 
 *.profraw
+.DS_Store
+Index/DataStore/*
+Build/Intermediates.noindex/*
