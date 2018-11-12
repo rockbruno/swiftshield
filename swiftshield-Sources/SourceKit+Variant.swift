@@ -22,7 +22,16 @@ extension sourcekitd_variant_t {
         return String( cString: SKApi.sourcekitd_uid_get_string_ptr( uuid! )! )// ?: "NOUUID"
     }
 
-    func getDictionary(key: sourcekitd_uid_t) -> sourcekitd_variant_t {
+    func getDictionaryValue( key: sourcekitd_uid_t ) -> sourcekitd_variant_t {
         return SKApi.sourcekitd_variant_dictionary_get_value(self, key)
+    }
+    
+    func getArrayValue( index: Int ) -> sourcekitd_variant_t {
+        return SKApi.sourcekitd_variant_array_get_value(self, index)
+    }
+    
+    func getArrayCount() -> Int {
+        let count = sourcekitd_variant_array_get_count(self)
+        return Int(count)
     }
 }

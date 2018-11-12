@@ -73,6 +73,8 @@ final class SourceKit {
     lazy var lineID = SKApi.sourcekitd_uid_get_from_cstr("key.line")!
     lazy var colID = SKApi.sourcekitd_uid_get_from_cstr("key.column")!
     lazy var usrID = SKApi.sourcekitd_uid_get_from_cstr("key.usr")!
+    lazy var attributesId = SKApi.sourcekitd_uid_get_from_cstr("key.attributes")!
+    lazy var attributeId = SKApi.sourcekitd_uid_get_from_cstr("key.attribute")!
 
     func array(argv: [String]) -> sourcekitd_object_t {
         let objects = argv.map { SKApi.sourcekitd_request_string_create($0) }

@@ -37,7 +37,8 @@ if automatic {
     let schemeToBuild = UserDefaults.standard.string(forKey: "automatic-project-scheme") ?? ""
     let projectToBuild = UserDefaults.standard.string(forKey: "automatic-project-file") ?? ""
     let modulesToIgnore = UserDefaults.standard.string(forKey: "ignore-modules")?.components(separatedBy: ",") ?? []
-    protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: Set(modulesToIgnore), protectedClassNameSize: protectedClassNameSize)
+    let excludePublic = CommandLine.arguments.contains("-exclude-public")
+    protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: Set(modulesToIgnore), protectedClassNameSize: protectedClassNameSize, excludePublic: excludePublic)
 } else {
     let tag = UserDefaults.standard.string(forKey: "tag") ?? "__s"
     protector = ManualSwiftShield(basePath: basePath, tag: tag, protectedClassNameSize: protectedClassNameSize)
