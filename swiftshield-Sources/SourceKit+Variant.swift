@@ -25,4 +25,18 @@ extension sourcekitd_variant_t {
     func getDictionary(key: sourcekitd_uid_t) -> sourcekitd_variant_t {
         return SKApi.sourcekitd_variant_dictionary_get_value(self, key)
     }
+    
+    func getAttributes(dict: sourcekitd_variant_t, subKey: sourcekitd_uid_t) -> [String] {
+
+        var data = [String]()
+      
+        let _ = SKApi.sourcekitd_variant_array_apply(dict) { (_, attributesDict) in
+            
+            let accessControl = attributesDict.getUUIDString(key: subKey)
+            data.append(accessControl)
+            return true
+        }
+
+        return data
+    }
 }

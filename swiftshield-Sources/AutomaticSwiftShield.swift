@@ -5,9 +5,8 @@ class AutomaticSwiftShield: Protector {
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
-    let filesToIgnore: Set<String>
-    let excludedPrefixTag: String
-    let excludedSuffixTag: String
+    var publicProtocols: Set<String>!
+    let excludePublic: Bool
     
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
@@ -17,16 +16,12 @@ class AutomaticSwiftShield: Protector {
          projectToBuild: String,
          schemeToBuild: String,
          modulesToIgnore: Set<String>,
-         classesToIgnore: Set<String>,
          protectedClassNameSize: Int,
-         excludedPrefixTag: String,
-         excludedSuffixTag: String) {
+         excludePublic: Bool) {
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
         self.modulesToIgnore = modulesToIgnore
-        self.filesToIgnore = classesToIgnore
-        self.excludedPrefixTag = excludedPrefixTag
-        self.excludedSuffixTag = excludedSuffixTag
+        self.excludePublic = excludePublic
         super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize)
         if self.schemeToBuild.isEmpty || self.projectToBuild.isEmpty {
             Logger.log(.helpText)
@@ -68,6 +63,9 @@ class AutomaticSwiftShield: Protector {
             Logger.log(.indexing(file: file))
             let resp = index(sourceKit: sourceKit, file: file, args: compilerArgs)
             let dict = SKApi.sourcekitd_response_get_value(resp)
+            
+            publicProtocols = Set<String>()
+
             sourceKit.recurseOver(childID: sourceKit.entitiesID, resp: dict) { [unowned self] dict in
                 guard let data = self.getNameData(from: dict,
                                                   obfuscationData: obfuscationData,
@@ -128,6 +126,7 @@ extension AutomaticSwiftShield {
                              obfuscationData: ObfuscationData,
                              sourceKit: SourceKit,
                              shouldRemoveSuffixTags: Bool) -> (name: String, usr: String, obfuscatedName: String)? {
+        
         let kind = dict.getUUIDString(key: sourceKit.kindID)
         guard sourceKit.declarationType(for: kind) != nil else {
             return nil
@@ -136,33 +135,43 @@ extension AutomaticSwiftShield {
             return nil
         }
         
-        if self.filesToIgnore.contains(name) {
-            return nil
-        }
-        
-        if self.excludedPrefixTag != "" && name.hasPrefix(self.excludedPrefixTag) && shouldRemoveSuffixTags == false {
-            return nil
-        }
-        
-        if self.excludedSuffixTag != "" && name.hasSuffix(excludedSuffixTag) && shouldRemoveSuffixTags == false {
-            return nil
-        }
-        
-        guard let protected = obfuscationData.obfuscationDict[name] else {
-            if !shouldRemoveSuffixTags {
-                let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
-                obfuscationData.obfuscationDict[name] = newName
-                return (name, usr, newName)
-            } else {
-                let newName = name.components(separatedBy: self.excludedSuffixTag).first!
-                obfuscationData.obfuscationDict[name] = newName
-                return (name, usr, newName)
+        if excludePublic {
+            let attributesDict = SKApi.sourcekitd_variant_dictionary_get_value(dict, sourceKit.attributesID)
+            let attributesData = dict.getAttributes(dict: attributesDict, subKey: sourceKit.attributeID)
+
+            
+            //Check if variant is public
+            let isPublic = attributesData.filter { item in
+                return item.contains("public")
+            }.count != 0
+            
+            //Add to publicProtocols array
+            if kind == "source.lang.swift.decl.protocol" && isPublic {
+                publicProtocols.insert(name)
             }
+            
+            //Don't Obfuscate public methods/properties..
+            if isPublic {
+                return nil
+            }
+            
+            //Handle public protocol's functions
+            for protocolName in publicProtocols {
+                if usr.contains(protocolName) {
+                    return nil
+                }
+            }
+        }
+        guard let protected = obfuscationData.obfuscationDict[name] else {
+            //if !shouldRemoveSuffixTags {
+            let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
+            obfuscationData.obfuscationDict[name] = newName
+            return (name, usr, newName)
         }
         
         return (name, usr, protected)
     }
-
+    
     func findReferencesInIndexed(obfuscationData: AutomaticObfuscationData) {
         let SK = SourceKit()
         Logger.log(.searchingReferencesOfUsr)
