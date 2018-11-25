@@ -16,6 +16,6 @@ The following types and cases might be working correctly in SourceKit, but are c
 
 - Typealiases and Associated Types: Not always indexed (`typealias Foo = UIImage | extension Foo {}` - Foo is ignored and indexed as UIImage). Note that these can't be reverse-engineered as they are purely an editor thing, so no action is required!
 - Enum cases and names: Although they are correctly indexed, some enums like `CodingKeys` are not meant to be changed. This will be activated again once the way to determine if an enum is related to internal frameworks is implemented.
-- **IN-PROGRESS**: Methods with names under four characters: Operators only get indexed as such if they are declared in a global scope. Since most people use `public static func`, they get indexed as regular methods. To prevent operators from being obfuscated, methods with names shorter than four characters won't get obfuscated.
+- **IN-REVIEW**: Methods with names under four characters: Operators only get indexed as such if they are declared in a global scope. Since most people use `public static func`, they get indexed as regular methods. To prevent operators from being obfuscated, methods with names shorter than four characters won't get obfuscated.
 - Properties: Not implemented yet!
 - Module names: Not implemented yet!
