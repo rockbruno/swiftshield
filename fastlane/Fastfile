@@ -1,0 +1,12 @@
+default_platform :osx
+
+platform :osx do
+  before_all do
+    setup_circle_ci    
+  end
+
+  desc "Test SwiftShield"
+  lane :tests do
+    scan(scheme: "swiftshield", formatter: "xcpretty-json-formatter")
+  end
+end
