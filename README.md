@@ -114,11 +114,7 @@ swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyA
 
 - `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. Note that this should be the exact name of the imported module (not the target name!). Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
 
-- `-verbose`: Prints additional information.
-
 - `-show-sourcekit-queries`: Prints queries sent to SourceKit. Note that they are huge and will absolutely clutter your terminal, so use this only for bug reports and feature development!
-
-- `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
 
 ### Manual mode
 
@@ -133,9 +129,13 @@ swiftshield -project-root /app/MyApp
 
 - `-tag`: Uses a custom tag. Default is `__s`.
 
+### Aditional parameters for both modes
+
 - `-verbose`: Prints additional information.
 
 - `-obfuscation-character-count`: Set the number of characters that obfuscated names will have. By default, this is `32`. Be aware that using a small number will result in slower runs due to the higher possibility of name collisions.
+
+- `-dry-run`: Does not actually overwrite the files. Useful for debugging!
 
 
 ## 🤝 Contributing
@@ -146,9 +146,10 @@ Contributions to SwiftShield are more than welcome! There's no contribution guid
 ## ✅ Automatic Mode Next Steps
 
 - [X] Method names
+- [X] Update Extension plists (Rich Notifications / Watch main classes)
+- [ ] "SDK Mode" (ignore `public`)
 - [ ] Properties
 - [ ] Module names
-- [ ] Update Extension plists (Rich Notifications / Watch main classes)
 
 
 ## License
@@ -158,4 +159,4 @@ SwiftShield is released under the GNU GPL v3.0 license. See LICENSE for details.
 
 ## Thanks
 
-Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, and to SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.
+Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, Apple for their open-source SourceKit wrapper and to SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.

@@ -6,7 +6,7 @@ if CommandLine.arguments.contains("-help") {
 }
 
 Logger.verbose = CommandLine.arguments.contains("-verbose")
-SKAPI.verbose = CommandLine.arguments.contains("-show-sourcekit-queries")
+SourceKit.verbose = CommandLine.arguments.contains("-show-sourcekit-queries")
 
 Logger.log(.version)
 Logger.log(.verbose)
@@ -25,6 +25,7 @@ if let filePathToDeobfuscate = UserDefaults.standard.string(forKey: "deobfuscate
 }
 
 let automatic = CommandLine.arguments.contains("-automatic")
+let dryRun = CommandLine.arguments.contains("-dry-run")
 
 Logger.log(.mode)
 
@@ -37,10 +38,10 @@ if automatic {
     let schemeToBuild = UserDefaults.standard.string(forKey: "automatic-project-scheme") ?? ""
     let projectToBuild = UserDefaults.standard.string(forKey: "automatic-project-file") ?? ""
     let modulesToIgnore = UserDefaults.standard.string(forKey: "ignore-modules")?.components(separatedBy: ",") ?? []
-    protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: Set(modulesToIgnore), protectedClassNameSize: protectedClassNameSize)
+    protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: Set(modulesToIgnore), protectedClassNameSize: protectedClassNameSize, dryRun: dryRun)
 } else {
     let tag = UserDefaults.standard.string(forKey: "tag") ?? "__s"
-    protector = ManualSwiftShield(basePath: basePath, tag: tag, protectedClassNameSize: protectedClassNameSize)
+    protector = ManualSwiftShield(basePath: basePath, tag: tag, protectedClassNameSize: protectedClassNameSize, dryRun: dryRun)
 }
 
 let obfuscationData = protector.protect()
@@ -49,8 +50,11 @@ if obfuscationData.obfuscationDict.isEmpty {
     exit(error: true)
 }
 
-protector.protectStoryboards(data: obfuscationData)
-protector.writeToFile(data: obfuscationData)
-protector.markProjectsAsProtected()
+if dryRun == false {
+    protector.protectStoryboards(data: obfuscationData)
+    protector.writeToFile(data: obfuscationData)
+    protector.markProjectsAsProtected()
+}
+
 Logger.log(.finished)
 exit()

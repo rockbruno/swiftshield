@@ -29,14 +29,14 @@ class AutomaticSwiftShieldTests: XCTestCase {
                           ReferenceData(name: "fakeMethod", line: 10, column: 30)]
         let originalFileData = loadFile("MockOriginalFile", ofType: "txt")
         let originalFile = String(data: originalFileData, encoding: .utf8)!
-        let obfuscatedFile = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0).generateObfuscatedFile(fromString: originalFile, references: references, obfuscationData: obfuscationData)
+        let obfuscatedFile = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0, dryRun: true).generateObfuscatedFile(fromString: originalFile, references: references, obfuscationData: obfuscationData)
         let expectedFileData = loadFile("MockObfuscatedFile", ofType: "txt")
         let expectedFile = String(data: expectedFileData, encoding: .utf8)!
         XCTAssertEqual(obfuscatedFile, expectedFile)
     }
 
     func testPlistExtractor() {
-        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0)
+        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0, dryRun: true)
         let plist = path(for: "MockPlist", ofType: "plist")
         let file = File(filePath: plist)
         let data = protector.getPlistVersionAndNumber(file)!
@@ -45,7 +45,7 @@ class AutomaticSwiftShieldTests: XCTestCase {
     }
 
     func testPlistPrincipalClassObfuscation() {
-        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0)
+        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0, dryRun: false)
         let plist = path(for: "MockPlist", ofType: "plist")
         let file = MockFile(path: plist)
         let obfuscationData = AutomaticObfuscationData(modules: [Module(name: "mock", plists: [file])])
