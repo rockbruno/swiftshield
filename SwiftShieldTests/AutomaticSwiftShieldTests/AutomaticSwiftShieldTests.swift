@@ -57,8 +57,4 @@ class AutomaticSwiftShieldTests: XCTestCase {
         let expectedXml = try! AEXMLDocument(xml: expectedPlistString)
         XCTAssertEqual(origXml.xml, expectedXml.xml)
     }
-
-    func testSourceKit() {
-        let protector = AutomaticSwiftShield(basePath: "abc", projectToBuild: "abc", schemeToBuild: "abc", modulesToIgnore: [], protectedClassNameSize: 0, dryRun: true)
-    }
 }
