@@ -146,9 +146,9 @@ Contributions to SwiftShield are more than welcome! There's no contribution guid
 ## ✅ Automatic Mode Next Steps
 
 - [X] Method names
-- [X] Properties
 - [X] Update Extension plists (Rich Notifications / Watch main classes)
 - [ ] "SDK Mode" (ignore `public`)
+- [ ] Properties
 - [ ] Module names
 
 
@@ -159,4 +159,4 @@ SwiftShield is released under the GNU GPL v3.0 license. See LICENSE for details.
 
 ## Thanks
 
-Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, and to SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.
+Thanks to John Holdsworth from [Refactorator](https://github.com/johnno1962/Refactorator) for `SourceKit.swift`, Apple for their open-source SourceKit wrapper and to SourceKitten for helping me figure out which compile arguments to ignore for SourceKit.

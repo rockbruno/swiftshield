@@ -6,13 +6,14 @@ final class MyView: UILabel {}
 
 class MyViewController: UIViewController {
 
-    let myLet = 1
-    var myProp = 1
-    class var myClassVar: Int {
-        return 10
-    }
-    static let myStaticLet = 1
-    static var myStaticVar = 1
+// Properties disabled due to Codable issues.
+//    let myLet = 1
+//    var myProp = 1
+//    class var myClassVar: Int {
+//        return 10
+//    }
+//    static let myStaticLet = 1
+//    static var myStaticVar = 1
 
     struct Foo {
         func barbar(view: MyView) -> MyViewController {
@@ -23,8 +24,8 @@ class MyViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        myProp = myLet * 10
-        MyViewController.myStaticVar = MyViewController.myClassVar + MyViewController.myStaticLet * 5
+//        myProp = myLet * 10
+//        MyViewController.myStaticVar = MyViewController.myClassVar + MyViewController.myStaticLet * 5
         render()
     }
 

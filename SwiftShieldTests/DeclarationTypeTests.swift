@@ -32,11 +32,11 @@ class DeclarationTypeTests: XCTestCase {
         }
         for property in ["var.instance", "var.static", "var.class"] {
             let declKind = declPrefix + property
-            XCTAssertEqual(sourceKit.declarationType(for: declKind), .property)
-            XCTAssertEqual(sourceKit.referenceType(kind: declKind), .property)
+            XCTAssertEqual(sourceKit.declarationType(for: declKind), nil)
+            XCTAssertEqual(sourceKit.referenceType(kind: declKind), nil)
             let refKind = refPrefix + property
             XCTAssertEqual(sourceKit.declarationType(for: refKind), nil)
-            XCTAssertEqual(sourceKit.referenceType(kind: refKind), .property)
+            XCTAssertEqual(sourceKit.referenceType(kind: refKind), nil)
         }
     }
 }
