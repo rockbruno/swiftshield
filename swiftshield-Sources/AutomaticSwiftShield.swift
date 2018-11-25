@@ -2,6 +2,7 @@ import Foundation
 
 class AutomaticSwiftShield: Protector {
 
+    let sourceKit: SourceKit
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
@@ -14,11 +15,14 @@ class AutomaticSwiftShield: Protector {
          projectToBuild: String,
          schemeToBuild: String,
          modulesToIgnore: Set<String>,
-         protectedClassNameSize: Int) {
+         protectedClassNameSize: Int,
+         dryRun: Bool,
+         sourceKit: SourceKit = .init()) {
+        self.sourceKit = sourceKit
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
         self.modulesToIgnore = modulesToIgnore
-        super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize)
+        super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize, dryRun: dryRun)
         if self.schemeToBuild.isEmpty || self.projectToBuild.isEmpty {
             Logger.log(.helpText)
             exit(error: true)
@@ -26,6 +30,10 @@ class AutomaticSwiftShield: Protector {
     }
 
     override func protect() -> ObfuscationData {
+        SourceKit.start()
+        defer {
+            SourceKit.stop()
+        }
         guard isWorkspace || projectToBuild.hasSuffix(".xcodeproj") else {
             Logger.log(.projectError)
             exit(error: true)
@@ -40,12 +48,13 @@ class AutomaticSwiftShield: Protector {
             exit(error: true)
         }
         obfuscateNSPrincipalClassPlists(obfuscationData: obfuscationData)
-        overwriteFiles(obfuscationData: obfuscationData)
+        if dryRun == false {
+            overwriteFiles(obfuscationData: obfuscationData)
+        }
         return obfuscationData
     }
 
     func index(obfuscationData: AutomaticObfuscationData) {
-        let sourceKit = SourceKit()
         var fileDataArray: [(file: File, module: Module)] = []
         for module in obfuscationData.modules {
             for file in module.sourceFiles {
@@ -55,21 +64,19 @@ class AutomaticSwiftShield: Protector {
         for fileData in fileDataArray {
             let file = fileData.file
             let module = fileData.module
-            let compilerArgs = sourceKit.array(argv: module.compilerArguments)
             Logger.log(.indexing(file: file))
-            let resp = index(sourceKit: sourceKit, file: file, args: compilerArgs)
-            let dict = SKApi.sourcekitd_response_get_value(resp)
-            sourceKit.recurseOver(childID: sourceKit.entitiesID, resp: dict) { [unowned self] dict in
+            let resp = index(file: file, args: module.compilerArguments)
+            resp.recurseOver(uid: .entitiesId) { [unowned self] variant in
+                let dict = variant.getDictionary()
                 guard let data = self.getNameData(from: dict,
-                                                  obfuscationData: obfuscationData,
-                                                  sourceKit: sourceKit) else {
+                                                  obfuscationData: obfuscationData) else {
                                                     return
                 }
                 let name = data.name
                 let usr = data.usr
                 obfuscationData.usrDict.insert(usr)
-                if dict.getString(key: sourceKit.receiverID) == nil {
-                    obfuscationData.usrRelationDict[usr] = dict
+                if dict.getString(.receiverId) == nil {
+                    obfuscationData.usrRelationDict[usr] = variant
                 }
                 Logger.log(.foundDeclaration(name: name, usr: usr))
             }
@@ -91,21 +98,24 @@ class AutomaticSwiftShield: Protector {
 }
 
 extension AutomaticSwiftShield {
-    private func index(sourceKit: SourceKit, file: File, args: sourcekitd_object_t) -> sourcekitd_response_t {
+    private func index(file: File, args: [String]) -> SourceKitdResponse {
         let resp = sourceKit.indexFile(filePath: file.path, compilerArgs: args)
-        if let error = sourceKit.error(resp: resp) {
+        if let error = resp.error {
             Logger.log(.indexError(file: file, error: error))
             exit(error: true)
         }
         return resp
     }
 
-    private func getNameData(from dict: sourcekitd_variant_t, obfuscationData: ObfuscationData, sourceKit: SourceKit) -> (name: String, usr: String, obfuscatedName: String)? {
-        let kind = dict.getUUIDString(key: sourceKit.kindID)
+    private func getNameData(from dict: SourceKitdResponse.Dictionary,
+                             obfuscationData: ObfuscationData) -> (name: String,
+                                                                   usr: String,
+                                                                   obfuscatedName: String)? {
+        let kind = dict.getUID(.kindId).asString
         guard sourceKit.declarationType(for: kind) != nil else {
             return nil
         }
-        guard let name = dict.getString(key: sourceKit.nameID)?.trueName, let usr = dict.getString(key: sourceKit.usrID) else {
+        guard let name = dict.getString(.nameId)?.trueName, let usr = dict.getString(.usrId) else {
             return nil
         }
         guard let protected = obfuscationData.obfuscationDict[name] else {
@@ -117,61 +127,76 @@ extension AutomaticSwiftShield {
     }
 
     func findReferencesInIndexed(obfuscationData: AutomaticObfuscationData) {
-        let SK = SourceKit()
         Logger.log(.searchingReferencesOfUsr)
-        for (file, indexResponse) in obfuscationData.indexedFiles {
-            let dict = SKApi.sourcekitd_response_get_value(indexResponse)
-            SK.recurseOver(childID: SK.entitiesID, resp: dict, block: { dict in
-                let kind = dict.getUUIDString(key: SK.kindID)
-                guard let type = SK.referenceType(kind: kind) else {
+        for (file, response) in obfuscationData.indexedFiles {
+            response.recurseOver(uid: .entitiesId) { [unowned self] variant in
+                let dict = variant.getDictionary()
+                let kind = dict.getUID(.kindId).asString
+                guard let type = self.sourceKit.referenceType(kind: kind) else {
                     return
                 }
-                guard let usr = dict.getString(key: SK.usrID), let name = dict.getString(key: SK.nameID)?.trueName else {
+                guard let usr = dict.getString(.usrId), let name = dict.getString(.nameId)?.trueName else {
                     return
                 }
-                let line = dict.getInt(key: SK.lineID)
-                let column = dict.getInt(key: SK.colID)
-                if obfuscationData.usrDict.contains(usr) {
-                    //Operators only get indexed as such if they are declared in a global scope
-                    //Unfortunately, most people use public static func
-                    //So we avoid obfuscating methods with small names to prevent obfuscating operators.
-                    if type == .method && name.count <= 4 {
-                        return
-                    }
-                    guard self.isReferencingInternal(type: type, kind: kind, dict: dict, obfuscationData: obfuscationData, sourceKit: SK) == false else {
-                        return
-                    }
-                    let newName = obfuscationData.obfuscationDict[name] ?? name
-                    Logger.log(.foundReference(name: name, usr: usr, at: file, line: line, column: column, newName: newName))
-                    let reference = ReferenceData(name: name, line: line, column: column)
-                    obfuscationData.referencesDict[file, default: []].append(reference)
+                let line = dict.getInt(.lineId)
+                let column = dict.getInt(.colId)
+                guard obfuscationData.usrDict.contains(usr) else {
+                    return
                 }
-            })
+                //Operators only get indexed as such if they are declared in a global scope
+                //Unfortunately, most people use public static func
+                //So we avoid obfuscating methods with small names to prevent obfuscating operators.
+                if type == .method && name.count <= 4 {
+                    return
+                }
+                guard self.isReferencingInternal(type: type, kind: kind, variant: variant, obfuscationData: obfuscationData) == false else {
+                    return
+                }
+                let newName = obfuscationData.obfuscationDict[name] ?? name
+                Logger.log(.foundReference(name: name,
+                                           usr: usr,
+                                           at: file,
+                                           line: line,
+                                           column: column,
+                                           newName: newName))
+                let reference = ReferenceData(name: name, line: line, column: column)
+                obfuscationData.referencesDict[file, default: []].append(reference)
+            }
         }
     }
 
-    private func isReferencingInternal(type: SourceKit.DeclarationType, kind: String, dict: sourcekitd_variant_t, obfuscationData: AutomaticObfuscationData, sourceKit: SourceKit) -> Bool {
+    private func isReferencingInternal(type: SourceKit.DeclarationType,
+                                       kind: String,
+                                       variant: SourceKitdResponse.Variant,
+                                       obfuscationData: AutomaticObfuscationData) -> Bool {
         guard type == .method || type == .property else {
             return false
         }
-        guard let usr = dict.getString(key: sourceKit.usrID) else {
+        guard let usr = variant.getDictionary().getString(.usrId) else {
             return false
         }
-        if let relDict = obfuscationData.usrRelationDict[usr], relDict.data != dict.data {
-            return isReferencingInternal(type: type, kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
+        if let relDict = obfuscationData.usrRelationDict[usr], relDict.val.data != variant.val.data {
+            return isReferencingInternal(type: type,
+                                         kind: kind,
+                                         variant: relDict,
+                                         obfuscationData: obfuscationData)
         }
         var isReference = false
-        sourceKit.recurseOver(childID: sourceKit.relatedID, resp: dict) { dict in
+        variant.recurseOver(uid: .relatedId) { [unowned self] variant in
             guard isReference == false else {
                 return
             }
-            guard let usr = dict.getString(key: sourceKit.usrID) else {
+            let dict = variant.getDictionary()
+            guard let usr = dict.getString(.usrId) else {
                 return
             }
             if obfuscationData.usrDict.contains(usr) == false {
                 isReference = true
             } else if let relDict = obfuscationData.usrRelationDict[usr] {
-                isReference = self.isReferencingInternal(type: type, kind: kind, dict: relDict, obfuscationData: obfuscationData, sourceKit: sourceKit)
+                isReference = self.isReferencingInternal(type: type,
+                                                         kind: kind,
+                                                         variant: relDict,
+                                                         obfuscationData: obfuscationData)
             }
         }
         return isReference

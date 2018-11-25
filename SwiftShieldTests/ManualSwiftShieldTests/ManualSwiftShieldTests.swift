@@ -10,7 +10,7 @@ import XCTest
 
 class ManualSwiftShieldTests: XCTestCase {
     func testObfuscator() {
-        let ss = ManualSwiftShield(basePath: "abc", tag: "__s", protectedClassNameSize: 32)
+        let ss = ManualSwiftShield(basePath: "abc", tag: "__s", protectedClassNameSize: 32, dryRun: true)
         let obfuscationData = ObfuscationData()
         obfuscationData.obfuscationDict["ViewController__s"] = "AAAAA"
         obfuscationData.obfuscationDict["CustomVC__s"] = "BBBBBBBBBBBBBBBBBBB"

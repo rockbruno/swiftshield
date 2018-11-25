@@ -22,8 +22,8 @@ final class AutomaticObfuscationData: ObfuscationData {
 
     var usrDict: Set<String> = []
     var referencesDict: [File: [ReferenceData]] = [:]
-    var usrRelationDict: [String: sourcekitd_variant_t] = [:]
-    var indexedFiles: [(File,sourcekitd_response_t)] = []
+    var usrRelationDict: [String: SourceKitdResponse.Variant] = [:]
+    var indexedFiles: [(File, SourceKitdResponse)] = []
 
     var moduleNames: Set<String> {
         return Set(modules.compactMap { $0.name })

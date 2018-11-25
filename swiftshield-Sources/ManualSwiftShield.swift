@@ -3,9 +3,9 @@ import Foundation
 final class ManualSwiftShield: Protector {
     let tag: String
 
-    init(basePath: String, tag: String, protectedClassNameSize: Int) {
+    init(basePath: String, tag: String, protectedClassNameSize: Int, dryRun: Bool) {
         self.tag = tag
-        super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize)
+        super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize, dryRun: dryRun)
     }
 
     override func protect() -> ObfuscationData {
@@ -22,7 +22,9 @@ final class ManualSwiftShield: Protector {
         do {
             let fileString = try String(contentsOfFile: file.path, encoding: .utf8)
             let newFile = obfuscateReferences(fileString: fileString, obfsData: obfsData)
-            try newFile.write(toFile: file.path, atomically: false, encoding: .utf8)
+            if dryRun == false {
+                try newFile.write(toFile: file.path, atomically: false, encoding: .utf8)
+            }
         } catch {
             Logger.log(.fatal(error: error.localizedDescription))
             exit(1)

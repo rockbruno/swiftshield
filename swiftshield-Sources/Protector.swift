@@ -7,6 +7,7 @@ class Protector {
 
     let basePath: String
     let protectedClassNameSize: Int
+    let dryRun: Bool
 
     static func mapData(from obfuscationData: ObfuscationData, info: String) -> String {
         return """
@@ -22,9 +23,10 @@ class Protector {
         }
     }
 
-    init(basePath: String, protectedClassNameSize: Int = 25) {
+    init(basePath: String, protectedClassNameSize: Int = 25, dryRun: Bool) {
         self.basePath = basePath
         self.protectedClassNameSize = protectedClassNameSize
+        self.dryRun = dryRun
         if basePath.isEmpty {
             Logger.log(.helpText)
             exit(error: true)

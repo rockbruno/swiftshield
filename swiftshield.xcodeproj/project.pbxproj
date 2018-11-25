@@ -26,10 +26,12 @@
 		FD1BEDB62130506B00105411 /* MockObfuscatedFile.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BEDB52130506A00105411 /* MockObfuscatedFile.txt */; };
 		FD1BEDB821305E2000105411 /* MockXib.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BEDB721305E2000105411 /* MockXib.txt */; };
 		FD1BEDBA21305F8300105411 /* ExpectedMockXib.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BEDB921305F8300105411 /* ExpectedMockXib.txt */; };
-		FD1C89CB212C986600F05C4D /* TTY.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CA212C986600F05C4D /* TTY.swift */; };
-		FD1C89CD212C988100F05C4D /* SourceKit+Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */; };
-		FD1C89CF212C989B00F05C4D /* DynamicLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CE212C989B00F05C4D /* DynamicLink.swift */; };
-		FD1C89D1212C98B100F05C4D /* SKAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89D0212C98B100F05C4D /* SKAPI.swift */; };
+		FD22AEFC21AAD4360099FFB1 /* SourceKitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD22AEFB21AAD4360099FFB1 /* SourceKitRequest.swift */; };
+		FD22AF0021AAEB4B0099FFB1 /* SourceKitdUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD22AEFF21AAEB4B0099FFB1 /* SourceKitdUUID.swift */; };
+		FD22AF0221AAEB730099FFB1 /* SourceKitdResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD22AF0121AAEB730099FFB1 /* SourceKitdResponse.swift */; };
+		FD22AF0321AAEE4E0099FFB1 /* SourceKitdResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD22AF0121AAEB730099FFB1 /* SourceKitdResponse.swift */; };
+		FD22AF0421AAEE500099FFB1 /* SourceKitdUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD22AEFF21AAEB4B0099FFB1 /* SourceKitdUUID.swift */; };
+		FD22AF0521AAEE520099FFB1 /* SourceKitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD22AEFB21AAD4360099FFB1 /* SourceKitRequest.swift */; };
 		FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */; };
 		FD39B3521EAA9D92009BFCDF /* ObfuscationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B3501EAA9D92009BFCDF /* ObfuscationData.swift */; };
 		FD39B3531EAA9D92009BFCDF /* ReferenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B3511EAA9D92009BFCDF /* ReferenceData.swift */; };
@@ -40,10 +42,6 @@
 		FD5315D4212F872E001EA977 /* XcodeProjectBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5315D3212F872E001EA977 /* XcodeProjectBuilderTests.swift */; };
 		FD5315DA212F8C4C001EA977 /* XcodeOutput.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD5315D9212F8C4C001EA977 /* XcodeOutput.txt */; };
 		FD5315EE212F8E68001EA977 /* SourceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */; };
-		FD5315EF212F8E68001EA977 /* DynamicLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CE212C989B00F05C4D /* DynamicLink.swift */; };
-		FD5315F0212F8E68001EA977 /* SKAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89D0212C98B100F05C4D /* SKAPI.swift */; };
-		FD5315F1212F8E68001EA977 /* TTY.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CA212C986600F05C4D /* TTY.swift */; };
-		FD5315F2212F8E68001EA977 /* SourceKit+Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */; };
 		FD5315F3212F8E68001EA977 /* SourceKitDeclarationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */; };
 		FD5315F4212F8E68001EA977 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895ADC1E31142400A753FB /* String.swift */; };
 		FD5315F5212F8E68001EA977 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD895AD51E31141100A753FB /* Logger.swift */; };
@@ -101,10 +99,9 @@
 		FD1BEDB52130506A00105411 /* MockObfuscatedFile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MockObfuscatedFile.txt; sourceTree = "<group>"; };
 		FD1BEDB721305E2000105411 /* MockXib.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MockXib.txt; sourceTree = "<group>"; };
 		FD1BEDB921305F8300105411 /* ExpectedMockXib.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ExpectedMockXib.txt; sourceTree = "<group>"; };
-		FD1C89CA212C986600F05C4D /* TTY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTY.swift; sourceTree = "<group>"; };
-		FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SourceKit+Variant.swift"; sourceTree = "<group>"; };
-		FD1C89CE212C989B00F05C4D /* DynamicLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLink.swift; sourceTree = "<group>"; };
-		FD1C89D0212C98B100F05C4D /* SKAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKAPI.swift; sourceTree = "<group>"; };
+		FD22AEFB21AAD4360099FFB1 /* SourceKitRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceKitRequest.swift; sourceTree = "<group>"; };
+		FD22AEFF21AAEB4B0099FFB1 /* SourceKitdUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceKitdUUID.swift; sourceTree = "<group>"; };
+		FD22AF0121AAEB730099FFB1 /* SourceKitdResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceKitdResponse.swift; sourceTree = "<group>"; };
 		FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SourceKit.swift; path = "swiftshield-Sources/SourceKit.swift"; sourceTree = SOURCE_ROOT; };
 		FD39B3501EAA9D92009BFCDF /* ObfuscationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObfuscationData.swift; path = "swiftshield-Sources/ObfuscationData.swift"; sourceTree = SOURCE_ROOT; };
 		FD39B3511EAA9D92009BFCDF /* ReferenceData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReferenceData.swift; path = "swiftshield-Sources/ReferenceData.swift"; sourceTree = SOURCE_ROOT; };
@@ -246,6 +243,18 @@
 			path = AutomaticSwiftShieldTests;
 			sourceTree = "<group>";
 		};
+		FD22AEFE21AAEB3A0099FFB1 /* SourceKitWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */,
+				FD22AEFF21AAEB4B0099FFB1 /* SourceKitdUUID.swift */,
+				FD22AF0121AAEB730099FFB1 /* SourceKitdResponse.swift */,
+				FD22AEFB21AAD4360099FFB1 /* SourceKitRequest.swift */,
+				FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */,
+			);
+			name = SourceKitWrapper;
+			sourceTree = "<group>";
+		};
 		FD34D4E41EA933C60002A273 /* Modes */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,12 +277,7 @@
 		FD4FB0491E5B146E009856B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FD39B34E1EAA9D83009BFCDF /* SourceKit.swift */,
-				FD1C89CE212C989B00F05C4D /* DynamicLink.swift */,
-				FD1C89D0212C98B100F05C4D /* SKAPI.swift */,
-				FD1C89CA212C986600F05C4D /* TTY.swift */,
-				FD1C89CC212C988100F05C4D /* SourceKit+Variant.swift */,
-				FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */,
+				FD22AEFE21AAEB3A0099FFB1 /* SourceKitWrapper */,
 				FD4FB0471E5B1465009856B8 /* SwiftShield-Bridging-Header.h */,
 				FD4FB0441E5B140E009856B8 /* sourcekitd.h */,
 				FD4FB0521E5B1734009856B8 /* sourcekitd.framework */,
@@ -465,7 +469,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD895AE11E31142400A753FB /* String.swift in Sources */,
-				FD1C89CF212C989B00F05C4D /* DynamicLink.swift in Sources */,
+				FD22AF0221AAEB730099FFB1 /* SourceKitdResponse.swift in Sources */,
 				FD895ADE1E31142400A753FB /* Array.swift in Sources */,
 				FD1BEDA0213034E100105411 /* Options.swift in Sources */,
 				FD895AD31E31140C00A753FB /* Storyboard.swift in Sources */,
@@ -475,20 +479,19 @@
 				FD39B3531EAA9D92009BFCDF /* ReferenceData.swift in Sources */,
 				FD895AE01E31142400A753FB /* Protector.swift in Sources */,
 				FD895AD81E31141500A753FB /* main.swift in Sources */,
+				FD22AF0021AAEB4B0099FFB1 /* SourceKitdUUID.swift in Sources */,
 				FD1BEDA8213034E100105411 /* Document.swift in Sources */,
 				FD833C832156666400CDF875 /* Deobfuscator.swift in Sources */,
 				FD742A2E2156B55200EE8010 /* OrderedDictionary.swift in Sources */,
 				FD4FB0571E5B2507009856B8 /* Module.swift in Sources */,
-				FD1C89D1212C98B100F05C4D /* SKAPI.swift in Sources */,
-				FD1C89CB212C986600F05C4D /* TTY.swift in Sources */,
 				FD1BEDA4213034E100105411 /* Element.swift in Sources */,
 				FD39B3521EAA9D92009BFCDF /* ObfuscationData.swift in Sources */,
 				FD1BEDA2213034E100105411 /* Parser.swift in Sources */,
 				FDC74E78212C49AC00B3E03B /* SourceKitDeclarationType.swift in Sources */,
 				FD9BE54E215675C400E25A25 /* NSTextCheckingResult.swift in Sources */,
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
-				FD1C89CD212C988100F05C4D /* SourceKit+Variant.swift in Sources */,
 				FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */,
+				FD22AEFC21AAD4360099FFB1 /* SourceKitRequest.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
 				FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */,
 				FDFF64D11E5275A000300623 /* Exit.swift in Sources */,
@@ -501,25 +504,23 @@
 			files = (
 				FD5315D4212F872E001EA977 /* XcodeProjectBuilderTests.swift in Sources */,
 				FD5315FB212F8E68001EA977 /* Storyboard.swift in Sources */,
+				FD22AF0421AAEE500099FFB1 /* SourceKitdUUID.swift in Sources */,
 				FD5315F3212F8E68001EA977 /* SourceKitDeclarationType.swift in Sources */,
 				FD1BEDA1213034E100105411 /* Options.swift in Sources */,
+				FD22AF0521AAEE520099FFB1 /* SourceKitRequest.swift in Sources */,
 				FD1BED9821302E3800105411 /* StoryboardObfuscationTests.swift in Sources */,
 				FD9C67D4215861EF0029EDF5 /* ManualSwiftShieldTests.swift in Sources */,
 				FD1BEDB22130491200105411 /* AutomaticSwiftShieldTests.swift in Sources */,
-				FD5315F2212F8E68001EA977 /* SourceKit+Variant.swift in Sources */,
-				FD5315EF212F8E68001EA977 /* DynamicLink.swift in Sources */,
 				FD5315FC212F8E68001EA977 /* Array.swift in Sources */,
 				FD5315F5212F8E68001EA977 /* Logger.swift in Sources */,
 				FDAA08EE21567C6C0061A52C /* MockFile.swift in Sources */,
 				FD5315F6212F8E68001EA977 /* Exit.swift in Sources */,
 				FD531602212F8F46001EA977 /* main.swift in Sources */,
 				FD833C842156672C00CDF875 /* Deobfuscator.swift in Sources */,
-				FD5315F0212F8E68001EA977 /* SKAPI.swift in Sources */,
 				FD5315F9212F8E68001EA977 /* ReferenceData.swift in Sources */,
 				FD531600212F8E68001EA977 /* ManualSwiftShield.swift in Sources */,
 				FD5315FE212F8E68001EA977 /* AutomaticSwiftShield.swift in Sources */,
 				FD5315F8212F8E68001EA977 /* ObfuscationData.swift in Sources */,
-				FD5315F1212F8E68001EA977 /* TTY.swift in Sources */,
 				FD1BEDA5213034E100105411 /* Element.swift in Sources */,
 				FD1BEDA3213034E100105411 /* Parser.swift in Sources */,
 				FD5315F4212F8E68001EA977 /* String.swift in Sources */,
@@ -534,6 +535,7 @@
 				FD1BEDA7213034E100105411 /* Error.swift in Sources */,
 				FD833C87215669AD00CDF875 /* DeobfuscatorTests.swift in Sources */,
 				FD5315EE212F8E68001EA977 /* SourceKit.swift in Sources */,
+				FD22AF0321AAEE4E0099FFB1 /* SourceKitdResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
