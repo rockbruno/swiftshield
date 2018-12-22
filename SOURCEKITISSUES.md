@@ -9,6 +9,7 @@ Bugs that are marked as merged are fixed in the Swift repo, but still bugged in 
 - **IN-REVIEW**: [(SR-9020)](https://bugs.swift.org/browse/SR-9020) Legacy KeyPaths that include types, such as `#keyPath(Foo.bar)` will not get indexed.
 - **MERGED**: [(SR-9039)](https://bugs.swift.org/browse/SR-9039) Explicit Swift KeyPaths such as `\Foo.bar` will not index the type portion.
 - Emoji Strings: Although SourceKit has no real bugs regarding emojis, it does treat them differently: While SourceKit treats emojis as several characters, Swift treats them as a single one - which will prevent SwiftShield from knowing the correct position of the references after said emoji. While a solution isn't found, you can avoid this by not using emojis.
+- **IN-PROGRESS**: Expressions marked as `@available` fail to be indexed.
 
 # Types that won't be obfuscated
 
