@@ -1,20 +1,24 @@
 PODS:
+  - AWSCore (2.9.4)
   - Cartography (3.0.2)
   - Unbox (3.0.0)
 
 DEPENDENCIES:
+  - AWSCore
   - Cartography
   - Unbox
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - AWSCore
     - Cartography
     - Unbox
 
 SPEC CHECKSUMS:
+  AWSCore: 8539eaa1d687d50b6b127db5cb600e4c6b37cd4e
   Cartography: 231190d7d0b3107ce8d67c54189f059a509b3760
   Unbox: 9ed33b2a31f7a8a049f54b94d40c4a52a28c4d9d
 
-PODFILE CHECKSUM: 9e662292939e8e0f4497487f381d85e1e3b48385
+PODFILE CHECKSUM: 79eed612af22e9011a0552e4660dd47f4d644232
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1

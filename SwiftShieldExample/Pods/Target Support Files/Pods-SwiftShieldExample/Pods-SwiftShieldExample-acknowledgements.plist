@@ -14,6 +14,17 @@
 		</dict>
 		<dict>
 			<key>FooterText</key>
+			<string>The AWS Mobile SDK for iOS is generally licensed under the Apache 2.0 License, with the Amazon Cognito Identity Provider and Amazon Cognito Sync subcomponents being licensed under the Amazon Software License and the AWSLex/Bluefront folder under the AWS Customer Agreement (https://aws.amazon.com/agreement/ ). 
+</string>
+			<key>License</key>
+			<string>Apache License, Version 2.0</string>
+			<key>Title</key>
+			<string>AWSCore</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
 			<string>Copyright (c) 2014 Robert Böhnke &lt;robb@robb.is&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
