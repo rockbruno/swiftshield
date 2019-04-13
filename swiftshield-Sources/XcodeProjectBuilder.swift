@@ -28,7 +28,7 @@ final class XcodeProjectBuilder {
         let arguments: [String] = [projectParameter, projectToBuild, "-scheme", schemeToBuild]
         let cleanTask = Process()
         cleanTask.launchPath = path
-        cleanTask.arguments = ["clean", "build"] + arguments + ["CODE_SIGN_IDENTITY=", "CODE_SIGNING_REQUIRED=NO"]
+        cleanTask.arguments = ["clean", "build"] + arguments
         let outpipe: Pipe = Pipe()
         cleanTask.standardOutput = outpipe
         cleanTask.standardError = outpipe
