@@ -1,0 +1,2 @@
+Before running the provided script, open the example project and enable the automatic signing. 
+This is because Xcode's new build system now requires provisioning profiles to run xcodebuild, which SwiftShield relies on.
