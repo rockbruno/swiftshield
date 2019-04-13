@@ -28,7 +28,7 @@ final class XcodeProjectBuilder {
         let arguments: [String] = [projectParameter, projectToBuild, "-scheme", schemeToBuild]
         let cleanTask = Process()
         cleanTask.launchPath = path
-        cleanTask.arguments = ["clean", "build"] + arguments + ["CODE_SIGN_IDENTITY=", "CODE_SIGNING_REQUIRED=NO"]
+        cleanTask.arguments = ["clean", "build"] + arguments
         let outpipe: Pipe = Pipe()
         cleanTask.standardOutput = outpipe
         cleanTask.standardError = outpipe
@@ -37,6 +37,10 @@ final class XcodeProjectBuilder {
         guard let output = String(data: outdata, encoding: .utf8) else {
             Logger.log(.compilerArgumentsError)
             exit(error: true)
+        }
+        if cleanTask.terminationStatus != 0 {
+            print(output)
+            fatalError("It looks like xcodebuild failed which prevents SwiftShield from proceeding. The log was printed above.")
         }
         return parseModulesFrom(xcodeBuildOutput: output)
     }
