@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name = 'SwiftShield'
   s.module_name = 'SwiftShield'
   s.version = '3.3.2'
-  s.license = { type: 'GNU GPL v3.0', file: 'LICENSE.md' }
+  s.license = { type: 'GNU GPL v3.0', file: 'LICENSE' }
   s.summary = 'A tool that protects Swift iOS apps against class-dump attacks.'
   s.homepage = 'https://github.com/rockbruno/swiftshield'
   s.authors = { 'Bruno Rocha' => 'brunorochaesilva@gmail.com' }
