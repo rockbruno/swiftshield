@@ -38,6 +38,10 @@ final class XcodeProjectBuilder {
             Logger.log(.compilerArgumentsError)
             exit(error: true)
         }
+        if cleanTask.terminationStatus != 0 {
+            print(output)
+            fatalError("It looks like xcodebuild failed which prevents SwiftShield from proceeding. The log was printed above.")
+        }
         return parseModulesFrom(xcodeBuildOutput: output)
     }
 
