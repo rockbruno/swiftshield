@@ -19,6 +19,8 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 With the `-automatic` tag, SwiftShield will use SourceKit to automatically obfuscate entire projects (including dependencies). Note that the scope of SwiftShield's automatic mode is directly related to the scope of Xcode's native refactoring tool, [which doesn't refactor everything yet](SOURCEKITISSUES.md). While the specific cases on the document won't be obfuscated, SwiftShield will obfuscate all Swift classes and methods that can be reverse-engineered. Take a look at the Example project to see SwiftShield in action!
 
+*Note: I've detected several issues when running the automatic mode in a Swift 5 / Xcode 10.2 environment due to recent SourceKit changes. Hold on for a bit if you want to use this with Swift 5.*
+
 
 ## 🛡 Manual mode (Swift/OBJ-C)
 
