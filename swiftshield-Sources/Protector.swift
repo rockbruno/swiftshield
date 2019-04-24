@@ -70,9 +70,15 @@ class Protector {
             let actionModule = idToXML[element.attributes["destination"] ?? ""]?.attributes["customModule"] ?? ""
             if supportedModules?.contains(actionModule) != false {
                 Logger.log(.protectedReference(originalName: trueName, protectedName: protectedClass))
-                element.attributes["selector"] = protectedClass + ":"
+                let tmp = actionSelector.contains(":") ? ":" : ""
+                element.attributes["selector"] = protectedClass + tmp
+            } else if element.parent?.name == "connections", element.parent?.parent?.name.contains("GestureRecognizer") != false {
+                Logger.log(.protectedReference(originalName: trueName, protectedName: protectedClass))
+                let tmp = actionSelector.contains(":") ? ":" : ""
+                element.attributes["selector"] = protectedClass + tmp
             }
         }
+        
         for child in element.children {
             obfuscateIBXML(element: child, currentModule: currentModule, obfuscationData: obfuscationData, idToXML: idToXML)
         }
