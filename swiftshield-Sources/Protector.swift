@@ -68,11 +68,15 @@ class Protector {
         }
         if element.name == "action", let actionSelector = element.attributes["selector"], let trueName = actionSelector.components(separatedBy: ":").first, trueName.count > 4, let protectedClass = obfuscationData.obfuscationDict[trueName] {
             let actionModule = idToXML[element.attributes["destination"] ?? ""]?.attributes["customModule"] ?? ""
-            if supportedModules?.contains(actionModule) != false {
+            let isSelectorReference = supportedModules?.contains(actionModule) != false
+            let isGestureReference = element.parent?.name == "connections" && element.parent?.parent?.name.contains("GestureRecognizer") != false
+            if isSelectorReference || isGestureReference {
                 Logger.log(.protectedReference(originalName: trueName, protectedName: protectedClass))
-                element.attributes["selector"] = protectedClass + ":"
+                let tmp = actionSelector.contains(":") ? ":" : ""
+                element.attributes["selector"] = protectedClass + tmp
             }
         }
+        
         for child in element.children {
             obfuscateIBXML(element: child, currentModule: currentModule, obfuscationData: obfuscationData, idToXML: idToXML)
         }
