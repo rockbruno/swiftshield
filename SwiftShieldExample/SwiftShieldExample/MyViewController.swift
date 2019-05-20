@@ -42,5 +42,10 @@ class MyViewController: UIViewController {
         let box = Unboxer(dictionary: dict)
         let text: String = try! box.unbox(key: "text")
         view.text = text
+        _ = self + self
+    }
+
+    public static func +(lhs: MyViewController, rhs: MyViewController) -> MyViewController {
+        return lhs
     }
 }

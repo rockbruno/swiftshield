@@ -143,12 +143,6 @@ extension AutomaticSwiftShield {
                 guard obfuscationData.usrDict.contains(usr) else {
                     return
                 }
-                //Operators only get indexed as such if they are declared in a global scope
-                //Unfortunately, most people use public static func
-                //So we avoid obfuscating methods with small names to prevent obfuscating operators.
-                if type == .method && name.count <= 4 {
-                    return
-                }
                 guard self.isReferencingInternal(type: type, kind: kind, variant: variant, obfuscationData: obfuscationData) == false else {
                     return
                 }
