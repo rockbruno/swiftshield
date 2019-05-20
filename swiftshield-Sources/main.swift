@@ -6,7 +6,8 @@ if CommandLine.arguments.contains("-help") {
 }
 
 Logger.verbose = CommandLine.arguments.contains("-verbose")
-SourceKit.verbose = CommandLine.arguments.contains("-show-sourcekit-queries")
+SourceKit.verbose = CommandLine.arguments.contains("-show-sourcekit-queries") ||
+                    CommandLine.arguments.contains("-print-sourcekit-queries")
 
 Logger.log(.version)
 Logger.log(.verbose)
