@@ -429,6 +429,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = FD0B108B1E2F8ACD00AED458;
@@ -661,7 +662,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFTSHIELDED = true;
 				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -677,7 +678,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFTSHIELDED = true;
 				SWIFT_OBJC_BRIDGING_HEADER = "swiftshield-Sources/SwiftShield-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

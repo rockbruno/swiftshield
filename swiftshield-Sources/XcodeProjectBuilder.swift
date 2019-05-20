@@ -105,7 +105,7 @@ final class XcodeProjectBuilder {
 
     private func parseCompilerArguments(from relevantArguments: [String]) -> [String] {
         var args: [String?] = Array(relevantArguments.dropFirst())
-        while let indexOfOutputMap = args.index(of: "-output-file-map") {
+        while let indexOfOutputMap = args.firstIndex(of: "-output-file-map") {
             args[indexOfOutputMap] = nil
             args[indexOfOutputMap + 1] = nil
         }

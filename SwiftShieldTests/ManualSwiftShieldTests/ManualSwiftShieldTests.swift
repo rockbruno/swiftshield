@@ -23,7 +23,6 @@ class ManualSwiftShieldTests: XCTestCase {
         let obfuscatedFile = ss.obfuscateReferences(fileString: originalFile, obfsData: obfuscationData)
         let expectedFileData = loadFile("MockObfuscatedFile", ofType: "txt")
         let expectedFile = String(data: expectedFileData, encoding: .utf8)!
-        print(obfuscatedFile)
         XCTAssertEqual(obfuscatedFile, expectedFile)
     }
 }

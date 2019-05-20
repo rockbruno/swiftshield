@@ -16,7 +16,7 @@ extension Array where Element:Equatable {
     func filter(_ array: [Element]) -> [Element] {
         var filtered = self
         for filter in array {
-            guard let indexOf = filtered.index(of: filter) else {
+            guard let indexOf = filtered.firstIndex(of: filter) else {
                 continue
             }
             filtered.remove(at: indexOf)
