@@ -1,7 +1,7 @@
 PODS:
-  - AWSCore (2.9.4)
-  - Cartography (3.0.2)
-  - Unbox (3.0.0)
+  - AWSCore (2.9.7)
+  - Cartography (3.1.0)
+  - Unbox (4.0.0)
 
 DEPENDENCIES:
   - AWSCore
@@ -15,9 +15,9 @@ SPEC REPOS:
     - Unbox
 
 SPEC CHECKSUMS:
-  AWSCore: 8539eaa1d687d50b6b127db5cb600e4c6b37cd4e
-  Cartography: 231190d7d0b3107ce8d67c54189f059a509b3760
-  Unbox: 9ed33b2a31f7a8a049f54b94d40c4a52a28c4d9d
+  AWSCore: c98ab96784580d7a141c6f1999aa919ef45a312c
+  Cartography: 1988b7578871a56c036e7af17195cb2190edf18c
+  Unbox: d2677af8fde59a30141e02981b11cb6a0e3b6bc5
 
 PODFILE CHECKSUM: 79eed612af22e9011a0552e4660dd47f4d644232
 
