@@ -43,7 +43,12 @@ class Protector {
             Logger.log(.checking(file: file))
             let data = try! Data(contentsOf: URL(fileURLWithPath: file.path))
             let xmlDoc = try! AEXMLDocument(xml: data, options: AEXMLOptions())
-            obfuscateIBXML(element: xmlDoc.root, obfuscationData: obfuscationData)
+            let fileTarget = (obfuscationData as? AutomaticObfuscationData)?
+                              .modules
+                              .first { $0.xibFiles.contains(file) }?.name
+            obfuscateIBXML(element: xmlDoc.root,
+                           fileTarget: fileTarget,
+                           obfuscationData: obfuscationData)
             let obfuscatedFile = xmlDoc.xml
             Logger.log(.saving(file: file))
             file.write(obfuscatedFile)
@@ -52,11 +57,15 @@ class Protector {
 
     func obfuscateIBXML(element: AEXMLElement,
                         currentModule: String? = nil,
+                        fileTarget: String? = nil,
                         obfuscationData: ObfuscationData,
                         idToXML: [String: AEXMLElement] = [:]) {
         var idToXML = idToXML
         let supportedModules = (obfuscationData as? AutomaticObfuscationData)?.moduleNames
-        let currentModule: String = element.attributes["customModule"] ?? currentModule ?? ""
+        let currentModule: String = element.attributes["customModule"]
+                                    ?? currentModule
+                                    ?? fileTarget
+                                    ?? ""
         if let identifier = element.attributes["id"] {
             idToXML[identifier] = element
         }
