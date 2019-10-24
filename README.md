@@ -73,8 +73,6 @@ swiftshield -deobfuscate CRASH_FILE -deobfuscate-map PATH_TO_CONVERSION_MAP
 
 ### Automatic mode:
 
-**Note: Xcode 11 changed how arguments are passed to the compiler, so this tool might not work correctly outside of the legacy build mode.**
-
 If one or more modules/extensions of your app fail to satify these conditions, you can avoid obfuscating them with the `-ignore-modules` argument.
 
 1. No logic based on class/property names, like loading `MyClass.xib` because `String(describing: type(of:self))` is `'MyClass'`.
