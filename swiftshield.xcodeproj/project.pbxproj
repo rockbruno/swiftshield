@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		846A66F423AFC7FA005801B8 /* SwiftAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846A66F323AFC7FA005801B8 /* SwiftAttribute.swift */; };
 		FD1BED9821302E3800105411 /* StoryboardObfuscationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1BED9721302E3800105411 /* StoryboardObfuscationTests.swift */; };
 		FD1BED9A21302EA200105411 /* MockStoryboard.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD1BED9921302EA200105411 /* MockStoryboard.txt */; };
 		FD1BEDA0213034E100105411 /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1BED9B213034E100105411 /* Options.swift */; };
@@ -84,6 +85,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		846A66F323AFC7FA005801B8 /* SwiftAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftAttribute.swift; sourceTree = "<group>"; };
 		FD0B10941E2F8ACD00AED458 /* swiftshield */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = swiftshield; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD1BED9721302E3800105411 /* StoryboardObfuscationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardObfuscationTests.swift; sourceTree = "<group>"; };
 		FD1BED9921302EA200105411 /* MockStoryboard.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MockStoryboard.txt; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 				FD22AF0121AAEB730099FFB1 /* SourceKitdResponse.swift */,
 				FD22AEFB21AAD4360099FFB1 /* SourceKitRequest.swift */,
 				FDC74E77212C49AC00B3E03B /* SourceKitDeclarationType.swift */,
+				846A66F323AFC7FA005801B8 /* SwiftAttribute.swift */,
 			);
 			name = SourceKitWrapper;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = FD0B108B1E2F8ACD00AED458;
@@ -492,6 +496,7 @@
 				FD895AD61E31141100A753FB /* Logger.swift in Sources */,
 				FD39B34F1EAA9D83009BFCDF /* SourceKit.swift in Sources */,
 				FD22AEFC21AAD4360099FFB1 /* SourceKitRequest.swift in Sources */,
+				846A66F423AFC7FA005801B8 /* SwiftAttribute.swift in Sources */,
 				FD895AD01E3113FA00A753FB /* File.swift in Sources */,
 				FDB0785220E6BD7B00F744A9 /* XcodeProjectBuilder.swift in Sources */,
 				FDFF64D11E5275A000300623 /* Exit.swift in Sources */,
