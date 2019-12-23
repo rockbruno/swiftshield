@@ -4,6 +4,7 @@ final class XcodeProjectBuilder {
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
+    var sdkMode: Bool
 
     private typealias MutableModuleData = (source: [File], xibs: [File], plists: [File], args: [String])
     private typealias MutableModuleDictionary = OrderedDictionary<String, MutableModuleData>
@@ -12,10 +13,11 @@ final class XcodeProjectBuilder {
         return projectToBuild.hasSuffix(".xcworkspace")
     }
 
-    init(projectToBuild: String, schemeToBuild: String, modulesToIgnore: Set<String>) {
+    init(projectToBuild: String, schemeToBuild: String, modulesToIgnore: Set<String>, sdkMode: Bool) {
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
         self.modulesToIgnore = modulesToIgnore
+        self.sdkMode = sdkMode
     }
 
     func getModulesAndCompilerArguments() -> [Module] {
@@ -25,13 +27,17 @@ final class XcodeProjectBuilder {
         Logger.log(.buildingProject)
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = [projectParameter, projectToBuild, "-scheme", schemeToBuild]
+        var arguments: [String] = [projectParameter, projectToBuild, "-scheme", schemeToBuild]
+        if sdkMode {
+            arguments += ["-sdk", "iphoneos"]
+        }
         let cleanTask = Process()
         cleanTask.launchPath = path
         cleanTask.arguments = ["clean", "build"] + arguments
         let outpipe: Pipe = Pipe()
         cleanTask.standardOutput = outpipe
         cleanTask.standardError = outpipe
+        print("xcodebuild \(cleanTask.arguments?.joined(separator: " ") ?? "")")
         cleanTask.launch()
         let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
         guard let output = String(data: outdata, encoding: .utf8) else {

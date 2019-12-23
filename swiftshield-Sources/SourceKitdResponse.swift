@@ -45,10 +45,8 @@ public class SourceKitdResponse: CustomStringConvertible {
             return value
         }
 
-        public func getUID(_ key: SourceKitdUID) -> SourceKitdUID? {
-            guard let value = sourcekitd_variant_dictionary_get_uid(dict, key.uid) else {
-                return nil
-            }
+        public func getUID(_ key: SourceKitdUID) -> SourceKitdUID {
+            let value = sourcekitd_variant_dictionary_get_uid(dict, key.uid)!
             return SourceKitdUID(uid: value)
         }
 

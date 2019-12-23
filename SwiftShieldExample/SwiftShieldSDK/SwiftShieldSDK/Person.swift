@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FzwubuMptrwvhVEwXAqMfTkHoQjlcQYY {
+class Person {
     var firstName: String
     var lastName: String
     
@@ -17,7 +17,7 @@ class FzwubuMptrwvhVEwXAqMfTkHoQjlcQYY {
         self.lastName = lastName
     }
     
-    func OwsOchcqUitjexxmTmqemlMPRduFrSSX() -> String {
+    func fullName() -> String {
         return "\(firstName) \(lastName)"
     }
 }

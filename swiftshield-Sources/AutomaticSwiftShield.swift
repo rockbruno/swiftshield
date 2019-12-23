@@ -41,7 +41,7 @@ class AutomaticSwiftShield: Protector {
             Logger.log(.projectError)
             exit(error: true)
         }
-        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore)
+        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore, sdkMode: sdkMode)
         let modules = projectBuilder.getModulesAndCompilerArguments()
         let obfuscationData = AutomaticObfuscationData(modules: modules)
         index(obfuscationData: obfuscationData)
@@ -71,11 +71,8 @@ class AutomaticSwiftShield: Protector {
             let resp = index(file: file, args: module.compilerArguments)
             resp.recurseOver(uid: .entitiesId) { [unowned self] variant in
                 let dict = variant.getDictionary()
-                if self.sdkMode {
-                    let isPublic = self.isPublicAttribute(from: dict)
-                    if isPublic {
-                        return
-                    }
+                if self.sdkMode && self.isPublicOpenAttribute(from: dict) {
+                    return
                 }
                 
                 guard let data = self.getNameData(from: dict,
@@ -117,13 +114,14 @@ extension AutomaticSwiftShield {
         return resp
     }
     
-    private func isPublicAttribute(from dict: SourceKitdResponse.Dictionary) -> Bool {
+    private func isPublicOpenAttribute(from dict: SourceKitdResponse.Dictionary) -> Bool {
         guard let attributes = dict.getArray(.attributesId) else {
             return false
         }
         if attributes.count > 0 {
             let attr = attributes.getDictionary(0).getUID(.attributeId)
-            return (attr?.asString == SwiftAttribute.public.rawValue)
+            return (attr.asString == SwiftAccessControl.public.rawValue ||
+                attr.asString == SwiftAccessControl.open.rawValue)
         }
         
         return false
@@ -133,9 +131,7 @@ extension AutomaticSwiftShield {
                              obfuscationData: ObfuscationData) -> (name: String,
                                                                    usr: String,
                                                                    obfuscatedName: String)? {
-        guard let kind = dict.getUID(.kindId)?.asString else {
-            return nil
-        }
+        let kind = dict.getUID(.kindId).asString
         guard sourceKit.declarationType(for: kind) != nil else {
             return nil
         }
@@ -156,9 +152,7 @@ extension AutomaticSwiftShield {
         for (file, response) in obfuscationData.indexedFiles {
             response.recurseOver(uid: .entitiesId) { [unowned self] variant in
                 let dict = variant.getDictionary()
-                guard let kind = dict.getUID(.kindId)?.asString else {
-                    return
-                }
+                let kind = dict.getUID(.kindId).asString
                 guard let type = self.sourceKit.referenceType(kind: kind) else {
                     return
                 }

@@ -1,5 +1,5 @@
 //
-//  SwiftAttribute
+//  SwiftAccessControl
 //  swiftshield
 //
 //  Created by Weidian on 22/12/19.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-enum SwiftAttribute: String {
+enum SwiftAccessControl: String {
+    case `open` = "source.decl.attribute.open"
     case `public` = "source.decl.attribute.public"
     case `private` = "source.decl.attribute.private"
     case `fileprivate` = "source.decl.attribute.fileprivate"

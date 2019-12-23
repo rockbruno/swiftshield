@@ -9,23 +9,23 @@
 import Foundation
 
 
-public class ContactsList {
-    var contacts = Array<Person>()
+open class NameList {
+    var names = Array<Person>()
     
     public init() {
         var person = Person("Bruce", "Lee")
-        contacts.append(person)
+        names.append(person)
         person = Person("Jackie", "Chan")
-        contacts.append(person)
+        names.append(person)
     }
     
-    public func printContacts() -> String {
-        return privatePrintContacts()
+    public func printNames() -> String {
+        return privatePrintNames()
     }
     
-    private func privatePrintContacts() -> String {
+    private func privatePrintNames() -> String {
         var contactsList = ""
-        for person in contacts {
+        for person in names {
             contactsList += contactsList + person.fullName()
         }
         return contactsList
