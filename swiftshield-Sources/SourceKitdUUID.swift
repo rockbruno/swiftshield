@@ -49,6 +49,8 @@ extension SourceKitdUID {
     static let relatedId = SourceKitdUID(uid: get("key.related"))
     static let sourceFileId = SourceKitdUID(uid: get("key.sourcefile"))
     static let indexRequestId = SourceKitdUID(uid: get("source.request.indexsource"))
+    static let attributesId = SourceKitdUID(uid: get("key.attributes"))
+    static let attributeId = SourceKitdUID(uid: get("key.attribute"))
 
     private static func get(_ cstr: String) -> sourcekitd_uid_t {
         return sourcekitd_uid_get_from_cstr(cstr)

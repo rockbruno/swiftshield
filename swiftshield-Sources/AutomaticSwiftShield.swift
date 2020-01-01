@@ -6,6 +6,7 @@ class AutomaticSwiftShield: Protector {
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
+    let sdkMode: Bool
 
     var isWorkspace: Bool {
         return projectToBuild.hasSuffix(".xcworkspace")
@@ -17,11 +18,13 @@ class AutomaticSwiftShield: Protector {
          modulesToIgnore: Set<String>,
          protectedClassNameSize: Int,
          dryRun: Bool,
+         sdkMode: Bool,
          sourceKit: SourceKit = .init()) {
         self.sourceKit = sourceKit
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
         self.modulesToIgnore = modulesToIgnore
+        self.sdkMode = sdkMode
         super.init(basePath: basePath, protectedClassNameSize: protectedClassNameSize, dryRun: dryRun)
         if self.schemeToBuild.isEmpty || self.projectToBuild.isEmpty {
             Logger.log(.helpText)
@@ -38,7 +41,7 @@ class AutomaticSwiftShield: Protector {
             Logger.log(.projectError)
             exit(error: true)
         }
-        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore)
+        let projectBuilder = XcodeProjectBuilder(projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: modulesToIgnore, sdkMode: sdkMode)
         let modules = projectBuilder.getModulesAndCompilerArguments()
         let obfuscationData = AutomaticObfuscationData(modules: modules)
         index(obfuscationData: obfuscationData)
@@ -68,6 +71,10 @@ class AutomaticSwiftShield: Protector {
             let resp = index(file: file, args: module.compilerArguments)
             resp.recurseOver(uid: .entitiesId) { [unowned self] variant in
                 let dict = variant.getDictionary()
+                if self.sdkMode && self.isPublicOpenAttribute(from: dict) {
+                    return
+                }
+                
                 guard let data = self.getNameData(from: dict,
                                                   obfuscationData: obfuscationData) else {
                                                     return
@@ -106,6 +113,19 @@ extension AutomaticSwiftShield {
         }
         return resp
     }
+    
+    private func isPublicOpenAttribute(from dict: SourceKitdResponse.Dictionary) -> Bool {
+        guard let attributes = dict.getArray(.attributesId) else {
+            return false
+        }
+        if attributes.count > 0 {
+            let attr = attributes.getDictionary(0).getUID(.attributeId)
+            return (attr.asString == SwiftAccessControl.public.rawValue ||
+                attr.asString == SwiftAccessControl.open.rawValue)
+        }
+        
+        return false
+    }
 
     private func getNameData(from dict: SourceKitdResponse.Dictionary,
                              obfuscationData: ObfuscationData) -> (name: String,
@@ -118,6 +138,7 @@ extension AutomaticSwiftShield {
         guard let name = dict.getString(.nameId)?.trueName, let usr = dict.getString(.usrId) else {
             return nil
         }
+
         guard let protected = obfuscationData.obfuscationDict[name] else {
             let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
             obfuscationData.obfuscationDict[name] = newName

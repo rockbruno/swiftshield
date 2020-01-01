@@ -112,6 +112,8 @@ swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyA
 
 **Optional Parameters:**
 
+- `-sdk`: Prevent public classes and methods from being obfuscated. Use this if it is building a SDK project. 
+
 - `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. Note that this should be the exact name of the imported module (not the target name!). Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
 
 - `-show-sourcekit-queries`: Prints queries sent to SourceKit. Note that they are huge and will absolutely clutter your terminal, so use this only for bug reports and feature development!
@@ -147,7 +149,7 @@ Contributions to SwiftShield are more than welcome! There's no contribution guid
 
 - [X] Method names
 - [X] Update Extension plists (Rich Notifications / Watch main classes)
-- [ ] "SDK Mode" (ignore `public`)
+- [X] "SDK Mode" (ignore `public`)
 - [ ] Properties
 - [ ] Module names
 

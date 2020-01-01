@@ -50,8 +50,11 @@ public class SourceKitdResponse: CustomStringConvertible {
             return SourceKitdUID(uid: value)
         }
 
-        public func getArray(_ key: SourceKitdUID) -> Array {
+        public func getArray(_ key: SourceKitdUID) -> Array? {
             let value = sourcekitd_variant_dictionary_get_value(dict, key.uid)
+            if value.data.0 == 0 || value.data.1 == 0 {
+                return nil
+            }
             return Array(arr: value, context: context)
         }
 

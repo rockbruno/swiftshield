@@ -26,6 +26,7 @@ if let filePathToDeobfuscate = UserDefaults.standard.string(forKey: "deobfuscate
 
 let automatic = CommandLine.arguments.contains("-automatic")
 let dryRun = CommandLine.arguments.contains("-dry-run")
+let sdkMode = CommandLine.arguments.contains("-sdk")
 
 Logger.log(.mode)
 
@@ -38,7 +39,7 @@ if automatic {
     let schemeToBuild = UserDefaults.standard.string(forKey: "automatic-project-scheme") ?? ""
     let projectToBuild = UserDefaults.standard.string(forKey: "automatic-project-file") ?? ""
     let modulesToIgnore = UserDefaults.standard.string(forKey: "ignore-modules")?.components(separatedBy: ",") ?? []
-    protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: Set(modulesToIgnore), protectedClassNameSize: protectedClassNameSize, dryRun: dryRun)
+    protector = AutomaticSwiftShield(basePath: basePath, projectToBuild: projectToBuild, schemeToBuild: schemeToBuild, modulesToIgnore: Set(modulesToIgnore), protectedClassNameSize: protectedClassNameSize, dryRun: dryRun, sdkMode: sdkMode)
 } else {
     let tag = UserDefaults.standard.string(forKey: "tag") ?? "__s"
     protector = ManualSwiftShield(basePath: basePath, tag: tag, protectedClassNameSize: protectedClassNameSize, dryRun: dryRun)
