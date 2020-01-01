@@ -37,7 +37,6 @@ final class XcodeProjectBuilder {
         let outpipe: Pipe = Pipe()
         cleanTask.standardOutput = outpipe
         cleanTask.standardError = outpipe
-        print("xcodebuild \(cleanTask.arguments?.joined(separator: " ") ?? "")")
         cleanTask.launch()
         let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
         guard let output = String(data: outdata, encoding: .utf8) else {
