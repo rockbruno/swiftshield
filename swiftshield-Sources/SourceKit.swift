@@ -36,10 +36,13 @@ final class SourceKit {
         let kindSuffix = String(kind[prefixIndex...])
         switch kindSuffix {
         case "class",
-             "struct":
+             "struct",
+             "enum":
             return .object
         case "protocol":
             return .protocol
+        case "enumelement":
+            return .property
 //        case "var.instance",
 //             "var.static",
 //             "var.class":

@@ -20,5 +20,16 @@ class Person {
     func fullName() -> String {
         return "\(firstName) \(lastName)"
     }
+    
+    func getName(part: NameEnum) -> String? {
+        switch part {
+        case NameEnum.FIRST_NAME:
+            return firstName
+        case NameEnum.LAST_NAME:
+            return lastName
+        default:
+            return nil
+        }
+    }
 }
 
