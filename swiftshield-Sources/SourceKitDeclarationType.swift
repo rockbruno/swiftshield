@@ -4,5 +4,7 @@ extension SourceKit {
         case `protocol`
         case property
         case method
+        case `enum`
+        case enumelement
     }
 }

@@ -164,6 +164,21 @@ extension AutomaticSwiftShield {
                 guard obfuscationData.usrDict.contains(usr) else {
                     return
                 }
+                
+                if type == .enum && name.hasSuffix("CodingKeys") {
+                    obfuscationData.excludedEnums.insert(usr)
+                    return
+                }
+                
+                if type == .enumelement {
+                    for exclusion in obfuscationData.excludedEnums {
+                        // Enum element belongs to excluded enum
+                        if usr.hasPrefix(exclusion) {
+                            return 
+                        }
+                    }
+                }
+                
                 //Operators only get indexed as such if they are declared in a global scope
                 //Unfortunately, most people use public static func
                 //So we avoid obfuscating methods with small names to prevent obfuscating operators.
@@ -190,12 +205,13 @@ extension AutomaticSwiftShield {
                                        kind: String,
                                        variant: SourceKitdResponse.Variant,
                                        obfuscationData: AutomaticObfuscationData) -> Bool {
-        guard type == .method || type == .property else {
+        guard type == .method || type == .property || type == .enumelement else {
             return false
         }
         guard let usr = variant.getDictionary().getString(.usrId) else {
             return false
         }
+        
         if let relDict = obfuscationData.usrRelationDict[usr], relDict.val.data != variant.val.data {
             return isReferencingInternal(type: type,
                                          kind: kind,

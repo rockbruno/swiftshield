@@ -8,9 +8,14 @@
 
 import Foundation
 
-class Person {
+class Person: Codable {
     var firstName: String
     var lastName: String
+    
+    private enum _personCodingKeys: String, CodingKey {
+        case firstName
+        case lastName
+    }
     
     init(_ firstName: String, _ lastName: String) {
         self.firstName = firstName

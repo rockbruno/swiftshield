@@ -1,6 +1,7 @@
 import UIKit
 import Cartography
 import Unbox
+import SwiftShieldSDK
 
 final class MyView: UILabel {}
 
@@ -27,6 +28,7 @@ class MyViewController: UIViewController {
 //        myProp = myLet * 10
 //        MyViewController.myStaticVar = MyViewController.myClassVar + MyViewController.myStaticLet * 5
         render()
+        sdkTest()
     }
 
     func render() {
@@ -42,5 +44,12 @@ class MyViewController: UIViewController {
         let box = Unboxer(dictionary: dict)
         let text: String = try! box.unbox(key: "text")
         view.text = text
+    }
+    
+    func sdkTest() {
+        let serializer = ShieldSerializer()
+        serializer.jsonContactsList()
+        let json = "[ { \"firstName\" : \"Bruce\",  \"lastName\" : \"Lee\" }, { \"firstName\" : \"Jackie\", \"lastName\" : \"Chan\" } ]"
+        serializer.parseContactsList(json: json)
     }
 }

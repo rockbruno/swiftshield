@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		690E9FDA54E33AE150456400 /* Pods_SwiftShieldExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906E79CBAAED7E65DB3DE1FF /* Pods_SwiftShieldExample.framework */; };
+		84F0B22C23C21BB4005CEE05 /* SwiftShieldSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 846A66E623AFA38D005801B8 /* SwiftShieldSDK.framework */; };
+		84F0B22D23C21BB4005CEE05 /* SwiftShieldSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 846A66E623AFA38D005801B8 /* SwiftShieldSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD5360EF212DFC21004FB44F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5360EE212DFC21004FB44F /* AppDelegate.swift */; };
 		FD5360F1212DFC21004FB44F /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5360F0212DFC21004FB44F /* MyViewController.swift */; };
 		FD5360F4212DFC21004FB44F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD5360F2212DFC21004FB44F /* Main.storyboard */; };
@@ -39,6 +41,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		84F0B22E23C21BB5005CEE05 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				84F0B22D23C21BB4005CEE05 /* SwiftShieldSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		846A66E023AFA38C005801B8 /* SwiftShieldSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftShieldSDK.xcodeproj; path = SwiftShieldSDK/SwiftShieldSDK.xcodeproj; sourceTree = "<group>"; };
 		887E68FDACDAF78F3E840DBC /* Pods-SwiftShieldExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftShieldExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -58,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F0B22C23C21BB4005CEE05 /* SwiftShieldSDK.framework in Frameworks */,
 				690E9FDA54E33AE150456400 /* Pods_SwiftShieldExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,6 +152,7 @@
 				FD5360E8212DFC21004FB44F /* Frameworks */,
 				FD5360E9212DFC21004FB44F /* Resources */,
 				9F318FF03689B66C34DE349D /* [CP] Embed Pods Frameworks */,
+				84F0B22E23C21BB5005CEE05 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

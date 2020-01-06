@@ -9,8 +9,32 @@
 import Foundation
 
 
-public class ContactsList {
+public class ContactsList: Codable {
     var contacts = Array<Person>()
+    
+    private enum CodingKeys: String, CodingKey {
+        case contacts
+    }
+    
+    required public init(from decoder:Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        var contacts = [Person]()
+        if let count = container.count {
+            contacts.reserveCapacity(count)
+        }
+
+        while !container.isAtEnd {
+            let person = try container.decode(Person.self)
+            contacts.append(person)
+        }
+
+        self.contacts = contacts
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(contacts)
+    }
     
     public init() {
         var person = Person("Bruce", "Lee")
