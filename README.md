@@ -79,7 +79,7 @@ If one or more modules/extensions of your app fail to satify these conditions, y
 2. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine, except when interfacing is involved)
 4. Latest Swift version and Xcode command line tools (works on all versions, but might have different results due to different SourceKit versions)
 5. Make sure your project doesn't contain one of [SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require some manual fixing afterwards.
-6. Enum and enum elements will be obfuscated, except the enum name suffixed with `CodingKeys`. Make sure the name your the CodingKeys enum ending with `CodingKeys`. 
+6. Enums that represent `Codable` properties should have the suffix `CodingKeys`.
 
 (App Extensions that use `NSExtensionPrincipalClass` or variants in their `Info.plist` (like Rich Notifications/Watch apps) will have such references obfuscated as well, but will assume that you haven't changed them from their default `$(PRODUCT_MODULE_NAME).ClassName` value. If you modified these plists to point to classes in different modules, you'll have to manually change them after running this tool.)
 
