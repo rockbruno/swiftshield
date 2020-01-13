@@ -81,6 +81,13 @@ class AutomaticSwiftShield: Protector {
                 }
                 let name = data.name
                 let usr = data.usr
+                let kind = data.kind
+                
+                if let type = self.sourceKit.referenceType(kind: kind), type == .enum && name.hasSuffix("CodingKeys") {
+                    obfuscationData.excludedEnums.insert(self.usrWithoutSuffix(usr))
+                    return
+                }
+                
                 obfuscationData.usrDict.insert(usr)
                 if dict.getString(.receiverId) == nil {
                     obfuscationData.usrRelationDict[usr] = variant
@@ -130,7 +137,8 @@ extension AutomaticSwiftShield {
     private func getNameData(from dict: SourceKitdResponse.Dictionary,
                              obfuscationData: ObfuscationData) -> (name: String,
                                                                    usr: String,
-                                                                   obfuscatedName: String)? {
+                                                                   obfuscatedName: String,
+                                                                   kind: String)? {
         let kind = dict.getUID(.kindId).asString
         guard sourceKit.declarationType(for: kind) != nil else {
             return nil
@@ -142,9 +150,18 @@ extension AutomaticSwiftShield {
         guard let protected = obfuscationData.obfuscationDict[name] else {
             let newName = String.random(length: self.protectedClassNameSize, excluding: obfuscationData.allObfuscatedNames)
             obfuscationData.obfuscationDict[name] = newName
-            return (name, usr, newName)
+            return (name, usr, newName, kind)
         }
-        return (name, usr, protected)
+        return (name, usr, protected, kind)
+    }
+    
+    private func usrWithoutSuffix(_ usr: String) -> String {
+        let lastIndex = usr.lastIndex(of: "_")
+        if let index = lastIndex {
+            let usrPrefix = usr[..<index]
+            return String(usrPrefix)
+        }
+        return usr
     }
 
     func findReferencesInIndexed(obfuscationData: AutomaticObfuscationData) {
@@ -164,6 +181,15 @@ extension AutomaticSwiftShield {
                 guard obfuscationData.usrDict.contains(usr) else {
                     return
                 }
+                
+                
+                if type == .enumelement {
+                    let usrPrefix = self.usrWithoutSuffix(usr)
+                    if obfuscationData.excludedEnums.contains(usrPrefix) {
+                        return
+                    }
+                }
+                
                 //Operators only get indexed as such if they are declared in a global scope
                 //Unfortunately, most people use public static func
                 //So we avoid obfuscating methods with small names to prevent obfuscating operators.
@@ -190,12 +216,13 @@ extension AutomaticSwiftShield {
                                        kind: String,
                                        variant: SourceKitdResponse.Variant,
                                        obfuscationData: AutomaticObfuscationData) -> Bool {
-        guard type == .method || type == .property else {
+        guard type == .method || type == .property || type == .enumelement else {
             return false
         }
         guard let usr = variant.getDictionary().getString(.usrId) else {
             return false
         }
+        
         if let relDict = obfuscationData.usrRelationDict[usr], relDict.val.data != variant.val.data {
             return isReferencingInternal(type: type,
                                          kind: kind,

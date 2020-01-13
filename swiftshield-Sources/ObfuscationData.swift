@@ -24,6 +24,7 @@ final class AutomaticObfuscationData: ObfuscationData {
     var referencesDict: [File: [ReferenceData]] = [:]
     var usrRelationDict: [String: SourceKitdResponse.Variant] = [:]
     var indexedFiles: [(File, SourceKitdResponse)] = []
+    var excludedEnums: Set<String> = []
 
     var moduleNames: Set<String> {
         return Set(modules.compactMap { $0.name })

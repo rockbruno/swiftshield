@@ -8,9 +8,14 @@
 
 import Foundation
 
-class Person {
+class Person: Codable {
     var firstName: String
     var lastName: String
+    
+    private enum _personCodingKeys: String, CodingKey {
+        case firstName
+        case lastName
+    }
     
     init(_ firstName: String, _ lastName: String) {
         self.firstName = firstName
@@ -19,6 +24,17 @@ class Person {
     
     func fullName() -> String {
         return "\(firstName) \(lastName)"
+    }
+    
+    func getName(part: NameEnum) -> String? {
+        switch part {
+        case NameEnum.FIRST_NAME:
+            return firstName
+        case NameEnum.LAST_NAME:
+            return lastName
+        default:
+            return nil
+        }
     }
 }
 

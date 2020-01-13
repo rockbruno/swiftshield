@@ -19,7 +19,7 @@ open class NameList {
         names.append(person)
     }
     
-    public func printNames() -> String {
+    open func printNames() -> String {
         return privatePrintNames()
     }
     

@@ -49,6 +49,10 @@ final class SourceKit {
              "function.method.static",
              "function.method.class":
             return .method
+        case "enum":
+            return .enum
+        case "enumelement":
+            return .enumelement
         default:
             return nil
         }
