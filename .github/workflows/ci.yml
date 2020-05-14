@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: make build
+    - name: Run tests
+      run: make test
+    - name: Check the example project
+      run: cd ./ExampleProject && make swiftshield
+    - name: Try to package it
+      run: make package

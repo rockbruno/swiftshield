@@ -1,6 +1,0 @@
-framework module Unbox {
-  umbrella header "Unbox-umbrella.h"
-
-  export *
-  module * { export * }
-}
