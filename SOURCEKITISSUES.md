@@ -1,23 +1,70 @@
-# Current known SourceKit issues that prevent SwiftShield from obfuscating *everything*
+# What SwiftShield can obfuscate
+
+- Classes
+- Structs
+- Methods
+- Enums (as long as they don't have `CodingKeys` in the name)
+- Enum cases
+
+# What SwiftShield can't obfuscate
+
+- Properties: Although we can obfuscate them, we avoid doing so because of `Codable` types. We can fix it by checking the inheritance tree of a property's outer type.
+- `typealias` and `associatedtypes`: SourceKit doesn't always index them, so we avoid them to prevent broken projects. Note that these can't be reverse engineered as they are purely an editor thing, so avoiding them isn't a problem!
+- Enums that have the `CodingKeys` suffix
+- Module names: Not implemented yet, but possible.
 
 # SourceKit Bugs
 
-Bugs that are marked as merged are fixed in the Swift repo, but still bugged in the current Xcode version. They are fixed in SwiftShield when the new Xcode containing these fixes come out.
+These are problems that SourceKit has that are unrelated to a specific feature, which means that we can't disable them to save you. If your project is affected by any of these problems, you will need to manually fix your project after obfuscating as it will not compile. This is not a complete list -- if you discover a problem that is not here, please open an issue.
 
-- **IN-REVIEW**: [(SR-8616)](https://bugs.swift.org/browse/SR-8616) `is` pattern: Matched type won't index if the left element is an optional (`if [].first is Foo`). For now, you can overcome this by not using the optionals directly.
-- **MERGED**: [(SR-8617)](https://bugs.swift.org/browse/SR-8617) Enum names: Explicitly using an enum type in pattern matching prevents it from getting indexed (`if case MyClass.MyEnum.myCase {}` - `myCase` will be indexed, but `MyClass` won't.)
-- **IN-REVIEW**: [(SR-9020)](https://bugs.swift.org/browse/SR-9020) Legacy KeyPaths that include types, such as `#keyPath(Foo.bar)` will not get indexed.
-- **MERGED**: [(SR-9039)](https://bugs.swift.org/browse/SR-9039) Explicit Swift KeyPaths such as `\Foo.bar` will not index the type portion.
-- Emoji Strings: Although SourceKit has no real bugs regarding emojis, it does treat them differently: While SourceKit treats emojis as several characters, Swift treats them as a single one - which will prevent SwiftShield from knowing the correct position of the references after said emoji. While a solution isn't found, you can avoid this by not using emojis.
-- **IN-REVIEW**: Expressions marked as `@available` fail to be indexed.
+**Note: You can use the `--ignore-targets` argument to completely disable the obfuscation of specific targets.**
+
+- (SR-9020)](https://bugs.swift.org/browse/SR-9020) Legacy KeyPaths that include types (like `#keyPath(Foo.bar)`) will not get indexed.
+- Any file that has an emoji will break the obfuscation process. This may not be a SourceKit bug itself, but something that we have to treat on our side.
 - `@objc optional` protocol methods don't have their references indexed.
 
-# Types that won't be obfuscated
+# Additional important information
 
-The following types and cases might be working correctly in SourceKit, but are currently disabled for other reasons.
+## Codable Enums need to have a specific suffix
 
-- Typealiases and Associated Types: Not always indexed (`typealias Foo = UIImage | extension Foo {}` - Foo is ignored and indexed as UIImage). Note that these can't be reverse-engineered as they are purely an editor thing, so no action is required!
-- Enum cases and names ending with `CodingKeys`: We avoid obfuscating Codable enums (otherwise your app wouldn't work), but this is detected by a name having the suffix `CodingKeys`.
-- **MERGED**: Methods with names under four characters: Operators only get indexed as such if they are declared in a global scope. Since most people use `public static func`, they get indexed as regular methods. To prevent operators from being obfuscated, methods with names shorter than four characters won't get obfuscated.
-- Properties: Properties are on hold for a while because they break derived `Codable` types. Although the obfuscation works correctly, if you build `Codable` types to work on top of a backend's json, parsing will fail because of the different property name.
-- Module names: Not implemented yet!
+To prevent `Codable` enums from being obfuscated, we avoid obfuscating enum cases belonging to enums that have the `CodingKeys` suffix. Make sure your enums follow this pattern.
+
+## SceneDelegate / App Extensions class references in plists should be untouched
+
+App Extensions that use `NSExtensionPrincipalClass` or variants in their `Info.plist` (like Rich Notifications/Watch apps and the SceneDelegate in iOS 13) will have such references obfuscated as well, but will assume that you haven't changed them from their default `$(PRODUCT_MODULE_NAME).ClassName` value. If you modified these plists to point to classes in different modules, you'll have to manually update these plists after running SwiftShield.
+
+# SourceKit Bugs When Using `--ignore-public`
+
+The `--ignore-public` (or SDK Mode) obfuscates your app while ignoring anything with the `public` or `open` access controls. However, some SourceKit bugs prevent it from working 100% as intended.
+
+## Public Extensions
+
+SourceKit has a problem where it can't detect content inside public extensions as such. For example, the following snippet will correctly avoid obfuscating `myMethod()`:
+
+```
+extension Int {
+	public func myMethod() {}
+}
+```
+
+This one however, will be incorrectly obfuscated as SourceKit doesn't recognize `myMethod()` as being public (even though it is).
+
+```
+public extension Int {
+	func myMethod() {}
+}
+```
+
+If you're using `--ignore-public`, make sure your public extensions follow the pattern from the first snippet.
+
+## Public enums
+
+SourceKit doesn't detect public enum cases as such.
+
+```
+public enum Foo {
+	case bar
+}
+```
+
+`.bar` will be obfuscated even though the enum is public.
