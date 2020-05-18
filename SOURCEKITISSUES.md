@@ -20,7 +20,6 @@ These are problems that SourceKit has that are unrelated to a specific feature, 
 **Note: You can use the `--ignore-targets` argument to completely disable the obfuscation of specific targets.**
 
 - (SR-9020)](https://bugs.swift.org/browse/SR-9020) Legacy KeyPaths that include types (like `#keyPath(Foo.bar)`) will not get indexed.
-- Any file that has an emoji will break the obfuscation process. This may not be a SourceKit bug itself, but something that we have to treat on our side.
 - `@objc optional` protocol methods don't have their references indexed.
 
 # Additional important information

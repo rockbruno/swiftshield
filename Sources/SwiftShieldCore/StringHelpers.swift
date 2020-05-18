@@ -68,3 +68,10 @@ extension NSTextCheckingResult {
         return groupStartIndex ..< groupEndIndex
     }
 }
+
+extension String {
+    /// Considers emoji scalars when counting.
+    var utf8Count: Int {
+        return utf8.count
+    }
+}
