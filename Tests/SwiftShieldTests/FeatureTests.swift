@@ -188,4 +188,64 @@ final class FeatureTests: XCTestCase {
         //}
         """)
     }
+
+    func test_files_withEmojis() throws {
+        let (obfs, store, delegate) = baseTestData()
+        let module = try testModule(withContents: """
+        enum JSON {
+            static func parse(_ a: String) -> String { return a }
+        }
+
+        extension String {
+            func unobfuscate() -> String { return self }
+        }
+
+        func l3️⃣og(_ a: String) -> String { return JSON.parse("") }
+
+        var paramsString = "foo"
+
+        struct Logger {
+            func log() {
+                log("Hello 👨‍👩‍👧‍👧 3 A̛͚̖ 3️⃣ response up message 📲: \\(JSON.parse(paramsString.unobfuscate()).description) 🇹🇩👫👨‍👩‍👧‍👧👨‍👨‍👦"); log("")
+            }
+
+            func log(_ a: String) {
+                _ = l3️⃣og("foo".unobfuscate())
+            }
+        }
+        """)
+        store.obfuscationDictionary["JSON"] = "OBS1"
+        store.obfuscationDictionary["parse"] = "OBS2"
+        store.obfuscationDictionary["unobfuscate"] = "OBS3"
+        store.obfuscationDictionary["log"] = "OBS4"
+        store.obfuscationDictionary["Logger"] = "OBS5"
+        store.obfuscationDictionary["l3️⃣og"] = "OBS6"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        enum OBS1 {
+            static func OBS2(_ a: String) -> String { return a }
+        }
+
+        extension String {
+            func OBS3() -> String { return self }
+        }
+
+        func OBS6(_ a: String) -> String { return OBS1.OBS2("") }
+
+        var paramsString = "foo"
+
+        struct OBS5 {
+            func OBS4() {
+                OBS4("Hello 👨‍👩‍👧‍👧 3 A̛͚̖ 3️⃣ response up message 📲: \\(OBS1.OBS2(paramsString.OBS3()).description) 🇹🇩👫👨‍👩‍👧‍👧👨‍👨‍👦"); OBS4("")
+            }
+
+            func OBS4(_ a: String) {
+                _ = OBS6("foo".OBS3())
+            }
+        }
+        """)
+    }
 }

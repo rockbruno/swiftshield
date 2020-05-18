@@ -199,27 +199,28 @@ extension SourceKitObfuscator {
                 // Avoid duplicates.
                 currentReferenceIndex += 1
             }
+            let currentCharacter = charArray[currentCharIndex]
             if line == reference.line, column == reference.column {
                 previousReference = reference
                 let originalName = reference.name
                 let obfuscatedName = obfuscate(name: originalName)
-                let wasInternalKeyword = charArray[currentCharIndex] == "`"
+                let wasInternalKeyword = currentCharacter == "`"
                 for i in 1 ..< (originalName.count + (wasInternalKeyword ? 2 : 0)) {
                     charArray[currentCharIndex + i] = ""
                 }
                 charArray[currentCharIndex] = obfuscatedName
                 currentReferenceIndex += 1
                 currentCharIndex += originalName.count
-                column += originalName.count
+                column += originalName.utf8Count
                 if wasInternalKeyword {
                     charArray[currentCharIndex] = ""
                 }
-            } else if charArray[currentCharIndex] == "\n" {
+            } else if currentCharacter == "\n" {
                 line += 1
                 column = 1
                 currentCharIndex += 1
             } else {
-                column += 1
+                column += currentCharacter.utf8Count
                 currentCharIndex += 1
             }
         }
