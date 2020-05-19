@@ -42,7 +42,7 @@ SourceKit has a problem where it can't detect content inside public extensions a
 
 ```
 extension Int {
-	public func myMethod() {}
+    public func myMethod() {}
 }
 ```
 
@@ -50,7 +50,7 @@ This one however, will be incorrectly obfuscated as SourceKit doesn't recognize 
 
 ```
 public extension Int {
-	func myMethod() {}
+    func myMethod() {}
 }
 ```
 
@@ -62,7 +62,7 @@ SourceKit doesn't detect public enum cases as such.
 
 ```
 public enum Foo {
-	case bar
+    case bar
 }
 ```
 
