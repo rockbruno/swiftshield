@@ -23,7 +23,7 @@ The capabilities of SwiftShield are directly related to the capabilities of Sour
 
 ## Requirements
 
-- You should not have logic based on type names (like loading `MyClass.json` because `String(describing: type(of:self))` is `'MyClass'`). SwiftShield does not obfuscate things like file names and hardcoded strings -- only the types themselves.
+- You should not have logic based on hardcoded names (like loading `MyClass.json` because `String(describing: type(of:self))` is `'MyClass'`). SwiftShield does not obfuscate things like file names and hardcoded strings -- only the types themselves.
 - No Objective-C classes that call Swift methods (but Swift classes calling Objective-C code is fine).
 - Your project should be 100% written in View Code. Older versions of SwiftShield did support obfuscating Storyboards/XIBs, but it was extremely hard to maintain. This parts from the principle that if you have a project big or important enough to be obfuscated, you probably shouldn't be using Storyboards in first place.
 - Your project should **not** be using Xcode's Legacy Build System setting.
