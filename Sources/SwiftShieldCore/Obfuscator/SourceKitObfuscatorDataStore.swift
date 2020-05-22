@@ -6,6 +6,5 @@ final class SourceKitObfuscatorDataStore {
     var obfuscatedNames = Set<String>()
     var usrRelationDictionary = [String: SKResponseDictionary]()
     var indexedFiles = [IndexedFile]()
-    var codableEnumUSRs = Set<String>()
     var plists = Set<File>()
 }

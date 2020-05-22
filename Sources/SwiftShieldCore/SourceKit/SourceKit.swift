@@ -567,10 +567,12 @@ final class SKResponse {
 final class SKResponseDictionary {
     let dict: sourcekitd_variant_t
     let resp: SKResponse
+    let parent: SKResponseDictionary!
     var sourcekitd: SourceKit { resp.sourcekitd }
 
-    init(_ dict: sourcekitd_variant_t, response: SKResponse) {
+    init(_ dict: sourcekitd_variant_t, response: SKResponse, parent: SKResponseDictionary! = nil) {
         self.dict = dict
+        self.parent = parent
         resp = response
     }
 
@@ -601,7 +603,7 @@ final class SKResponseDictionary {
         guard let array: SKResponseArray = self[uid] else {
             return
         }
-        array.forEach { (_, dict) -> Bool in
+        array.forEach(parent: self) { (_, dict) -> Bool in
             block(dict)
             dict.recurseEntities(block: block)
             return true
@@ -622,14 +624,18 @@ final class SKResponseArray {
     var count: Int { sourcekitd.api.variant_array_get_count(array) }
 
     subscript(i: Int) -> SKResponseDictionary {
-        SKResponseDictionary(sourcekitd.api.variant_array_get_value(array, i), response: resp)
+        return get(i, parent: nil)
+    }
+
+    private func get(_ i: Int, parent: SKResponseDictionary!) -> SKResponseDictionary {
+        SKResponseDictionary(sourcekitd.api.variant_array_get_value(array, i), response: resp, parent: parent)
     }
 
     /// If the `applier` returns `false`, iteration terminates.
     @discardableResult
-    func forEach(_ applier: (Int, SKResponseDictionary) -> Bool) -> Bool {
+    func forEach(parent: SKResponseDictionary, _ applier: (Int, SKResponseDictionary) -> Bool) -> Bool {
         for i in 0 ..< count {
-            if !applier(i, self[i]) {
+            if !applier(i, get(i, parent: parent)) {
                 return false
             }
         }

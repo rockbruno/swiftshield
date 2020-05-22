@@ -3,14 +3,13 @@
 - Classes
 - Structs
 - Methods
-- Enums (as long as they don't have `CodingKeys` in the name)
+- Enums (except ones that inherit from `CodingKey`)
 - Enum cases
 
 # What SwiftShield can't obfuscate
 
 - Properties: Although we can obfuscate them, we avoid doing so because of `Codable` types. We can fix it by checking the inheritance tree of a property's outer type.
 - `typealias` and `associatedtypes`: SourceKit doesn't always index them, so we avoid them to prevent broken projects. Note that these can't be reverse engineered as they are purely an editor thing, so avoiding them isn't a problem!
-- Enums that have the `CodingKeys` suffix
 - Module names: Not implemented yet, but possible.
 
 # SourceKit Bugs
@@ -55,15 +54,3 @@ public extension Int {
 ```
 
 If you're using `--ignore-public`, make sure your public extensions follow the pattern from the first snippet.
-
-## Public enums
-
-SourceKit doesn't detect public enum cases as such.
-
-```
-public enum Foo {
-    case bar
-}
-```
-
-`.bar` will be obfuscated even though the enum is public.
