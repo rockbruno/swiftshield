@@ -15,8 +15,6 @@ struct fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 SwiftShield is a tool that generates irreversible encrypted names for your iOS project's types and methods (including third-party libraries and Storyboards) in order to protect your app from iOS reverse engineering tools like `class-dump` and `Cycript`. It uses Apple's SourceKit to mimick Xcode's indexing behavior, revealing a complete map of your project that is used to safely rename parts of your project. 
 
-Check this repo's example project to see it in action! You can run it by executing `make swiftshield` in your terminal.
-
 ## Limitations
 
 The capabilities of SwiftShield are directly related to the capabilities of SourceKit, which unfortunately has its share of bugs. However, although SwiftShield can't obfuscate *everything*, it can obfuscate just enough to make reverse engineering very hard. [Check this document to see its capabilities in detail](SOURCEKITISSUES.md).
@@ -30,6 +28,8 @@ The capabilities of SwiftShield are directly related to the capabilities of Sour
 - Make sure your project doesn't suffer from [one of SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require you to manually fix the resulting code as it will not be able to compile.
 
 ## Usage
+
+Check this repo's example project to see it in action! You can run it by executing `make swiftshield` in your terminal.
 
 ### Downloading SwiftShield
 
