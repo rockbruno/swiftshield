@@ -3,14 +3,15 @@
 - Classes
 - Structs
 - Methods
+- Properties
 - Enums (except ones that inherit from `CodingKey`)
 - Enum cases
 
 # What SwiftShield can't obfuscate
 
-- Properties: Although we can obfuscate them, we avoid doing so because of `Codable` types. We can fix it by checking the inheritance tree of a property's outer type.
 - `typealias` and `associatedtypes`: SourceKit doesn't always index them, so we avoid them to prevent broken projects. Note that these can't be reverse engineered as they are purely an editor thing, so avoiding them isn't a problem!
 - Module names: Not implemented yet, but possible.
+- Local content inside methods (like argument names and inner properties). They aren't indexed, but they also can't be reverse engineered.
 
 # SourceKit Bugs
 
@@ -22,10 +23,6 @@ These are problems that SourceKit has that are unrelated to a specific feature, 
 - [(SR-12837)](https://bugs.swift.org/browse/SR-12837)`@objc optional` protocol methods don't have their references indexed.
 
 # Additional important information
-
-## Codable Enums need to have a specific suffix
-
-To prevent `Codable` enums from being obfuscated, we avoid obfuscating enum cases belonging to enums that have the `CodingKeys` suffix. Make sure your enums follow this pattern.
 
 ## SceneDelegate / App Extensions class references in plists should be untouched
 
