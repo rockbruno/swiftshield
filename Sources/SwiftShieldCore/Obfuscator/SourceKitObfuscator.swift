@@ -232,8 +232,8 @@ extension SKResponseDictionary {
         guard attributes.count > 0 else {
             return false
         }
-        for _ in 0 ..< attributes.count {
-            guard let attr: SKUID = attributes[0][sourcekitd.keys.attribute] else {
+        for i in 0 ..< attributes.count {
+            guard let attr: SKUID = attributes[i][sourcekitd.keys.attribute] else {
                 continue
             }
             guard attr.asString == AccessControl.public.rawValue || attr.asString == AccessControl.open.rawValue else {

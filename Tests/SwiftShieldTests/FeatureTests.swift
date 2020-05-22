@@ -127,6 +127,7 @@ final class FeatureTests: XCTestCase {
             public func ignored2() {}
             open func ignored7() {}
             func notIgnored() {}
+            public static func ignored13() {}
         }
 
         struct NotIgnored2 {}
@@ -165,6 +166,7 @@ final class FeatureTests: XCTestCase {
             public func ignored2() {}
             open func ignored7() {}
             func OBS1() {}
+            public static func ignored13() {}
         }
 
         struct OBS2 {}
