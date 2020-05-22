@@ -139,9 +139,9 @@ final class FeatureTests: XCTestCase {
         public func ignored4() {}
         func notIgnored4() {}
 
-        //public enum Bla {
-        //    case abc
-        //}
+        public enum Bla {
+            case abc
+        }
 
         //Broken.
         //public extension Int {
@@ -177,9 +177,9 @@ final class FeatureTests: XCTestCase {
         public func ignored4() {}
         func OBS4() {}
 
-        //public enum Bla {
-        //    case abc
-        //}
+        public enum Bla {
+            case abc
+        }
 
         //Broken.
         //public extension Int {
