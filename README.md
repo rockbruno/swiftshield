@@ -2,9 +2,7 @@
 
 ```swift
 struct fjiovh4894bvic: XbuinvcxoDHFh3fjid {
-
   let VNfhnfn3219d: Vnahfi5n34djga
-
   func cxncjnx8fh83FDJSDd() -> Lghbna2gf0gmh3d {
     return vPAOSNdcbif372hFKF(VNfhnfn3219d.Gjanbfpgi3jfg())
   }
