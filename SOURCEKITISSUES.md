@@ -39,7 +39,7 @@ The `--ignore-public` (or SDK Mode) obfuscates your app while ignoring anything 
 
 SourceKit has a problem where it can't detect content inside public extensions as such. For example, the following snippet will correctly avoid obfuscating `myMethod()`:
 
-```
+```swift
 extension Int {
     public func myMethod() {}
 }
@@ -47,7 +47,7 @@ extension Int {
 
 This one however, will be incorrectly obfuscated as SourceKit doesn't recognize `myMethod()` as being public (even though it is).
 
-```
+```swift
 public extension Int {
     func myMethod() {}
 }
