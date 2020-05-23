@@ -773,14 +773,14 @@ public struct SKUID: CustomStringConvertible {
     }
 
     func referenceType() -> SourceKit.DeclarationType? {
-        declarationType() ?? declarationType(firstSuffix: ".ref.")
+        declarationType(firstSuffix: ".ref.")
     }
 
-    func declarationType(onlyObfuscable: Bool = true) -> SourceKit.DeclarationType? {
-        declarationType(firstSuffix: ".decl.", onlyObfuscable: onlyObfuscable)
+    func declarationType() -> SourceKit.DeclarationType? {
+        declarationType(firstSuffix: ".decl.")
     }
 
-    func declarationType(firstSuffix: String, onlyObfuscable: Bool = true) -> SourceKit.DeclarationType? {
+    func declarationType(firstSuffix: String) -> SourceKit.DeclarationType? {
         let kind = description
         let prefix = "source.lang.swift" + firstSuffix
         guard kind.hasPrefix(prefix) else {
@@ -809,14 +809,6 @@ public struct SKUID: CustomStringConvertible {
         case "enumelement":
             return .enumelement
         default:
-            break
-        }
-        guard onlyObfuscable == false else {
-            return nil
-        }
-        if kindSuffix.hasPrefix("extension.") {
-            return .extension
-        } else {
             return nil
         }
     }
