@@ -6,6 +6,5 @@ extension SourceKit {
         case method
         case `enum`
         case enumelement
-        case `extension`
     }
 }
