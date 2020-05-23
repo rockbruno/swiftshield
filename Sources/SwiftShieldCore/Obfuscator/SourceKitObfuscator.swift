@@ -72,10 +72,6 @@ extension SourceKitObfuscator {
             return
         }
 
-        if dict.isCodableProperty {
-            return
-        }
-
         logger.log("* Found declaration of \(name) (USR: \(usr))")
         dataStore.processedUsrs.insert(usr)
 
@@ -260,28 +256,12 @@ extension SKResponseDictionary {
         }
         var result = false
         parentEntities.forEach(parent: parent) { (i, dict) -> Bool in
-            guard let usr: String = dict[self.sourcekitd.keys.usr], usr == "s:s9CodingKeyP" else {
-                return true
-            }
-            result = true
-            return false
-        }
-        return result
-    }
-
-    var isCodableProperty: Bool {
-        guard let kindId: SKUID = self[sourcekitd.keys.kind],
-              let type = kindId.declarationType(),
-              type == .property else
-        {
-            return false
-        }
-        guard let parentEntities: SKResponseArray = parent[sourcekitd.keys.entities] else {
-            return false
-        }
-        var result = false
-        parentEntities.forEach(parent: parent) { (i, dict) -> Bool in
-            guard let usr: String = dict[self.sourcekitd.keys.usr], usr == "s:s7Codablea" else {
+            guard let kindId: SKUID = dict[sourcekitd.keys.kind],
+                  let type = kindId.referenceType(),
+                  type == .protocol,
+                  let usr: String = dict[self.sourcekitd.keys.usr],
+                  usr == "s:s9CodingKeyP" else
+            {
                 return true
             }
             result = true

@@ -107,7 +107,7 @@ final class FeatureTests: XCTestCase {
 
         final class OBS1: OBS4, UITableViewDelegate {
             func OBS2() {}
-            var OBS3: Int { return 1 }
+            var notADelegateProperty: Int { return 1 }
 
             override var hash: Int { return 1 }
             func tableView(
@@ -126,8 +126,6 @@ final class FeatureTests: XCTestCase {
         open class Ignored {
             public func ignored2() {}
             open func ignored7() {}
-            public var ignored8 = 0
-            open var ignored12: Int { return 0 }
             func notIgnored() {}
             public static func ignored13() {}
         }
@@ -136,13 +134,9 @@ final class FeatureTests: XCTestCase {
 
         extension Int {
             public func ignored3() {}
-            public var ignored9: Int {
-                return 0
-            }
             func notIgnored3() {}
         }
 
-        public var ignored11: String = ""
         public func ignored4() {}
         func notIgnored4() {}
 
@@ -171,8 +165,6 @@ final class FeatureTests: XCTestCase {
         open class Ignored {
             public func ignored2() {}
             open func ignored7() {}
-            public var ignored8 = 0
-            open var ignored12: Int { return 0 }
             func OBS1() {}
             public static func ignored13() {}
         }
@@ -181,13 +173,9 @@ final class FeatureTests: XCTestCase {
 
         extension Int {
             public func ignored3() {}
-            public var ignored9: Int {
-                return 0
-            }
             func OBS3() {}
         }
 
-        public var ignored11: String = ""
         public func ignored4() {}
         func OBS4() {}
 
@@ -234,7 +222,6 @@ final class FeatureTests: XCTestCase {
         store.obfuscationDictionary["log"] = "OBS4"
         store.obfuscationDictionary["Logger"] = "OBS5"
         store.obfuscationDictionary["l3️⃣og"] = "OBS6"
-        store.obfuscationDictionary["paramsString"] = "OBS7"
 
         try obfs.registerModuleForObfuscation(module)
         try obfs.obfuscate()
@@ -250,101 +237,16 @@ final class FeatureTests: XCTestCase {
 
         func OBS6(_ a: String) -> String { return OBS1.OBS2("") }
 
-        var OBS7 = "foo"
+        var paramsString = "foo"
 
         struct OBS5 {
             func OBS4() {
-                OBS4("Hello 👨‍👩‍👧‍👧 3 A̛͚̖ 3️⃣ response up message 📲: \\(OBS1.OBS2(OBS7.OBS3()).description) 🇹🇩👫👨‍👩‍👧‍👧👨‍👨‍👦"); OBS4("")
+                OBS4("Hello 👨‍👩‍👧‍👧 3 A̛͚̖ 3️⃣ response up message 📲: \\(OBS1.OBS2(paramsString.OBS3()).description) 🇹🇩👫👨‍👩‍👧‍👧👨‍👨‍👦"); OBS4("")
             }
 
             func OBS4(_ a: String) {
                 _ = OBS6("foo".OBS3())
             }
-        }
-        """)
-    }
-
-    func test_property_obfuscation() throws {
-        let (obfs, store, delegate) = baseTestData()
-        let module = try testModule(withContents: """
-        var prop1 = "a"
-        struct Foo {
-            static let prop2 = Foo()
-            let prop3 = 1
-            var prop4: String {
-                return ""
-            }
-            lazy var prop5 = {
-                return self.prop4
-            }()
-        }
-        extension Foo {
-            var prop6: String {
-                return ""
-            }
-        }
-        """)
-        store.obfuscationDictionary["Foo"] = "OBSFOO"
-        store.obfuscationDictionary["prop1"] = "OBS1"
-        store.obfuscationDictionary["prop2"] = "OBS2"
-        store.obfuscationDictionary["prop3"] = "OBS3"
-        store.obfuscationDictionary["prop4"] = "OBS4"
-        store.obfuscationDictionary["prop5"] = "OBS5"
-        store.obfuscationDictionary["prop6"] = "OBS6"
-
-        try obfs.registerModuleForObfuscation(module)
-        try obfs.obfuscate()
-
-        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
-        var OBS1 = "a"
-        struct OBSFOO {
-            static let OBS2 = OBSFOO()
-            let OBS3 = 1
-            var OBS4: String {
-                return ""
-            }
-            lazy var OBS5 = {
-                return self.OBS4
-            }()
-        }
-        extension OBSFOO {
-            var OBS6: String {
-                return ""
-            }
-        }
-        """)
-    }
-
-    func test_property_obfuscation_ignoresCodableChildren() throws {
-        let (obfs, store, delegate) = baseTestData()
-        let module = try testModule(withContents: """
-        struct Foo {
-            let prop1: String
-            var prop2: String { return "" }
-        }
-        struct Bar: Codable {
-            let prop3: String
-            var prop4: String { return "" }
-        }
-        """)
-        store.obfuscationDictionary["Foo"] = "OBSFOO"
-        store.obfuscationDictionary["Bar"] = "OBSBAR"
-        store.obfuscationDictionary["prop1"] = "OBS1"
-        store.obfuscationDictionary["prop2"] = "OBS2"
-        store.obfuscationDictionary["prop3"] = "OBS3"
-        store.obfuscationDictionary["prop4"] = "OBS4"
-
-        try obfs.registerModuleForObfuscation(module)
-        try obfs.obfuscate()
-
-        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
-        struct OBSFOO {
-            let OBS1: String
-            var OBS2: String { return "" }
-        }
-        struct OBSBAR: Codable {
-            let prop3: String
-            var prop4: String { return "" }
         }
         """)
     }

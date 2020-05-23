@@ -790,11 +790,10 @@ public struct SKUID: CustomStringConvertible {
             return .object
         case "protocol":
             return .protocol
-        case "var.instance",
-             "var.static",
-             "var.global",
-             "var.class":
-            return .property
+        //        case "var.instance",
+        //             "var.static",
+        //             "var.class":
+        //            return .property
         case "function.free",
              "function.method.instance",
              "function.method.static",
