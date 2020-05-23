@@ -171,14 +171,14 @@ extension SourceKit {
     // MARK: - Convenience API for requests.
 
     /// Send the given request and synchronously receive a reply dictionary (or error).
-    public func sendSync(_ req: SKRequestDictionary) -> SKResult<SKResponseDictionary> {
+    public func sendSync(_ req: SKRequestDictionary) throws -> SKResponseDictionary {
         logger?.log(req.description, sourceKit: true)
         let resp = SKResponse(api.send_request_sync(req.dict), sourcekitd: self)
         logger?.log(resp.description, sourceKit: true)
         guard let dict = resp.value else {
-            return .failure(resp.error!)
+            throw (logger ?? Logger()).fatalError(forMessage: resp.error!)
         }
-        return .success(dict)
+        return dict
     }
 }
 
@@ -277,6 +277,8 @@ public struct sourcekitd_requests {
     let relatedidents: sourcekitd_uid_t
     let semantic_refactoring: sourcekitd_uid_t
     let indexsource: sourcekitd_uid_t
+    let typecontextinfo: sourcekitd_uid_t
+    let conformingmethods: sourcekitd_uid_t
 
     init(api: sourcekitd_functions_t) {
         editor_open = api.uid_get_from_cstr("source.request.editor.open")!
@@ -287,6 +289,8 @@ public struct sourcekitd_requests {
         relatedidents = api.uid_get_from_cstr("source.request.relatedidents")!
         semantic_refactoring = api.uid_get_from_cstr("source.request.semantic.refactoring")!
         indexsource = api.uid_get_from_cstr("source.request.indexsource")!
+        typecontextinfo = api.uid_get_from_cstr("source.request.typecontextinfo")!
+        conformingmethods = api.uid_get_from_cstr("source.request.conformingmethods")!
     }
 }
 
@@ -595,17 +599,17 @@ final class SKResponseDictionary {
         SKResponseArray(sourcekitd.api.variant_dictionary_get_value(dict, key), response: resp)
     }
 
-    func recurseEntities(block: @escaping (SKResponseDictionary) -> Void) {
-        recurse(uid: sourcekitd.keys.entities, block: block)
+    func recurseEntities(block: @escaping (SKResponseDictionary) throws -> Void) rethrows {
+        try recurse(uid: sourcekitd.keys.entities, block: block)
     }
 
-    func recurse(uid: sourcekitd_uid_t, block: @escaping (SKResponseDictionary) -> Void) {
+    func recurse(uid: sourcekitd_uid_t, block: @escaping (SKResponseDictionary) throws -> Void) rethrows {
         guard let array: SKResponseArray = self[uid] else {
             return
         }
-        array.forEach(parent: self) { (_, dict) -> Bool in
-            block(dict)
-            dict.recurseEntities(block: block)
+        try array.forEach(parent: self) { (_, dict) -> Bool in
+            try block(dict)
+            try dict.recurseEntities(block: block)
             return true
         }
     }
@@ -633,9 +637,9 @@ final class SKResponseArray {
 
     /// If the `applier` returns `false`, iteration terminates.
     @discardableResult
-    func forEach(parent: SKResponseDictionary, _ applier: (Int, SKResponseDictionary) -> Bool) -> Bool {
+    func forEach(parent: SKResponseDictionary, _ applier: (Int, SKResponseDictionary) throws -> Bool) rethrows -> Bool {
         for i in 0 ..< count {
-            if !applier(i, get(i, parent: parent)) {
+            if try applier(i, get(i, parent: parent)) == false {
                 return false
             }
         }
@@ -772,11 +776,11 @@ public struct SKUID: CustomStringConvertible {
         declarationType() ?? declarationType(firstSuffix: ".ref.")
     }
 
-    func declarationType() -> SourceKit.DeclarationType? {
-        declarationType(firstSuffix: ".decl.")
+    func declarationType(onlyObfuscable: Bool = true) -> SourceKit.DeclarationType? {
+        declarationType(firstSuffix: ".decl.", onlyObfuscable: onlyObfuscable)
     }
 
-    func declarationType(firstSuffix: String) -> SourceKit.DeclarationType? {
+    func declarationType(firstSuffix: String, onlyObfuscable: Bool = true) -> SourceKit.DeclarationType? {
         let kind = description
         let prefix = "source.lang.swift" + firstSuffix
         guard kind.hasPrefix(prefix) else {
@@ -805,6 +809,14 @@ public struct SKUID: CustomStringConvertible {
         case "enumelement":
             return .enumelement
         default:
+            break
+        }
+        guard onlyObfuscable == false else {
+            return nil
+        }
+        if kindSuffix.hasPrefix("extension.") {
+            return .extension
+        } else {
             return nil
         }
     }

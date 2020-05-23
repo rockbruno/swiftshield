@@ -107,7 +107,7 @@ final class FeatureTests: XCTestCase {
 
         final class OBS1: OBS4, UITableViewDelegate {
             func OBS2() {}
-            var OBS3: Int { return 1 }
+            var notADelegateProperty: Int { return 1 }
 
             override var hash: Int { return 1 }
             func tableView(
@@ -318,17 +318,53 @@ final class FeatureTests: XCTestCase {
     func test_property_obfuscation_ignoresCodableChildren() throws {
         let (obfs, store, delegate) = baseTestData()
         let module = try testModule(withContents: """
+        import Foundation
+
         struct Foo {
             let prop1: String
-            var prop2: String { return "" }
         }
         struct Bar: Codable {
-            let prop3: String
-            var prop4: String { return "" }
+            let prop1: String
+        }
+        struct Bar2: Decodable {
+            let prop1: String
+        }
+        struct Bar3: Encodable {
+            let prop1: String
+        }
+
+        protocol WrapperProtocol: Decodable {}
+        protocol AnotherWrapper: WrapperProtocol {}
+
+        typealias SomeCodable = Codable
+
+        struct BarWithHiddenCodable: AnotherWrapper {
+            let prop1: String
+        }
+
+        struct BarWithTypealias: SomeCodable {
+            let prop1: String
+        }
+
+        struct BarExternal: CodableProtocolInAnotherFile {
+            let prop1: String
+        }
+
+        class BarClass: Codable {
+            let prop1: String
         }
         """)
         store.obfuscationDictionary["Foo"] = "OBSFOO"
         store.obfuscationDictionary["Bar"] = "OBSBAR"
+        store.obfuscationDictionary["Bar2"] = "OBSBAR2"
+        store.obfuscationDictionary["Bar3"] = "OBSBAR3"
+        store.obfuscationDictionary["BarWithHiddenCodable"] = "OBSBARHIDDEN"
+        store.obfuscationDictionary["WrapperProtocol"] = "OBSWRAP"
+        store.obfuscationDictionary["AnotherWrapper"] = "OBSAN"
+        store.obfuscationDictionary["BarWithTypealias"] = "OBSAL"
+        store.obfuscationDictionary["BarExternal"] = "OBSEX"
+        store.obfuscationDictionary["BarClass"] = "OBSOBJC"
+        store.obfuscationDictionary["CodableProtocolInAnotherFile"] = "EXCOD"
         store.obfuscationDictionary["prop1"] = "OBS1"
         store.obfuscationDictionary["prop2"] = "OBS2"
         store.obfuscationDictionary["prop3"] = "OBS3"
@@ -338,13 +374,79 @@ final class FeatureTests: XCTestCase {
         try obfs.obfuscate()
 
         XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        import Foundation
+
         struct OBSFOO {
             let OBS1: String
-            var OBS2: String { return "" }
         }
         struct OBSBAR: Codable {
-            let prop3: String
-            var prop4: String { return "" }
+            let prop1: String
+        }
+        struct OBSBAR2: Decodable {
+            let prop1: String
+        }
+        struct OBSBAR3: Encodable {
+            let prop1: String
+        }
+
+        protocol OBSWRAP: Decodable {}
+        protocol OBSAN: OBSWRAP {}
+
+        typealias SomeCodable = Codable
+
+        struct OBSBARHIDDEN: OBSAN {
+            let prop1: String
+        }
+
+        struct OBSAL: SomeCodable {
+            let prop1: String
+        }
+
+        struct OBSEX: EXCOD {
+            let prop1: String
+        }
+
+        class OBSOBJC: Codable {
+            let prop1: String
+        }
+        """)
+    }
+
+    func test_property_obfuscation_ignoresOBJCClasses() throws {
+        let (obfs, store, delegate) = baseTestData()
+        let module = try testModule(withContents: """
+        import Foundation
+        import UIKit
+
+        class BarClass: NSObject {
+            let prop1: String = ""
+            func method() {}
+        }
+
+        @objc class BarRaw: UIViewController {
+            let prop1: String = ""
+            func method() {}
+        }
+        """)
+        store.obfuscationDictionary["BarClass"] = "OBS1"
+        store.obfuscationDictionary["BarRaw"] = "OBS2"
+        store.obfuscationDictionary["method"] = "OBS3"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        import Foundation
+        import UIKit
+
+        class OBS1: NSObject {
+            let prop1: String = ""
+            func OBS3() {}
+        }
+
+        @objc class OBS2: UIViewController {
+            let prop1: String = ""
+            func OBS3() {}
         }
         """)
     }

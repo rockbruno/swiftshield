@@ -11,7 +11,7 @@ final class SourceKitObfuscatorTests: XCTestCase {
 
         try obfuscator.registerModuleForObfuscation(module)
 
-        let expectedSet = Set<String>(["s:18FeatureTestProject3FooC", "c:@M@FeatureTestProject@objc(cs)AppDelegate"])
+        let expectedSet = Set<String>(["s:18FeatureTestProject3FooC", "c:@M@FeatureTestProject@objc(cs)AppDelegate", "s:18FeatureTestProject28CodableProtocolInAnotherFileP"])
 
         XCTAssertEqual(dataStore.processedUsrs, expectedSet)
         XCTAssertEqual(Set(dataStore.indexedFiles.map { $0.file }), module.sourceFiles)
