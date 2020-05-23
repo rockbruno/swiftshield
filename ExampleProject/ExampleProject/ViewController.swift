@@ -2,16 +2,31 @@ import DifferentModule
 import UIKit
 
 func globalMethod() {}
+var globalProp = 0
 
 struct SomeStruct {
     static func staticMethod() {}
     func method() {}
+    static let singleton = SomeStruct()
+    var instanceProp = 0
 }
 
 enum SomeEnum {
     case a
     case b
     case c
+
+    var bla: String {
+        switch self {
+        case .a:
+            break
+        case .b:
+            break
+        case .c:
+            break
+        }
+        return ""
+    }
 }
 
 class ViewController: UIViewController {

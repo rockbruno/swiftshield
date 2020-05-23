@@ -1,9 +1,12 @@
 <img src="http://i.imgur.com/0ksj7Gh.png" alt="SwiftShield logo" height="140" >
 
 ```swift
-class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
-  func cxncjnx8fh83FDJSDd() {
-    return vPAOSNdcbif372hFKF()
+struct fjiovh4894bvic: XbuinvcxoDHFh3fjid {
+
+  let VNfhnfn3219d: Vnahfi5n34djga
+
+  func cxncjnx8fh83FDJSDd() -> Lghbna2gf0gmh3d {
+    return vPAOSNdcbif372hFKF(VNfhnfn3219d.Gjanbfpgi3jfg())
   }
 }
 ```
