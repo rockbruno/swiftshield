@@ -35,45 +35,94 @@ extension SourceKitObfuscator {
             req[keys.request] = requests.indexsource
             req[keys.sourcefile] = file.path
             req[keys.compilerargs] = compilerArguments
-            let response = sourceKit.sendSync(req)
-            switch response {
-            case let .success(response):
-                response.recurseEntities { [unowned self] dict in
-                    if self.ignorePublic, dict.isPublic {
-                        return
-                    }
-                    self.process(declarationEntity: dict, ofFile: file)
-                }
-                let indexedFile = IndexedFile(file: file, response: response)
-                self.dataStore.indexedFiles.append(indexedFile)
-            case let .failure(error):
-                throw logger.fatalError(forMessage: error)
+            let response = try sourceKit.sendSync(req)
+            logger.log("--- Preprocessing indexing result of: \(file.name)")
+            response.recurseEntities { [unowned self] dict in
+                self.preprocess(declarationEntity: dict, ofFile: file, fromModule: module)
             }
+            logger.log("--- Processing indexing result of: \(file.name)")
+            try response.recurseEntities { [unowned self] dict in
+                if self.ignorePublic, dict.isPublic {
+                    return
+                }
+                try self.process(declarationEntity: dict, ofFile: file, fromModule: module)
+            }
+            let indexedFile = IndexedFile(file: file, response: response)
+            self.dataStore.indexedFiles.append(indexedFile)
         }
         dataStore.plists = dataStore.plists.union(module.plists)
     }
 
+    func preprocess(
+        declarationEntity dict: SKResponseDictionary,
+        ofFile file: File,
+        fromModule module: Module
+    ) {
+        guard let usr: String = dict[keys.usr] else {
+            return
+        }
+        dataStore.fileForUSR[usr] = file
+    }
+
     func process(
         declarationEntity dict: SKResponseDictionary,
-        ofFile _: File
-    ) {
+        ofFile file: File,
+        fromModule module: Module
+    ) throws {
         let entityKind: SKUID = dict[keys.kind]!
-        guard entityKind.declarationType() != nil else {
+        guard let kind = entityKind.declarationType() else {
             return
         }
         guard let rawName: String = dict[keys.name],
-            let usr: String = dict[keys.usr] else {
+              let usr: String = dict[keys.usr] else
+        {
             return
         }
 
         let name = rawName.removingParameterInformation
 
-        if dict.isCodingKeysEnumElement {
-            return
+        if kind == .enumelement, let parentUSR: String = dict.parent[keys.usr] {
+            let codingKeysUSR: Set<String> = ["s:s9CodingKeyP"]
+            if try inheritsFromAnyUSR(
+                parentUSR,
+                anyOf: codingKeysUSR,
+                inModule: module
+            ) {
+                logger.log("* Ignoring \(name) (USR: \(usr)) because its parent enum inherits from CodingKey.", verbose: true)
+                return
+            } else {
+                logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent enum does not appear to inherit from CodingKey.)", verbose: true)
+            }
         }
 
-        if dict.isCodableProperty {
-            return
+        if kind == .property, dict.parent != nil, let parentKind: SKUID = dict.parent[keys.kind] {
+            let parentUSR: String
+            if parentKind.declarationType(onlyObfuscable: false) == .extension {
+                // The type's USR of an extension is hidden inside the entities.
+                guard let entities: SKResponseArray = dict.parent[keys.entities] else {
+                    throw logger.fatalError(forMessage: "Parent of \(usr) is an extension with no entities!")
+                }
+                guard let pUSR: String = entities[0][keys.usr] else {
+                    throw logger.fatalError(forMessage: "Parent of \(usr) is an extension with no USR!")
+                }
+                parentUSR = pUSR
+            } else {
+                guard let pUSR: String = dict.parent[keys.usr] else {
+                    throw logger.fatalError(forMessage: "Parent of \(usr) is has no USR!")
+                }
+                parentUSR = pUSR
+            }
+            let codableUSRs: Set<String> = ["s:s7Codablea", "s:SE", "s:Se"]
+            if try inheritsFromAnyUSR(
+                parentUSR,
+                anyOf: codableUSRs,
+                inModule: module
+            ) {
+                logger.log("* Ignoring \(name) (USR: \(usr)) because its parent inherits from Codable.", verbose: true)
+                return
+            } else {
+                logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent does not appear to inherit from Codable.)", verbose: true)
+            }
         }
 
         logger.log("* Found declaration of \(name) (USR: \(usr))")
@@ -223,6 +272,46 @@ extension SourceKitObfuscator {
     }
 }
 
+extension SourceKitObfuscator {
+    func inheritsFromAnyUSR(_ usr: String, anyOf usrs: Set<String>, inModule module: Module) throws -> Bool {
+        let usrsKey = usrs.joined(separator: " ")
+        if let cache = dataStore.inheritsFromX[usr, default: [:]][usrsKey] {
+            return cache
+        }
+
+        func result(_ val: Bool) -> Bool {
+            dataStore.inheritsFromX[usr, default: [:]][usrsKey] = val
+            return val
+        }
+
+        let req = SKRequestDictionary(sourcekitd: sourceKit)
+        req[keys.request] = requests.cursorinfo
+        req[keys.compilerargs] = module.compilerArguments
+        req[keys.usr] = usr
+        // We have to store the file of the USR because it looks CursorInfo doesn't returns USRs if you use the wrong one
+        //, except if it's a closed source framework. No idea why it works like that.
+        // Hopefully this won't break in the future.
+        let file: File = dataStore.fileForUSR[usr] ?? module.sourceFiles.first!
+        req[keys.sourcefile] = file.path
+        let cursorInfo = try sourceKit.sendSync(req)
+        guard let annotation: String = cursorInfo[keys.annotated_decl] else {
+            logger.log("Pretending \(usr) inherits from Codable because SourceKit failed to look it up. This can happen if this USR belongs to an @objc class.", verbose: true)
+            return result(true)
+        }
+        let regex = "usr=\\\"(.\\S*)\\\""
+        let regexResult = annotation.match(regex: regex)
+        for res in regexResult {
+            let inheritedUSR = res.captureGroup(1, originalString: annotation)
+            if usrs.contains(inheritedUSR) {
+                return result(true)
+            } else if try inheritsFromAnyUSR(inheritedUSR, anyOf: usrs, inModule: module) {
+                return result(true)
+            }
+        }
+        return result(false)
+    }
+}
+
 // MARK: SKResponseDictionary Helpers
 
 extension SKResponseDictionary {
@@ -246,48 +335,6 @@ extension SKResponseDictionary {
             return true
         }
         return false
-    }
-
-    var isCodingKeysEnumElement: Bool {
-        guard let kindId: SKUID = self[sourcekitd.keys.kind],
-              let type = kindId.declarationType(),
-              type == .enumelement else
-        {
-            return false
-        }
-        guard let parentEntities: SKResponseArray = parent[sourcekitd.keys.entities] else {
-            return false
-        }
-        var result = false
-        parentEntities.forEach(parent: parent) { (i, dict) -> Bool in
-            guard let usr: String = dict[self.sourcekitd.keys.usr], usr == "s:s9CodingKeyP" else {
-                return true
-            }
-            result = true
-            return false
-        }
-        return result
-    }
-
-    var isCodableProperty: Bool {
-        guard let kindId: SKUID = self[sourcekitd.keys.kind],
-              let type = kindId.declarationType(),
-              type == .property else
-        {
-            return false
-        }
-        guard let parentEntities: SKResponseArray = parent[sourcekitd.keys.entities] else {
-            return false
-        }
-        var result = false
-        parentEntities.forEach(parent: parent) { (i, dict) -> Bool in
-            guard let usr: String = dict[self.sourcekitd.keys.usr], usr == "s:s7Codablea" else {
-                return true
-            }
-            result = true
-            return false
-        }
-        return result
     }
 
     func isReferencingInternalFramework(dataStore: SourceKitObfuscatorDataStore) -> Bool {
