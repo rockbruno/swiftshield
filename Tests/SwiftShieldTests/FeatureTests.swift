@@ -350,7 +350,9 @@ final class FeatureTests: XCTestCase {
             let prop1: String
         }
 
-        class BarClass: Codable {
+        protocol SomeProt {}
+
+        class BarClass: Codable, SomeProt {
             let prop1: String
         }
         """)
@@ -365,6 +367,7 @@ final class FeatureTests: XCTestCase {
         store.obfuscationDictionary["BarExternal"] = "OBSEX"
         store.obfuscationDictionary["BarClass"] = "OBSOBJC"
         store.obfuscationDictionary["CodableProtocolInAnotherFile"] = "EXCOD"
+        store.obfuscationDictionary["SomeProt"] = "OBSSOMEPROT"
         store.obfuscationDictionary["prop1"] = "OBS1"
         store.obfuscationDictionary["prop2"] = "OBS2"
         store.obfuscationDictionary["prop3"] = "OBS3"
@@ -406,7 +409,9 @@ final class FeatureTests: XCTestCase {
             let prop1: String
         }
 
-        class OBSOBJC: Codable {
+        protocol OBSSOMEPROT {}
+
+        class OBSOBJC: Codable, OBSSOMEPROT {
             let prop1: String
         }
         """)

@@ -95,22 +95,13 @@ extension SourceKitObfuscator {
             }
         }
 
-        if kind == .property, dict.parent != nil, let parentKind: SKUID = dict.parent[keys.kind] {
-            let parentUSR: String
-            if parentKind.declarationType(onlyObfuscable: false) == .extension {
-                // The type's USR of an extension is hidden inside the entities.
-                guard let entities: SKResponseArray = dict.parent[keys.entities] else {
-                    throw logger.fatalError(forMessage: "Parent of \(usr) is an extension with no entities!")
-                }
-                guard let pUSR: String = entities[0][keys.usr] else {
-                    throw logger.fatalError(forMessage: "Parent of \(usr) is an extension with no USR!")
-                }
-                parentUSR = pUSR
-            } else {
-                guard let pUSR: String = dict.parent[keys.usr] else {
-                    throw logger.fatalError(forMessage: "Parent of \(usr) is has no USR!")
-                }
-                parentUSR = pUSR
+        if kind == .property,
+           dict.parent != nil,
+           let parentKind: SKUID = dict.parent[keys.kind],
+           parentKind.declarationType() == .object
+        {
+            guard let parentUSR: String = dict.parent[keys.usr] else {
+                throw logger.fatalError(forMessage: "Parent of \(usr) is has no USR!")
             }
             let codableUSRs: Set<String> = ["s:s7Codablea", "s:SE", "s:Se"]
             if try inheritsFromAnyUSR(
@@ -154,7 +145,7 @@ extension SourceKitObfuscator {
         var referenceArray = [Reference]()
         index.response.recurseEntities { [unowned self] dict in
             guard let kindId: SKUID = dict[self.keys.kind],
-                kindId.referenceType() != nil,
+                kindId.referenceType() != nil || kindId.declarationType() != nil,
                 let rawName: String = dict[self.keys.name],
                 let usr: String = dict[self.keys.usr],
                 self.dataStore.processedUsrs.contains(usr),
@@ -341,7 +332,7 @@ extension SKResponseDictionary {
         guard let kindId: SKUID = self[sourcekitd.keys.kind] else {
             return false
         }
-        let type = kindId.referenceType()
+        let type = kindId.referenceType() ?? kindId.declarationType()
         guard type == .method || type == .property else {
             return false
         }
