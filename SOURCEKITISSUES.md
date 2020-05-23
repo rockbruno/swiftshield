@@ -3,7 +3,7 @@
 - Classes
 - Structs
 - Methods
-- Properties
+- Properties (except ones under `Codable` types -- even if they are not used as `CodingKeys`)
 - Enums (except ones that inherit from `CodingKey`)
 - Enum cases
 
