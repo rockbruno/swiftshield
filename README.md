@@ -13,7 +13,11 @@ struct fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 [![GitHub release](https://img.shields.io/github/tag/rockbruno/swiftshield.svg)](https://github.com/rockbruno/swiftshield/releases)
 
-SwiftShield is a tool that generates irreversible encrypted names for your iOS project's types and methods (including third-party libraries and Storyboards) in order to protect your app from iOS reverse engineering tools like `class-dump` and `Cycript`. It uses Apple's SourceKit to mimick Xcode's indexing behavior, revealing a complete map of your project that is used to safely rename parts of your project. 
+SwiftShield is a tool that generates random and irreversible encrypted names for your iOS project's types and methods (including third-party libraries). It uses Apple's SourceKit to mimick Xcode's indexing behavior, revealing a complete map of your project that is used to safely rename parts of your project. 
+
+Reverse engineering iOS apps is relatively simple due to the fact that almost every single type and method name is exposed in the app's binary. This allows jailbreak tools like `class-dump` and `Cycript` to extract this information and use it to change the behavior of your app in runtime. 
+
+Obfuscating code in iOS difficults the usage of these tools, while also makes it tougher for jailbreak developers to create tweaks for your app as SwiftShield's obfuscation changes every time you run it.
 
 ## Limitations
 
