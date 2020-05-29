@@ -23,7 +23,7 @@ These are problems that SourceKit has that are unrelated to a specific feature, 
 **Note: You can use the `--ignore-targets` argument to completely disable the obfuscation of specific targets.**
 
 - [(SR-9020)](https://bugs.swift.org/browse/SR-9020) Legacy KeyPaths that include types (like `#keyPath(Foo.bar)`) will not get indexed.
-- [(SR-12837)](https://bugs.swift.org/browse/SR-12837)`@objc optional` protocol methods don't have their references indexed.
+- **Fixed in Swift 5.3**: `@objc optional` protocol methods don't have their references indexed.
 - **Fixed in Swift 5.3**: The postfix of an `is` parameter doesn't get indexed. (`foo is MyType`)
 
 # Additional important information
