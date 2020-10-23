@@ -5,6 +5,7 @@ public enum SwiftSwiftAssembler {
         projectPath: String,
         scheme: String,
         modulesToIgnore: Set<String>,
+        namesToIgnore: Set<String>,
         ignorePublic: Bool,
         dryRun: Bool,
         verbose: Bool,
@@ -30,6 +31,7 @@ public enum SwiftSwiftAssembler {
             sourceKit: sourceKit,
             logger: logger,
             dataStore: .init(),
+            namesToIgnore: namesToIgnore,
             ignorePublic: ignorePublic
         )
 
