@@ -5,13 +5,15 @@ final class SourceKitObfuscator: ObfuscatorProtocol {
     let logger: LoggerProtocol
     let dataStore: SourceKitObfuscatorDataStore
     let ignorePublic: Bool
+    let namesToIgnore: Set<String>
     weak var delegate: ObfuscatorDelegate?
 
-    init(sourceKit: SourceKit, logger: LoggerProtocol, dataStore: SourceKitObfuscatorDataStore, ignorePublic: Bool) {
+    init(sourceKit: SourceKit, logger: LoggerProtocol, dataStore: SourceKitObfuscatorDataStore, namesToIgnore: Set<String>, ignorePublic: Bool) {
         self.sourceKit = sourceKit
         self.logger = logger
         self.dataStore = dataStore
         self.ignorePublic = ignorePublic
+        self.namesToIgnore = namesToIgnore
     }
 
     var requests: sourcekitd_requests! {
@@ -81,6 +83,11 @@ extension SourceKitObfuscator {
 
         let name = rawName.removingParameterInformation
 
+        if namesToIgnore.contains(name) {
+            logger.log("* Ignoring \(name) (USR: \(usr)) because its included in ignore-names", verbose: true)
+            return
+        }
+        
         if kind == .enumelement, let parentUSR: String = dict.parent[keys.usr] {
             let codingKeysUSR: Set<String> = ["s:s9CodingKeyP"]
             if try inheritsFromAnyUSR(

@@ -45,7 +45,8 @@ func testModule(
     return try provider.getModulesFromProject().first!
 }
 
-func baseTestData(ignorePublic: Bool = false) -> (SourceKitObfuscator, SourceKitObfuscatorDataStore, ObfuscatorDelegateSpy) {
+func baseTestData(ignorePublic: Bool = false,
+                  namesToIgnore: Set<String> = []) -> (SourceKitObfuscator, SourceKitObfuscatorDataStore, ObfuscatorDelegateSpy) {
     let logger = Logger()
     let sourceKit = SourceKit(logger: logger)
     let dataStore = SourceKitObfuscatorDataStore()
@@ -53,6 +54,7 @@ func baseTestData(ignorePublic: Bool = false) -> (SourceKitObfuscator, SourceKit
         sourceKit: sourceKit,
         logger: logger,
         dataStore: dataStore,
+        namesToIgnore: namesToIgnore,
         ignorePublic: ignorePublic
     )
     let delegateSpy = ObfuscatorDelegateSpy()

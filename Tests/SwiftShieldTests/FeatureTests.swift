@@ -28,7 +28,7 @@ final class FeatureTests: XCTestCase {
     }
 
     func test_CodingKeys_isIgnored() throws {
-        let (obfs, store, delegate) = baseTestData()
+        let (obfs, store, delegate) = baseTestData(namesToIgnore: ["FooCodingKeys"])
         let module = try testModule(withContents: """
         struct Foo: Codable {
             enum FooCodingKeys: CodingKey {
@@ -59,7 +59,7 @@ final class FeatureTests: XCTestCase {
 
         XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
         struct OBS1: Codable {
-            enum OBS9: CodingKey {
+            enum FooCodingKeys: CodingKey {
                 case a
                 case b
                 case c
