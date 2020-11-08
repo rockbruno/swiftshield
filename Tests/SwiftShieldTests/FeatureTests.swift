@@ -28,7 +28,7 @@ final class FeatureTests: XCTestCase {
     }
 
     func test_CodingKeys_isIgnored() throws {
-        let (obfs, store, delegate) = baseTestData(namesToIgnore: ["FooCodingKeys"])
+        let (obfs, store, delegate) = baseTestData()
         let module = try testModule(withContents: """
         struct Foo: Codable {
             enum FooCodingKeys: CodingKey {
@@ -59,7 +59,7 @@ final class FeatureTests: XCTestCase {
 
         XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
         struct OBS1: Codable {
-            enum FooCodingKeys: CodingKey {
+            enum OBS9: CodingKey {
                 case a
                 case b
                 case c
@@ -68,6 +68,46 @@ final class FeatureTests: XCTestCase {
                 case OBS5
                 case OBS6
                 case OBS7
+            }
+        }
+        """)
+    }
+    
+    func test_NamesToIgnore() throws {
+        let (obfs, store, delegate) = baseTestData(namesToIgnore: ["IgnoreClassName",
+                                                                   "CodingKeys"])
+        let module = try testModule(withContents: """
+        import Foundation
+
+        class IgnoreClassName: NSObject {}
+
+        struct Foo: Codable {
+            let a: String
+            
+            enum CodingKeys: String, CodingKey {
+                case a
+            }
+        }
+        """)
+        
+        store.obfuscationDictionary["IgnoreClassName"] = "OBS1"
+        store.obfuscationDictionary["Foo"] = "OBS2"
+        store.obfuscationDictionary["a"] = "OBS3"
+        store.obfuscationDictionary["CodingKeys"] = "OBS4"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        import Foundation
+
+        class IgnoreClassName: NSObject {}
+
+        struct OBS2: Codable {
+            let a: String
+            
+            enum CodingKeys: String, CodingKey {
+                case a
             }
         }
         """)
