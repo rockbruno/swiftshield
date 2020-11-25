@@ -68,9 +68,28 @@ extension SourceKitObfuscator {
 
         let name = rawName.removingParameterInformation
 
-        if dict.isCodingKeysEnumElement {
+        // CodingKeysFix: mariusms75, 20 nov 2020: 4.0.3 repo implementation not working, it obfuscates CodingKeys
+//        if dict.isCodingKeysEnumElement {
+//            return
+//        }
+        
+        // start: CodingKeysFix: mariusms75, 20 nov 2020: Exclude CodingKeys using SwiftShield 3.5.1 method
+        if kind == .enum, name.lowercased().hasSuffix("codingkeys") {
+            dataStore.codableEnumUSRs.insert(usr)
+            logger.log("* Found Enum CodingKeys declaration of \(name) (USR: \(usr))")
             return
         }
+        
+        if kind == .enumelement {
+            for codableEnum in dataStore.codableEnumUSRs {
+                // Enum element belongs to excluded enum
+                if usr.lowercased().hasPrefix(codableEnum.lowercased()) {
+                    logger.log("* Found EnumElement declaration of \(codableEnum) (USR: \(usr))")
+                    return
+                }
+            }
+        }
+        // end: CodingKeysFix
 
         logger.log("* Found declaration of \(name) (USR: \(usr))")
         dataStore.processedUsrs.insert(usr)
