@@ -139,6 +139,8 @@ struct SchemeInfoProvider: SchemeInfoProviderProtocol {
                 args[index] = "-Onone"
             } else if arg == "-DNDEBUG=1" {
                 args[index] = "-DDEBUG=1"
+            } else if arg == "-DDEBUG\\=1" {
+                args[index] = "-DDEBUG=1"
             }
         }
         args.append(contentsOf: ["-D", "DEBUG"])
