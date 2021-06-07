@@ -8,11 +8,11 @@ struct Project: Hashable {
 
     func markAsSwiftShielded() throws -> String {
         var data = try pbxProj.read()
-        let matches = data.match(regex: "PRODUCT_NAME = \".*\";")
+        let matches = data.match(regex: "buildSettings = \\{")
         for match in matches.reversed() {
             let value = match.captureGroup(0, originalString: data)
             let range = match.captureGroupRange(0, originalString: data)
-            let newValue = value + "SWIFTSHIELDED = true;"
+            let newValue = value + "\n" + "SWIFTSHIELDED = true;"
             data = data.replacingCharacters(in: range, with: newValue)
         }
         return data
