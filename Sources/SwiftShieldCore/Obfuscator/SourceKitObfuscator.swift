@@ -317,6 +317,11 @@ extension SKResponseDictionary {
         if let kindId: SKUID = self[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .enumelement {
             return parent.isPublic
         }
+        
+        if let effectiveACL: SKUID = self[sourcekitd.keys.effectiveAccess], effectiveACL.asString == "source.decl.effective_access.public" {
+            return true
+        }
+        
         guard let attributes: SKResponseArray = self[sourcekitd.keys.attributes] else {
             return false
         }
