@@ -39,11 +39,13 @@ final class ProjectTests: XCTestCase {
 
     func test_projectTagging() throws {
         let projectContent = """
+        buildSettings = {
         LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
         OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"TESTS\"";
         PRODUCT_BUNDLE_IDENTIFIER = com.rockbruno.MarketplaceTests;
         PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";
+        }
         """
         let projTemp = temporaryFilePath(forFile: "foo.xcodeproj")
         try? FileManager.default.createDirectory(
@@ -59,11 +61,14 @@ final class ProjectTests: XCTestCase {
         let result = try projectFile.markAsSwiftShielded()
 
         XCTAssertEqual(result, """
+        buildSettings = {
+        SWIFTSHIELDED = true;
         LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
         OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"TESTS\"";
         PRODUCT_BUNDLE_IDENTIFIER = com.rockbruno.MarketplaceTests;
-        PRODUCT_NAME = "$(TARGET_NAME)";SWIFTSHIELDED = true;
+        PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";
+        }
         """)
     }
 }
