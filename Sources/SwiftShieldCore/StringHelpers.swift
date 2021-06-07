@@ -46,6 +46,10 @@ extension String {
     var replacingEscapedSpaces: String {
         replacingOccurrences(of: "\\ ", with: spacedFolderPlaceholder)
     }
+    
+    var removeEscapedSpaces: String {
+        replacingOccurrences(of: "\\ ", with: " ")
+    }
 
     var removingPlaceholder: String {
         replacingOccurrences(of: spacedFolderPlaceholder, with: " ")
