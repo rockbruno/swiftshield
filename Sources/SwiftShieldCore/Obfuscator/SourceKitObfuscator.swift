@@ -318,7 +318,7 @@ extension SKResponseDictionary {
             return parent.isPublic
         }
         
-        if let effectiveACL: SKUID = self[sourcekitd.keys.effectiveAccess], effectiveACL.asString == "source.decl.effective_access.public" {
+        if let effectiveACL: SKUID = self[sourcekitd.keys.effectiveAccess], effectiveACL.asString == EffectiveAccess.public.rawValue {
             return true
         }
         
