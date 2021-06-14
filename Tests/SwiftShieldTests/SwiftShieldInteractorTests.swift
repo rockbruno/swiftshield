@@ -21,7 +21,7 @@ final class SwiftShieldInteractorTests: XCTestCase {
             obfuscator: ObfuscatorFake()
         )
 
-        let fakeModule = Module(name: "foo", sourceFiles: [], plists: [], compilerArguments: ["bar"])
+        let fakeModule = Module(name: "foo", sourceFiles: [], plists: [], ibxmls: [], compilerArguments: ["bar"])
         providerFake.modulesToReturn = [fakeModule]
 
         let result = try interactor.getModulesFromProject()
@@ -37,8 +37,8 @@ final class SwiftShieldInteractorTests: XCTestCase {
             obfuscator: obfuscatorFake
         )
 
-        let fakeModule = Module(name: "foo", sourceFiles: [], plists: [], compilerArguments: ["bar"])
-        let fakeModule2 = Module(name: "bar", sourceFiles: [], plists: [], compilerArguments: ["foo"])
+        let fakeModule = Module(name: "foo", sourceFiles: [], plists: [], ibxmls: [], compilerArguments: ["bar"])
+        let fakeModule2 = Module(name: "bar", sourceFiles: [], plists: [], ibxmls: [], compilerArguments: ["foo"])
 
         obfuscatorFake.mapToReturn = ConversionMap(obfuscationDictionary: ["a": "b"])
         let map = try interactor.obfuscate(modules: [fakeModule, fakeModule2])

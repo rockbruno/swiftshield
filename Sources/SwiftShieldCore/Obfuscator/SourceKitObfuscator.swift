@@ -6,14 +6,16 @@ final class SourceKitObfuscator: ObfuscatorProtocol {
     let dataStore: SourceKitObfuscatorDataStore
     let ignorePublic: Bool
     let namesToIgnore: Set<String>
+    let modulesToIgnore: Set<String>
     weak var delegate: ObfuscatorDelegate?
 
-    init(sourceKit: SourceKit, logger: LoggerProtocol, dataStore: SourceKitObfuscatorDataStore, namesToIgnore: Set<String>, ignorePublic: Bool) {
+    init(sourceKit: SourceKit, logger: LoggerProtocol, dataStore: SourceKitObfuscatorDataStore, namesToIgnore: Set<String>, ignorePublic: Bool, modulesToIgnore: Set<String>) {
         self.sourceKit = sourceKit
         self.logger = logger
         self.dataStore = dataStore
         self.ignorePublic = ignorePublic
         self.namesToIgnore = namesToIgnore
+        self.modulesToIgnore = modulesToIgnore
     }
 
     var requests: sourcekitd_requests! {
@@ -53,6 +55,7 @@ extension SourceKitObfuscator {
             self.dataStore.indexedFiles.append(indexedFile)
         }
         dataStore.plists = dataStore.plists.union(module.plists)
+        dataStore.ibxmls = dataStore.ibxmls.union(module.ibxmls)
     }
 
     func preprocess(
@@ -144,6 +147,12 @@ extension SourceKitObfuscator {
         try dataStore.plists.forEach { plist in
             try obfuscate(plist: plist)
         }
+        if !dataStore.ibxmls.isEmpty {
+            let xmlObfuscationWrapper = IBXMLObfuscationWrapper(obfuscationDictionary: dataStore.obfuscationDictionary, modulesToIgnore: modulesToIgnore)
+            try dataStore.ibxmls.forEach { xmlFile in
+                try obfuscate(ibxml: xmlFile, xmlObfuscator: xmlObfuscationWrapper)
+            }
+        }
         return ConversionMap(obfuscationDictionary: dataStore.obfuscationDictionary)
     }
 
@@ -194,6 +203,14 @@ extension SourceKitObfuscator {
         }
         let newPlist = data
         if let error = delegate?.obfuscator(self, didObfuscateFile: plist, newContents: newPlist) {
+            throw error
+        }
+    }
+    
+    func obfuscate(ibxml: File, xmlObfuscator: IBXMLObfuscationWrapper) throws {
+        logger.log("--- Obfuscating \(ibxml.name)")
+        let newContents = try xmlObfuscator.obfuscate(file: ibxml)
+        if let error = self.delegate?.obfuscator(self, didObfuscateFile: ibxml, newContents: newContents) {
             throw error
         }
     }

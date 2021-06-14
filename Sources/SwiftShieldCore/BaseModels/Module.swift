@@ -5,5 +5,6 @@ struct Module: Hashable {
     let name: String
     let sourceFiles: Set<File>
     let plists: Set<File>
+    let ibxmls: Set<File>
     let compilerArguments: [String]
 }
