@@ -317,6 +317,9 @@ extension SKResponseDictionary {
         if let kindId: SKUID = self[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .enumelement {
             return parent.isPublic
         }
+        if let kindId: SKUID = parent[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .protocol {
+            return parent.isPublic
+        }
         guard let attributes: SKResponseArray = self[sourcekitd.keys.attributes] else {
             return false
         }
