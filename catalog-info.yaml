@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: swiftshield
+  annotations:
+    github.com/project-slug: dcilia/swiftshield
+spec:
+  type: other
+  lifecycle: unknown
+  owner: infrastructure
