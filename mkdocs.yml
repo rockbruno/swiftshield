@@ -1,7 +1,3 @@
 site_name: 'swiftshield-docs'
-
-nav:
-  - Home: index.md
-
 plugins:
   - techdocs-core
