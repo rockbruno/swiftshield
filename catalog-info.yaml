@@ -2,9 +2,12 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: swiftshield
+  description: fork of SwiftShield security framework 
   annotations:
     github.com/project-slug: dcilia/swiftshield
+  tags:
+    - swift
 spec:
-  type: other
-  lifecycle: unknown
+  type: Swift Package
+  lifecycle: Production
   owner: infrastructure
