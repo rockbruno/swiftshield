@@ -8,6 +8,6 @@ metadata:
   tags:
     - swift
 spec:
-  type: Swift Package
+  type: library
   lifecycle: Production
   owner: infrastructure
