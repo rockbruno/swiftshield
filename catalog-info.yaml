@@ -5,7 +5,7 @@ metadata:
   description: fork of SwiftShield security framework 
   annotations:
     github.com/project-slug: dcilia/swiftshield
-    backstage.io/techdocs-ref: dir:./README.md
+    backstage.io/techdocs-ref: dir:.
   tags:
     - swift
 spec:
