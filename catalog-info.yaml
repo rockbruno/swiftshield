@@ -6,7 +6,8 @@ metadata:
   annotations:
     github.com/project-slug: dcilia/swiftshield
   tags:
-    - swift
+    - swiftannotations:
+  backstage.io/techdocs-ref: https://github.com/dcilia/swiftshield/blob/master/README.md
 spec:
   type: library
   lifecycle: Production
