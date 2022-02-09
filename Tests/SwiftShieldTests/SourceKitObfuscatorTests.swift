@@ -191,4 +191,113 @@ final class SourceKitObfuscatorTests: XCTestCase {
         }
         """)
     }
+
+    func test_phantomTypeConformingToProtocol_sendsCorrectObfuscatedFileContentToDelegate() throws {
+        let (obfs, store, delegate) = baseTestData()
+        let module = try testModule(withContents: """
+        protocol SomeProtocol {}
+        struct SomeStruct<T: SomeProtocol> {
+            var someBool: Bool {
+                return true
+            }
+        }
+        """)
+
+        store.obfuscationDictionary["SomeProtocol"] = "OBS1"
+        store.obfuscationDictionary["SomeStruct"] = "OBS2"
+        store.obfuscationDictionary["someBool"] = "OBS3"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        protocol OBS1 {}
+        struct OBS2<T: OBS1> {
+            var OBS3: Bool {
+                return true
+            }
+        }
+        """)
+        XCTAssertEqual(delegate.receivedContent.count, 3)
+    }
+
+    func test_phantomTypeConformingToProtocolWithWhereClause_sendsCorrectObfuscatedFileContentToDelegate() throws {
+        let (obfs, store, delegate) = baseTestData()
+        let module = try testModule(withContents: """
+        struct Foo {}
+        protocol SomeProtocol {
+            associatedtype Item
+        }
+        struct SomeStruct<T: SomeProtocol> where T.Item == Foo {
+            var someBool: Bool {
+                return true
+            }
+        }
+        """)
+
+        store.obfuscationDictionary["SomeProtocol"] = "OBS1"
+        store.obfuscationDictionary["SomeStruct"] = "OBS2"
+        store.obfuscationDictionary["someBool"] = "OBS3"
+        store.obfuscationDictionary["Foo"] = "OBS4"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        struct OBS4 {}
+        protocol OBS1 {
+            associatedtype Item
+        }
+        struct OBS2<T: OBS1> where T.Item == OBS4 {
+            var OBS3: Bool {
+                return true
+            }
+        }
+        """)
+        XCTAssertEqual(delegate.receivedContent.count, 3)
+    }
+
+    func test_publicProtocolWhenIgnorePublic_sendsCorrectNonObfuscatedFileContentToDelegate() throws {
+        let (obfs, store, delegate) = baseTestData(ignorePublic: true)
+        let module = try testModule(withContents: """
+        public protocol SomeProtocol {
+            var someBool: Bool { get }
+        }
+        """)
+
+        store.obfuscationDictionary["SomeProtocol"] = "OBS1"
+        store.obfuscationDictionary["someBool"] = "OBS2"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        public protocol SomeProtocol {
+            var someBool: Bool { get }
+        }
+        """)
+        XCTAssertEqual(delegate.receivedContent.count, 3)
+    }
+
+    func test_publicProtocolWhenNotIgnorePublic_sendsCorrectObfuscatedFileContentToDelegate() throws {
+        let (obfs, store, delegate) = baseTestData(ignorePublic: false)
+        let module = try testModule(withContents: """
+        public protocol SomeProtocol {
+            var someBool: Bool { get }
+        }
+        """)
+
+        store.obfuscationDictionary["SomeProtocol"] = "OBS1"
+        store.obfuscationDictionary["someBool"] = "OBS2"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        public protocol OBS1 {
+            var OBS2: Bool { get }
+        }
+        """)
+        XCTAssertEqual(delegate.receivedContent.count, 3)
+    }
 }

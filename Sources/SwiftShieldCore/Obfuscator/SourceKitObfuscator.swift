@@ -293,11 +293,15 @@ extension SourceKitObfuscator {
         req[keys.sourcefile] = file.path
         let cursorInfo = try sourceKit.sendSync(req)
         guard let annotation: String = cursorInfo[keys.annotated_decl] else {
-            logger.log("Pretending \(usr) inherits from Codable because SourceKit failed to look it up. This can happen if this USR belongs to an @objc class.", verbose: true)
-            return result(true)
+            // Added support for phantom types: https://github.com/jortberends/swiftshield/commit/0d524facda062a4de6107f4ee421bc740402b5cc
+            if usr.hasPrefix("c:") {
+                logger.log("Pretending \(usr) inherits from Codable because SourceKit failed to look it up. This can happen if this USR belongs to an @objc class.", verbose: true)
+                return result(true)
+            }
+            return result(false)
         }
         let regex = "usr=\\\"(.\\S*)\\\""
-        let regexResult = annotation.match(regex: regex)
+        let regexResult = annotation.components(separatedBy: " where ")[0].match(regex: regex)
         for res in regexResult {
             let inheritedUSR = res.captureGroup(1, originalString: annotation)
             if usrs.contains(inheritedUSR) {
@@ -317,6 +321,12 @@ extension SKResponseDictionary {
         if let kindId: SKUID = self[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .enumelement {
             return parent.isPublic
         }
+
+        // Add public protocol conformance ignoring: https://github.com/CoreWillSoft/swiftshield/commit/2896a0c90f12c1929e7b80d826c7054d536c1cf4
+        if let kindId: SKUID = parent[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .protocol {
+            return parent.isPublic
+        }
+
         guard let attributes: SKResponseArray = self[sourcekitd.keys.attributes] else {
             return false
         }
