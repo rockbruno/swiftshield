@@ -89,7 +89,7 @@ extension SourceKitObfuscator {
         }
         
         if kind == .enumelement, let parentUSR: String = dict.parent[keys.usr] {
-            let codingKeysUSR: Set<String> = ["s:s9CodingKeyP"]
+            let codingKeysUSR: Set<String> = ["s:s9CodingKeyP", "s:s7Codablea", "s:SE", "s:Se"]
             if try inheritsFromAnyUSR(
                 parentUSR,
                 anyOf: codingKeysUSR,
@@ -324,6 +324,10 @@ extension SKResponseDictionary {
 
         // Add public protocol conformance ignoring: https://github.com/CoreWillSoft/swiftshield/commit/2896a0c90f12c1929e7b80d826c7054d536c1cf4
         if let kindId: SKUID = parent[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .protocol {
+            return parent.isPublic
+        }
+
+        if let kindId: SKUID = parent[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .method {
             return parent.isPublic
         }
 

@@ -16,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D7252D1A27B9181A00F83714 /* MyInternalLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyInternalLibrary; sourceTree = "<group>"; };
 		D763E4D827B5529A00F0CECA /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyLibrary; sourceTree = "<group>"; };
 		D7DB209927B547140090B946 /* SPMFeatureTestsProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPMFeatureTestsProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7DB209C27B547140090B946 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -41,6 +42,7 @@
 		D7DB209027B547140090B946 = {
 			isa = PBXGroup;
 			children = (
+				D7252D1A27B9181A00F83714 /* MyInternalLibrary */,
 				D763E4D827B5529A00F0CECA /* MyLibrary */,
 				D7DB209B27B547140090B946 /* SPMFeatureTestsProject */,
 				D7DB209A27B547140090B946 /* Products */,

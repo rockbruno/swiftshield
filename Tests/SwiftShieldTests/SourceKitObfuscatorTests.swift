@@ -411,4 +411,52 @@ final class SourceKitObfuscatorTests: XCTestCase {
         """)
         XCTAssertEqual(delegate.receivedContent.count, 3)
     }
+
+    func testCodableEnum() throws {
+        let (obfs, store, delegate) = baseTestData(ignorePublic: false)
+        let module = try testModule(withContents: """
+        enum SomeEnum {
+            case case1
+            case case2
+        }
+
+        enum SomeRawValueCodableEnum: String, Codable {
+            case case1
+            case case2
+        }
+
+        struct SomeCodableProtocol: Codable {
+            let property1: String
+            let property2: String
+        }
+        """)
+
+        store.obfuscationDictionary["SomeEnum"] = "OBS1"
+        store.obfuscationDictionary["case1"] = "CASE_OBS1"
+        store.obfuscationDictionary["case2"] = "CASE_OBS2"
+        store.obfuscationDictionary["SomeRawValueCodableEnum"] = "OBS2"
+        store.obfuscationDictionary["SomeCodableProtocol"] = "OBS4"
+        store.obfuscationDictionary["property1"] = "OBS5"
+        store.obfuscationDictionary["property2"] = "OBS6"
+
+        try obfs.registerModuleForObfuscation(module)
+        try obfs.obfuscate()
+
+        XCTAssertEqual(delegate.receivedContent[modifiableFilePath], """
+        enum OBS1 {
+            case CASE_OBS1
+            case CASE_OBS2
+        }
+
+        enum OBS2: String, Codable {
+            case case1
+            case case2
+        }
+
+        struct OBS4: Codable {
+            let property1: String
+            let property2: String
+        }
+        """)
+    }
 }

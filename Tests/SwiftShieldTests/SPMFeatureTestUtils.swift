@@ -18,11 +18,19 @@ enum SPMFeatureTestUtils {
         try File(path: modifiableAppFilePath).read()
     }
 
-        static var modifiableLibraryFilePath: String {
+    static var modifiableLibraryFilePath: String {
         path(forResource: "SPMFeatureTestsProject/MyLibrary/Sources/MyLibrary/LibraryFile.swift").relativePath
     }
 
     static func modifiableLibraryFileContents() throws -> String {
+        try File(path: modifiableLibraryFilePath).read()
+    }
+
+    static var modifiableInternalLibraryFilePath: String {
+        path(forResource: "SPMFeatureTestsProject/MyInternalLibrary/Sources/MyInternalLibrary/LibraryFile.swift").relativePath
+    }
+
+    static func modifiableInternalLibraryFileContents() throws -> String {
         try File(path: modifiableLibraryFilePath).read()
     }
 
@@ -37,6 +45,7 @@ enum SPMFeatureTestUtils {
     static func testModule(
         withAppContents appContents: String = "",
         withLibraryContents libraryContents: String = "",
+        withInternalLibraryContents internalLibraryContents: String = "",
         withPlist plistContents: String =
         """
         <?xml version="1.0" encoding="UTF-8"?>
@@ -46,7 +55,7 @@ enum SPMFeatureTestUtils {
         </dict>
         </plist>
         """
-    ) throws -> (library: Module, app: Module) {
+    ) throws -> (internalLibrary: Module, library: Module, app: Module) {
         let projectPath = path(forResource: "SPMFeatureTestsProject/SPMFeatureTestsProject.xcodeproj").relativePath
         let projectFile = File(path: projectPath)
         let provider = SchemeInfoProvider(
@@ -59,10 +68,11 @@ enum SPMFeatureTestUtils {
 
         try File(path: modifiableAppFilePath).write(contents: appContents)
         try File(path: modifiableLibraryFilePath).write(contents: libraryContents)
+        try File(path: modifiableInternalLibraryFilePath).write(contents: internalLibraryContents)
         try File(path: modifiablePlistPath).write(contents: plistContents)
 
         let modules = try provider.getModulesFromProject()
-        return (modules[0], modules[1])
+        return (modules[0], modules[1], modules[2])
     }
 
     static func baseTestData(ignorePublic: Bool = false,
