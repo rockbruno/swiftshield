@@ -11,6 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", .exact("0.0.2")),
+        .package(url: "https://github.com/krzysztofzablocki/Difference", .upToNextMajor(from: "1.0.1"))
     ],
     targets: [
         // Csourcekitd: C modules wrapper for sourcekitd.
@@ -30,7 +31,7 @@ let package = Package(
         ),
         .testTarget(
             name: "SwiftShieldTests",
-            dependencies: ["SwiftShieldCore"]
+            dependencies: ["SwiftShieldCore", "Difference"]
         ),
     ]
 )
