@@ -77,9 +77,9 @@ extension SourceKitObfuscator {
         }
         guard let rawName: String = dict[keys.name],
               let usr: String = dict[keys.usr] else
-        {
-            return
-        }
+              {
+                  return
+              }
 
         let name = rawName.removingParameterInformation
 
@@ -89,7 +89,32 @@ extension SourceKitObfuscator {
         }
         
         if kind == .enumelement, let parentUSR: String = dict.parent[keys.usr] {
-            let codingKeysUSR: Set<String> = ["s:s9CodingKeyP", "s:s7Codablea", "s:SE", "s:Se"]
+            if rawName == "case1" {
+                print("found case1")
+            }
+            if let parent = dict.parent {
+                if let parentKindID: SKUID = parent[keys.kind] {
+                    if let parentKind = parentKindID.declarationType() {
+                        if parentKind == .enum {
+                            logger.log("--> found case in a parent enum: \(usr) - \(parentUSR)")
+                            let codingKeysUSR: Set<String> = ["s:s7Codablea", "s:SE", "s:Se"]
+                            if try inheritsFromAnyUSR(
+                                parentUSR,
+                                anyOf: codingKeysUSR,
+                                inModule: module,
+                                resursive: false
+                            ) {
+                                logger.log("* Ignoring \(name) (USR: \(usr)) because its parent enum inherits from Codable and RawValue.", verbose: true)
+                                return
+                            } else {
+                                logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent enum does not appear to inherit Codable has RawValue.)", verbose: true)
+                            }
+                        }
+                    }
+                }
+            }
+
+            let codingKeysUSR: Set<String> = ["s:s9CodingKeyP"]
             if try inheritsFromAnyUSR(
                 parentUSR,
                 anyOf: codingKeysUSR,
@@ -152,15 +177,15 @@ extension SourceKitObfuscator {
         var referenceArray = [Reference]()
         index.response.recurseEntities { [unowned self] dict in
             guard let kindId: SKUID = dict[self.keys.kind],
-                kindId.referenceType() != nil || kindId.declarationType() != nil,
-                let rawName: String = dict[self.keys.name],
-                let usr: String = dict[self.keys.usr],
-                self.dataStore.processedUsrs.contains(usr),
-                let line: Int = dict[self.keys.line],
-                let column: Int = dict[self.keys.column],
-                dict.isReferencingInternalFramework(dataStore: self.dataStore) == false else {
-                return
-            }
+                  kindId.referenceType() != nil || kindId.declarationType() != nil,
+                  let rawName: String = dict[self.keys.name],
+                  let usr: String = dict[self.keys.usr],
+                  self.dataStore.processedUsrs.contains(usr),
+                  let line: Int = dict[self.keys.line],
+                  let column: Int = dict[self.keys.column],
+                  dict.isReferencingInternalFramework(dataStore: self.dataStore) == false else {
+                      return
+                  }
 
             let name = rawName.removingParameterInformation
             let obfuscatedName = self.obfuscate(name: name)
@@ -236,8 +261,8 @@ extension SourceKitObfuscator {
         while currentCharIndex < charArray.count, currentReferenceIndex < sortedReferences.count {
             let reference = sortedReferences[currentReferenceIndex]
             if previousReference != nil,
-                reference.line == previousReference.line,
-                reference.column == previousReference.column {
+               reference.line == previousReference.line,
+               reference.column == previousReference.column {
                 // Avoid duplicates.
                 currentReferenceIndex += 1
             }
@@ -271,7 +296,7 @@ extension SourceKitObfuscator {
 }
 
 extension SourceKitObfuscator {
-    func inheritsFromAnyUSR(_ usr: String, anyOf usrs: Set<String>, inModule module: Module) throws -> Bool {
+    func inheritsFromAnyUSR(_ usr: String, anyOf usrs: Set<String>, inModule module: Module, resursive: Bool = true) throws -> Bool {
         let usrsKey = usrs.joined(separator: " ")
         if let cache = dataStore.inheritsFromX[usr, default: [:]][usrsKey] {
             return cache
@@ -306,8 +331,12 @@ extension SourceKitObfuscator {
             let inheritedUSR = res.captureGroup(1, originalString: annotation)
             if usrs.contains(inheritedUSR) {
                 return result(true)
-            } else if try inheritsFromAnyUSR(inheritedUSR, anyOf: usrs, inModule: module) {
-                return result(true)
+            } else {
+                if resursive {
+                    if try inheritsFromAnyUSR(inheritedUSR, anyOf: usrs, inModule: module) {
+                        return result(true)
+                    }
+                }
             }
         }
         return result(false)
