@@ -16,7 +16,5 @@ class ViewController: UIViewController {
 
         print(MyLibrary().text)
     }
-
-
 }
 
