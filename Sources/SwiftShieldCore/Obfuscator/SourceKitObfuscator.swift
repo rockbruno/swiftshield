@@ -31,26 +31,34 @@ extension SourceKitObfuscator {
     func registerModuleForObfuscation(_ module: Module) throws {
         let compilerArguments = SKRequestArray(sourcekitd: sourceKit)
         module.compilerArguments.forEach(compilerArguments.append(_:))
-        try module.sourceFiles.sorted { $0.path < $1.path }.forEach { file in
-            logger.log("--- Indexing: \(file.name)")
-            let req = SKRequestDictionary(sourcekitd: sourceKit)
-            req[keys.request] = requests.indexsource
-            req[keys.sourcefile] = file.path
-            req[keys.compilerargs] = compilerArguments
-            let response = try sourceKit.sendSync(req)
-            logger.log("--- Preprocessing indexing result of: \(file.name)")
-            response.recurseEntities { [unowned self] dict in
-                self.preprocess(declarationEntity: dict, ofFile: file, fromModule: module)
-            }
-            logger.log("--- Processing indexing result of: \(file.name)")
-            try response.recurseEntities { [unowned self] dict in
-                if self.ignorePublic, dict.isPublic {
-                    return
+        do {
+            try module.sourceFiles.sorted { $0.path < $1.path }.forEach { file in
+                logger.log("--- Indexing: \(file.name)")
+                let req = SKRequestDictionary(sourcekitd: sourceKit)
+                req[keys.request] = requests.indexsource
+                req[keys.sourcefile] = file.path
+                req[keys.compilerargs] = compilerArguments
+                let response = try sourceKit.sendSync(req)
+                logger.log("--- Preprocessing indexing result of: \(file.name)")
+                response.recurseEntities { [unowned self] dict in
+                    self.preprocess(declarationEntity: dict, ofFile: file, fromModule: module)
                 }
-                try self.process(declarationEntity: dict, ofFile: file, fromModule: module)
+                logger.log("--- Processing indexing result of: \(file.name)")
+                    response.recurseEntities { [unowned self] dict in
+                        if self.ignorePublic, dict.isPublic {
+                            return
+                        }
+                        do {
+                            try self.process(declarationEntity: dict, ofFile: file, fromModule: module)
+                        } catch {
+                            print("❌ SourceKit request error: \(error)")
+                        }
+                    }
+                let indexedFile = IndexedFile(file: file, response: response)
+                self.dataStore.indexedFiles.append(indexedFile)
             }
-            let indexedFile = IndexedFile(file: file, response: response)
-            self.dataStore.indexedFiles.append(indexedFile)
+        } catch {
+            print("❌ SourceKit request error: \(error)")
         }
         dataStore.plists = dataStore.plists.union(module.plists)
     }
@@ -61,6 +69,9 @@ extension SourceKitObfuscator {
         fromModule module: Module
     ) {
         guard let usr: String = dict[keys.usr] else {
+            let kind = dict[keys.kind] ?? "unknown"
+            let name = dict[keys.name] ?? "unknown"
+            logger.log("* --- Ignoring: kind: \(kind) | name: \(name) : usr invalid", verbose: true)
             return
         }
         dataStore.fileForUSR[usr] = file
@@ -71,89 +82,93 @@ extension SourceKitObfuscator {
         ofFile file: File,
         fromModule module: Module
     ) throws {
-        let entityKind: SKUID = dict[keys.kind]!
-        guard let kind = entityKind.declarationType() else {
-            return
-        }
-        guard let rawName: String = dict[keys.name],
-              let usr: String = dict[keys.usr] else
-              {
-                  return
-              }
-
-        let name = rawName.removingParameterInformation
-
-        if namesToIgnore.contains(name) {
-            logger.log("* Ignoring \(name) (USR: \(usr)) because its included in ignore-names", verbose: true)
-            return
-        }
-        
-        if kind == .enumelement, let parentUSR: String = dict.parent[keys.usr] {
-            if rawName == "case1" {
-                print("found case1")
+        do {
+            let entityKind: SKUID = dict[keys.kind]!
+            guard let kind = entityKind.declarationType() else {
+                logger.log("* --- Ignoring: kind: \(entityKind): \(entityKind.description)", verbose: true)
+                return
             }
-            if let parent = dict.parent {
-                if let parentKindID: SKUID = parent[keys.kind] {
-                    if let parentKind = parentKindID.declarationType() {
-                        if parentKind == .enum {
-                            logger.log("--> found case in a parent enum: \(usr) - \(parentUSR)")
-                            let codingKeysUSR: Set<String> = ["s:s7Codablea", "s:SE", "s:Se"]
-                            if try inheritsFromAnyUSR(
-                                parentUSR,
-                                anyOf: codingKeysUSR,
-                                inModule: module,
-                                resursive: false
-                            ) {
-                                logger.log("* Ignoring \(name) (USR: \(usr)) because its parent enum inherits from Codable and RawValue.", verbose: true)
-                                return
-                            } else {
-                                logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent enum does not appear to inherit Codable has RawValue.)", verbose: true)
+
+            guard let rawName: String = dict[keys.name],
+                  let usr: String = dict[keys.usr] else {
+              logger.log("* --- Ignoring: kind: \(kind): name or usr invalid", verbose: true)
+
+              return
+            }
+
+            let name = rawName.removingParameterInformation
+
+            if namesToIgnore.contains(name) {
+                logger.log("* --- Ignoring \(name) (USR: \(usr)) because its included in ignore-names", verbose: true)
+                return
+            }
+
+            if kind == .enumelement, let parentUSR: String = dict.parent[keys.usr] {
+                if let parent = dict.parent {
+                    if let parentKindID: SKUID = parent[keys.kind] {
+                        if let parentKind = parentKindID.declarationType() {
+                            if parentKind == .enum {
+                                logger.log("* --> found case in a parent enum: \(usr) - \(parentUSR)")
+                                let codingKeysUSR: Set<String> = ["s:s7Codablea", "s:SE", "s:Se"]
+                                if try inheritsFromAnyUSR(
+                                    parentUSR,
+                                    anyOf: codingKeysUSR,
+                                    inModule: module,
+                                    resursive: false
+                                ) {
+                                    logger.log("* --- Ignoring \(name) (USR: \(usr)) because its parent enum inherits from Codable and RawValue.", verbose: true)
+                                    return
+                                } else {
+                                    logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent enum does not appear to inherit Codable has RawValue.)", verbose: true)
+                                }
                             }
                         }
                     }
                 }
+
+                let codingKeysUSR: Set<String> = ["s:s9CodingKeyP"]
+                if try inheritsFromAnyUSR(
+                    parentUSR,
+                    anyOf: codingKeysUSR,
+                    inModule: module
+                ) {
+                    logger.log("* --- Ignoring \(name) (USR: \(usr)) because its parent enum inherits from CodingKey.", verbose: true)
+                    return
+                } else {
+                    logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent enum does not appear to inherit from CodingKey.)", verbose: true)
+                }
             }
 
-            let codingKeysUSR: Set<String> = ["s:s9CodingKeyP"]
-            if try inheritsFromAnyUSR(
-                parentUSR,
-                anyOf: codingKeysUSR,
-                inModule: module
-            ) {
-                logger.log("* Ignoring \(name) (USR: \(usr)) because its parent enum inherits from CodingKey.", verbose: true)
-                return
-            } else {
-                logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent enum does not appear to inherit from CodingKey.)", verbose: true)
+            if kind == .property,
+               dict.parent != nil,
+               let parentKind: SKUID = dict.parent[keys.kind],
+               parentKind.declarationType() == .object
+            {
+                guard let parentUSR: String = dict.parent[keys.usr] else {
+                    throw logger.fatalError(forMessage: "Parent of \(usr) is has no USR!")
+                }
+                let codableUSRs: Set<String> = ["s:s7Codablea", "s:SE", "s:Se"]
+                if try inheritsFromAnyUSR(
+                    parentUSR,
+                    anyOf: codableUSRs,
+                    inModule: module
+                ) {
+                    logger.log("* --- Ignoring \(name) (USR: \(usr)) because its parent inherits from Codable.", verbose: true)
+                    return
+                } else {
+                    logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent does not appear to inherit from Codable.)", verbose: true)
+                }
             }
-        }
 
-        if kind == .property,
-           dict.parent != nil,
-           let parentKind: SKUID = dict.parent[keys.kind],
-           parentKind.declarationType() == .object
-        {
-            guard let parentUSR: String = dict.parent[keys.usr] else {
-                throw logger.fatalError(forMessage: "Parent of \(usr) is has no USR!")
+            logger.log("* +++ Found declaration of \(name) (USR: \(usr))")
+            dataStore.processedUsrs.insert(usr)
+
+            let receiver: String? = dict[keys.receiver]
+            if receiver == nil {
+                dataStore.usrRelationDictionary[usr] = dict
             }
-            let codableUSRs: Set<String> = ["s:s7Codablea", "s:SE", "s:Se"]
-            if try inheritsFromAnyUSR(
-                parentUSR,
-                anyOf: codableUSRs,
-                inModule: module
-            ) {
-                logger.log("* Ignoring \(name) (USR: \(usr)) because its parent inherits from Codable.", verbose: true)
-                return
-            } else {
-                logger.log("Info: Proceeding with \(name) (USR: \(usr)) because its parent does not appear to inherit from Codable.)", verbose: true)
-            }
-        }
-
-        logger.log("* Found declaration of \(name) (USR: \(usr))")
-        dataStore.processedUsrs.insert(usr)
-
-        let receiver: String? = dict[keys.receiver]
-        if receiver == nil {
-            dataStore.usrRelationDictionary[usr] = dict
+        } catch {
+            print("❌ [process] SourceKit request error: \(error)")
         }
     }
 }
@@ -173,23 +188,41 @@ extension SourceKitObfuscator {
     }
 
     func obfuscate(index: IndexedFile) throws {
-        logger.log("--- Obfuscating \(index.file.name)")
+        logger.log("\n--- Obfuscating \(index.file.name)")
         var referenceArray = [Reference]()
         index.response.recurseEntities { [unowned self] dict in
             guard let kindId: SKUID = dict[self.keys.kind],
                   kindId.referenceType() != nil || kindId.declarationType() != nil,
                   let rawName: String = dict[self.keys.name],
                   let usr: String = dict[self.keys.usr],
-                  self.dataStore.processedUsrs.contains(usr),
                   let line: Int = dict[self.keys.line],
-                  let column: Int = dict[self.keys.column],
-                  dict.isReferencingInternalFramework(dataStore: self.dataStore) == false else {
-                      return
-                  }
+                  let column: Int = dict[self.keys.column] else {
+
+                let kind = dict[self.keys.kind] ?? "unknown"
+                let rawName = dict[self.keys.name] ?? "unknown"
+                let usr = dict[self.keys.usr] ?? "unknown"
+                let line = dict[self.keys.line] ?? "unknown"
+                let column = dict[self.keys.column] ?? "unknown"
+
+                self.logger.log("* --- Skipped: kind: \(kind) | name: \(rawName) | usr: \(usr) | line: \(line) | column: \(column)")
+                return
+            }
+
+            guard self.dataStore.processedUsrs.contains(usr) else {
+                self.logger.log("* --- Skipped: kind: \(dict[self.keys.kind] ?? "unknown") | name: \(dict[self.keys.name] ?? "unknown") (USR: \(usr) at \(index.file.name) (\(line):\(column)): usr not proccessed ")
+                return
+            }
+
+
+            guard dict.isReferencingInternalFramework(dataStore: self.dataStore) == false else {
+                let name = rawName.removingParameterInformation
+                self.logger.log("* --- Skipped reference of \(name) (USR: \(usr) at \(index.file.name) (\(line):\(column)): refercing internal framework")
+                return
+            }
 
             let name = rawName.removingParameterInformation
             let obfuscatedName = self.obfuscate(name: name)
-            self.logger.log("* Found reference of \(name) (USR: \(usr) at \(index.file.name) (\(line):\(column)) -> now \(obfuscatedName)")
+            self.logger.log("* +++ Found reference of \(name) (USR: \(usr) at \(index.file.name) (\(line):\(column)) -> now \(obfuscatedName)")
             let reference = Reference(name: name, line: line, column: column)
             referenceArray.append(reference)
         }
@@ -207,7 +240,7 @@ extension SourceKitObfuscator {
         guard results.isEmpty == false else {
             return
         }
-        logger.log("--- Obfuscating \(plist.name)")
+        logger.log("\n--- Obfuscating \(plist.name)")
         for result in results.reversed() {
             let value = String(result.captureGroup(0, originalString: data).dropLast())
             let range = result.captureGroupRange(0, originalString: data)

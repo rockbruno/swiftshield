@@ -21,13 +21,14 @@ public final class SwiftShieldController {
             logger.log("--- Getting modules from Xcode")
             let modules = try interactor.getModulesFromProject()
             logger.log("--- Starting main obfuscation procedure")
-            let map = try interactor.obfuscate(modules: modules)
-            logger.log("--- Tagging projects")
-            try interactor.markProjectsAsObfuscated()
-            logger.log("--- Preparing conversion map")
-            try interactor.prepare(map: map, date: Date())
+            if let map = try? interactor.obfuscate(modules: modules) {
+                logger.log("--- Tagging projects")
+                try interactor.markProjectsAsObfuscated()
+                logger.log("--- Preparing conversion map")
+                try interactor.prepare(map: map, date: Date())
+            }
         } catch {
-            logger.log(error.localizedDescription)
+            logger.log("❌ Run Error: \(error)")
             throw error
         }
     }
