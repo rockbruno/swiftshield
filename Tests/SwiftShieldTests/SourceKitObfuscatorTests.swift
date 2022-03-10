@@ -5,7 +5,7 @@ final class SourceKitObfuscatorTests: XCTestCase {
     func test_moduleRegistration() throws {
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], namesToEnforce: [], ignorePublic: false)
 
         let module = try testModule(withContents: "final class Foo {}")
 
@@ -118,7 +118,7 @@ final class SourceKitObfuscatorTests: XCTestCase {
     func test_obfuscation_cachesStrings() {
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], namesToEnforce: [], ignorePublic: false)
 
         let fooString = "fooString"
         XCTAssertNil(dataStore.obfuscationDictionary[fooString])
@@ -150,12 +150,12 @@ final class SourceKitObfuscatorTests: XCTestCase {
 
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], namesToEnforce: [], ignorePublic: false)
 
         dataStore.obfuscationDictionary["Foo"] = "AAAA"
         dataStore.obfuscationDictionary["default"] = "BBBB"
 
-        let result = obfuscator.obfuscate(fileContents: file, fromReferences: [fooDecl, defaultDecl])
+        let result = try obfuscator.obfuscate(fileContents: file, fromReferences: [fooDecl, defaultDecl])
 
         XCTAssertEqual(result, """
         class AAAA {
@@ -176,12 +176,12 @@ final class SourceKitObfuscatorTests: XCTestCase {
 
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], namesToEnforce: [], ignorePublic: false)
 
         dataStore.obfuscationDictionary["Foo"] = "AAAA"
         dataStore.obfuscationDictionary["default"] = "BBBB"
 
-        let result = obfuscator.obfuscate(fileContents: file, fromReferences: [
+        let result = try obfuscator.obfuscate(fileContents: file, fromReferences: [
             defaultDecl, defaultDecl, fooDecl, defaultDecl, fooDecl, fooDecl,
         ])
 

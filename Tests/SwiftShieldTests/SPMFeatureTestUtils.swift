@@ -76,7 +76,7 @@ enum SPMFeatureTestUtils {
     }
 
     static func baseTestData(ignorePublic: Bool = false,
-                      namesToIgnore: Set<String> = []) -> (SourceKitObfuscator, SourceKitObfuscatorDataStore, ObfuscatorDelegateSpy) {
+                      namesToIgnore: Set<String> = [], namesToEnforce: Set<String> = []) -> (SourceKitObfuscator, SourceKitObfuscatorDataStore, ObfuscatorDelegateSpy) {
         let logger = Logger()
         let sourceKit = SourceKit(logger: logger)
         let dataStore = SourceKitObfuscatorDataStore()
@@ -85,6 +85,7 @@ enum SPMFeatureTestUtils {
             logger: logger,
             dataStore: dataStore,
             namesToIgnore: namesToIgnore,
+            namesToEnforce: namesToEnforce,
             ignorePublic: ignorePublic
         )
         let delegateSpy = ObfuscatorDelegateSpy()

@@ -23,6 +23,9 @@ extension Swiftshield {
         @Option(name: .shortAndLong, help: "A list of names, separated by a comma, that should NOT be obfuscated.")
         var ignoreNames: String?
 
+        @Option(name: .shortAndLong, help: "A list of names, separated by a comma, that will definitively be obfuscated.")
+        var enforceNames: String?
+
         @Flag(help: "Don't obfuscate content that is 'public' or 'open' (a.k.a 'SDK Mode').")
         var ignorePublic: Bool
 
@@ -38,10 +41,12 @@ extension Swiftshield {
         func run() throws {
             let modulesToIgnore = Set((ignoreTargets ?? "").components(separatedBy: ","))
             let namesToIgnore = Set((ignoreNames ?? "").components(separatedBy: ","))
+            let namesToEnforce = Set((enforceNames ?? "").components(separatedBy: ","))
             let runner = SwiftSwiftAssembler.generate(
                 projectPath: projectFile, scheme: scheme,
                 modulesToIgnore: modulesToIgnore,
                 namesToIgnore: namesToIgnore,
+                namesToEnforce: namesToEnforce,
                 ignorePublic: ignorePublic,
                 dryRun: dryRun,
                 verbose: verbose,

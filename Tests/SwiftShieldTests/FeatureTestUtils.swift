@@ -46,7 +46,9 @@ func testModule(
 }
 
 func baseTestData(ignorePublic: Bool = false,
-                  namesToIgnore: Set<String> = []) -> (SourceKitObfuscator, SourceKitObfuscatorDataStore, ObfuscatorDelegateSpy) {
+                  namesToIgnore: Set<String> = [],
+                  namesToEnforce: Set<String> = []
+) -> (SourceKitObfuscator, SourceKitObfuscatorDataStore, ObfuscatorDelegateSpy) {
     let logger = Logger()
     let sourceKit = SourceKit(logger: logger)
     let dataStore = SourceKitObfuscatorDataStore()
@@ -55,6 +57,7 @@ func baseTestData(ignorePublic: Bool = false,
         logger: logger,
         dataStore: dataStore,
         namesToIgnore: namesToIgnore,
+        namesToEnforce: namesToEnforce,
         ignorePublic: ignorePublic
     )
     let delegateSpy = ObfuscatorDelegateSpy()

@@ -1,3 +1,5 @@
+
+import SwiftSyntax
 import Foundation
 
 final class SourceKitObfuscator: ObfuscatorProtocol {
@@ -6,14 +8,20 @@ final class SourceKitObfuscator: ObfuscatorProtocol {
     let dataStore: SourceKitObfuscatorDataStore
     let ignorePublic: Bool
     let namesToIgnore: Set<String>
+    let namesToEnforce: Set<String>
     weak var delegate: ObfuscatorDelegate?
 
-    init(sourceKit: SourceKit, logger: LoggerProtocol, dataStore: SourceKitObfuscatorDataStore, namesToIgnore: Set<String>, ignorePublic: Bool) {
+    private lazy var rewriter = RenameRewriter(names: namesToEnforce, logger: logger) { [weak self] in
+        self?.obfuscate(name: $0)
+    }
+
+    init(sourceKit: SourceKit, logger: LoggerProtocol, dataStore: SourceKitObfuscatorDataStore, namesToIgnore: Set<String>, namesToEnforce: Set<String>, ignorePublic: Bool) {
         self.sourceKit = sourceKit
         self.logger = logger
         self.dataStore = dataStore
         self.ignorePublic = ignorePublic
         self.namesToIgnore = namesToIgnore
+        self.namesToEnforce = namesToEnforce
     }
 
     var requests: sourcekitd_requests! {
@@ -29,6 +37,7 @@ final class SourceKitObfuscator: ObfuscatorProtocol {
 
 extension SourceKitObfuscator {
     func registerModuleForObfuscation(_ module: Module) throws {
+        logger.log("\n\n========== \(module.name) ==========")
         let compilerArguments = SKRequestArray(sourcekitd: sourceKit)
         module.compilerArguments.forEach(compilerArguments.append(_:))
         do {
@@ -40,20 +49,31 @@ extension SourceKitObfuscator {
                 req[keys.compilerargs] = compilerArguments
                 let response = try sourceKit.sendSync(req)
                 logger.log("--- Preprocessing indexing result of: \(file.name)")
+//                if file.name == "HomeFlowViewProviding.swift" {
+//                    print("======= RESPONSE ======")
+//                    dump(response)
+//                    print("======= END OF RESPONSE ======")
+//                }
                 response.recurseEntities { [unowned self] dict in
+//                    if file.name == "DashboardFlowCoordinator.swift" {
+//                        print(dict)
+//                    }
                     self.preprocess(declarationEntity: dict, ofFile: file, fromModule: module)
                 }
                 logger.log("--- Processing indexing result of: \(file.name)")
-                    response.recurseEntities { [unowned self] dict in
-                        if self.ignorePublic, dict.isPublic {
-                            return
-                        }
-                        do {
-                            try self.process(declarationEntity: dict, ofFile: file, fromModule: module)
-                        } catch {
-                            print("❌ SourceKit request error: \(error)")
-                        }
+                response.recurseEntities { [unowned self] dict in
+//                    if file.name == "DashboardFlowCoordinator.swift" {
+//                        print(dict)
+//                    }
+                    if self.ignorePublic, dict.isPublic {
+                        return
                     }
+                    do {
+                        try self.process(declarationEntity: dict, ofFile: file, fromModule: module)
+                    } catch {
+                        print("❌ SourceKit request error: \(error)")
+                    }
+                }
                 let indexedFile = IndexedFile(file: file, response: response)
                 self.dataStore.indexedFiles.append(indexedFile)
             }
@@ -213,7 +233,6 @@ extension SourceKitObfuscator {
                 return
             }
 
-
             guard dict.isReferencingInternalFramework(dataStore: self.dataStore) == false else {
                 let name = rawName.removingParameterInformation
                 self.logger.log("* --- Skipped reference of \(name) (USR: \(usr) at \(index.file.name) (\(line):\(column)): refercing internal framework")
@@ -227,7 +246,7 @@ extension SourceKitObfuscator {
             referenceArray.append(reference)
         }
         let originalContents = try index.file.read()
-        let obfuscatedContents = obfuscate(fileContents: originalContents, fromReferences: referenceArray)
+        let obfuscatedContents = try obfuscate(fileContents: originalContents, fromReferences: referenceArray)
         if let error = delegate?.obfuscator(self, didObfuscateFile: index.file, newContents: obfuscatedContents) {
             throw error
         }
@@ -280,7 +299,7 @@ extension SourceKitObfuscator {
         return randomString
     }
 
-    func obfuscate(fileContents: String, fromReferences references: [Reference]) -> String {
+    func obfuscate(fileContents: String, fromReferences references: [Reference]) throws -> String {
         let sortedReferences = references.sorted(by: <)
 
         var previousReference: Reference!
@@ -324,7 +343,9 @@ extension SourceKitObfuscator {
                 currentCharIndex += 1
             }
         }
-        return charArray.joined()
+        let sourceKitObfuscatedResult = charArray.joined()
+        let sourceFileTree = try SyntaxParser.parse(source: sourceKitObfuscatedResult)
+        return rewriter.visit(sourceFileTree).description
     }
 }
 

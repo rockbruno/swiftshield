@@ -172,8 +172,10 @@ extension SourceKit {
 
     /// Send the given request and synchronously receive a reply dictionary (or error).
     public func sendSync(_ req: SKRequestDictionary) throws -> SKResponseDictionary {
+        logger?.log("_____ REQUEST _____", sourceKit: true)
         logger?.log(req.description, sourceKit: true)
         let resp = SKResponse(api.send_request_sync(req.dict), sourcekitd: self)
+        logger?.log("_____ RESPONSE _____", sourceKit: true)
         logger?.log(resp.description, sourceKit: true)
         guard let dict = resp.value else {
             throw (logger ?? Logger()).fatalError(forMessage: resp.error!)
