@@ -11,6 +11,8 @@ struct fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 # SwiftShield: Swift Obfuscator
 
+**Don't use this tool for production apps. Because Apple manages to break SourceKit somehow with every Swift release, I gave up on keeping this tool updated. It's probably really broken and is only useful as a way for you to learn more about obfuscation and SourceKit.**
+
 [![GitHub release](https://img.shields.io/github/tag/rockbruno/swiftshield.svg)](https://github.com/rockbruno/swiftshield/releases)
 
 SwiftShield is a tool that generates random and irreversible encrypted names for your iOS project's types and methods (including third-party libraries). It uses Apple's SourceKit to mimick Xcode's indexing behavior, revealing a complete map of your project that is used to safely rename parts of your project. 
