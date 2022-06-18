@@ -19,7 +19,7 @@ SwiftShield is a tool that generates random and irreversible encrypted names for
 
 Reverse engineering iOS apps is relatively simple due to the fact that almost every single type and method name is exposed in the app's binary. This allows jailbreak tools like `class-dump` and `Cycript` to extract this information and use it to change the behavior of your app in runtime. 
 
-Obfuscating code in iOS difficults the usage of these tools, while also makes it tougher for jailbreak developers to create tweaks for your app as SwiftShield's obfuscation changes every time you run it.
+Obfuscating code in iOS makes the usage of these tools difficult, while also making it tougher for jailbreak developers to create tweaks for your app as SwiftShield's obfuscation changes every time you run it.
 
 ## Limitations
 
@@ -28,8 +28,8 @@ The capabilities of SwiftShield are directly related to the capabilities of Sour
 ## Requirements
 
 - You should not have logic based on hardcoded names (like loading `MyClass.json` because `String(describing: type(of:self))` is `'MyClass'`). SwiftShield does not obfuscate things like file names and hardcoded strings -- only the types themselves.
-- No Objective-C classes that call Swift methods (but Swift classes calling Objective-C code is fine).
-- Your project should be 100% written in View Code. Older versions of SwiftShield did support obfuscating Storyboards/XIBs, but it was extremely hard to maintain. This parts from the principle that if you have a project big or important enough to be obfuscated, you probably shouldn't be using Storyboards in first place.
+- No Objective-C classes that call Swift methods (but Swift classes calling Objective-C code are fine).
+- Your project should be 100% written in View Code. Older versions of SwiftShield did support obfuscating Storyboards/XIBs, but it was extremely hard to maintain. This parts from the principle that if you have a project big or important enough to be obfuscated, you probably shouldn't be using Storyboards in the first place.
 - Your project should **not** be using Xcode's Legacy Build System setting.
 - Make sure your project doesn't suffer from [one of SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require you to manually fix the resulting code as it will not be able to compile.
 
@@ -87,7 +87,7 @@ OPTIONS:
 
 ## Deobfuscating crash logs
 
-A succesful run of SwiftShield generates a `swiftshield-output/conversionMap.txt` file that contains all changes made to your project:
+A successful run of SwiftShield generates a `swiftshield-output/conversionMap.txt` file that contains all changes made to your project:
 
 ```
 //
