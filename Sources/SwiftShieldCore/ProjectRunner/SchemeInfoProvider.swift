@@ -85,7 +85,7 @@ struct SchemeInfoProvider: SchemeInfoProviderProtocol {
         if let swiftFileList = swiftFileList {
             let swiftFilePaths = try swiftFileList.read()
                 .components(separatedBy: "\n")
-                .filter { !$0.isEmpty }
+                .filter { !$0.isEmpty }.map{ $0.removeEscapedSpaces }
 
             if let complieFlagIndex = compilerArguments.firstIndex(of: "-c") {
                 var insertIndex = complieFlagIndex
