@@ -11,7 +11,7 @@ struct fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 # SwiftShield: Swift Obfuscator
 
-**Don't use this tool for production apps. Because Apple manages to break SourceKit somehow with every Swift release, I gave up on keeping this tool updated. It's probably really broken and is only useful as a way for you to learn more about obfuscation and SourceKit.**
+**Don't use this tool for production apps. I gave up on keeping this tool updated because every Swift release breaks SourceKit in a different way. It's probably really broken and is only useful as a way for you to learn more about obfuscation and SourceKit.**
 
 [![GitHub release](https://img.shields.io/github/tag/rockbruno/swiftshield.svg)](https://github.com/rockbruno/swiftshield/releases)
 
