@@ -293,11 +293,14 @@ extension SourceKitObfuscator {
         req[keys.sourcefile] = file.path
         let cursorInfo = try sourceKit.sendSync(req)
         guard let annotation: String = cursorInfo[keys.annotated_decl] else {
-            logger.log("Pretending \(usr) inherits from Codable because SourceKit failed to look it up. This can happen if this USR belongs to an @objc class.", verbose: true)
-            return result(true)
+            if usr.hasPrefix("c:") {
+                logger.log("Pretending \(usr) inherits from Codable because SourceKit failed to look it up. This can happen if this USR belongs to an @objc class.", verbose: true)
+                return result(true)
+            }
+            return result(false)
         }
         let regex = "usr=\\\"(.\\S*)\\\""
-        let regexResult = annotation.match(regex: regex)
+        let regexResult = annotation.components(separatedBy: " where ")[0].match(regex: regex)
         for res in regexResult {
             let inheritedUSR = res.captureGroup(1, originalString: annotation)
             if usrs.contains(inheritedUSR) {
