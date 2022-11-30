@@ -223,6 +223,7 @@ public struct sourcekitd_keys {
     let attributes: sourcekitd_uid_t
     let attribute: sourcekitd_uid_t
     let related: sourcekitd_uid_t
+    let effectiveAccess: sourcekitd_uid_t
 
     init(api: sourcekitd_functions_t) {
         request = api.uid_get_from_cstr("key.request")!
@@ -265,6 +266,7 @@ public struct sourcekitd_keys {
         attributes = api.uid_get_from_cstr("key.attributes")!
         attribute = api.uid_get_from_cstr("key.attribute")!
         related = api.uid_get_from_cstr("key.related")!
+        effectiveAccess = api.uid_get_from_cstr("key.effective_access")!
     }
 }
 

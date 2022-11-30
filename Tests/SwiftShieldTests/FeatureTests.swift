@@ -189,6 +189,11 @@ final class FeatureTests: XCTestCase {
         public enum Bla {
             case abc
         }
+        
+        @objc public protocol Ignored13 {
+            static func ignored14()
+            static var ignored15: Int { get }
+        }
 
         //Broken.
         //public extension Int {
@@ -201,6 +206,7 @@ final class FeatureTests: XCTestCase {
         store.obfuscationDictionary["NotIgnored2"] = "OBS2"
         store.obfuscationDictionary["notIgnored3"] = "OBS3"
         store.obfuscationDictionary["notIgnored4"] = "OBS4"
+        store.obfuscationDictionary["Ignored13"] = "OBS5"
 
         try obfs.registerModuleForObfuscation(module)
         try obfs.obfuscate()
@@ -235,6 +241,11 @@ final class FeatureTests: XCTestCase {
             case abc
         }
 
+        @objc public protocol Ignored13 {
+            static func ignored14()
+            static var ignored15: Int { get }
+        }
+        
         //Broken.
         //public extension Int {
         //    func ignored5() {}
