@@ -79,3 +79,11 @@ extension String {
         return utf8.count
     }
 }
+
+extension String {
+    mutating func replaceFirst(regex: String, with string: String) {
+        if let range = range(of: regex, options: .regularExpression) {
+            replaceSubrange(range, with: string)
+        }
+    }
+}

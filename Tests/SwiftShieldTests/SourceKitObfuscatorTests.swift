@@ -5,7 +5,7 @@ final class SourceKitObfuscatorTests: XCTestCase {
     func test_moduleRegistration() throws {
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false, modulesToIgnore: [])
 
         let module = try testModule(withContents: "final class Foo {}")
 
@@ -118,7 +118,7 @@ final class SourceKitObfuscatorTests: XCTestCase {
     func test_obfuscation_cachesStrings() {
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false, modulesToIgnore: [])
 
         let fooString = "fooString"
         XCTAssertNil(dataStore.obfuscationDictionary[fooString])
@@ -150,7 +150,7 @@ final class SourceKitObfuscatorTests: XCTestCase {
 
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false, modulesToIgnore: [])
 
         dataStore.obfuscationDictionary["Foo"] = "AAAA"
         dataStore.obfuscationDictionary["default"] = "BBBB"
@@ -176,7 +176,7 @@ final class SourceKitObfuscatorTests: XCTestCase {
 
         let sourceKit = SourceKit(logger: DummyLogger())
         let dataStore = SourceKitObfuscatorDataStore()
-        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false)
+        let obfuscator = SourceKitObfuscator(sourceKit: sourceKit, logger: DummyLogger(), dataStore: dataStore, namesToIgnore: [], ignorePublic: false, modulesToIgnore: [])
 
         dataStore.obfuscationDictionary["Foo"] = "AAAA"
         dataStore.obfuscationDictionary["default"] = "BBBB"

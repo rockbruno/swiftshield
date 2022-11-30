@@ -7,6 +7,7 @@ final class SourceKitObfuscatorDataStore {
     var usrRelationDictionary = [String: SKResponseDictionary]()
     var indexedFiles = [IndexedFile]()
     var plists = Set<File>()
+    var ibxmls = Set<File>()
     var inheritsFromX = [String: [String: Bool]]()
     var fileForUSR = [String: File]()
 }

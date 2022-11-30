@@ -67,7 +67,7 @@ If you're using a dependency manager like CocoaPods, you need to make sure that 
 ### Running SwiftInfo
 
 ```bash
-USAGE: swiftshield obfuscate --project-file <project-file> --scheme <scheme> [--ignore-public] [--ignore-targets] [--verbose] [--dry-run] [--print-sourcekit]
+USAGE: swiftshield obfuscate --project-file <project-file> --scheme <scheme> [--ignore-public] [--ignore-targets] [--include-ibxmls] [--verbose] [--dry-run] [--print-sourcekit]
 
 OPTIONS:
   -p, --project-file <project-file>
@@ -77,7 +77,8 @@ OPTIONS:
   --ignore-public         Don't obfuscate content that is 'public' or 'open'
                           (a.k.a 'SDK Mode'). 
   -i, --ignore-targets    A list of targets, separated by a comma, that should
-                          NOT be obfuscated. 
+                          NOT be obfuscated.
+  --include-ibxmls        Obfuscate storyboard and xib files (experimental)
   -v, --verbose           Prints additional information. 
   -d, --dry-run           Does not actually overwrite the files. 
   --print-sourcekit       Prints SourceKit queries. Note that they are huge, so

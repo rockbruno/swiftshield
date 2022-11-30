@@ -36,7 +36,8 @@ func testModule(
         schemeName: "FeatureTestProject",
         taskRunner: TaskRunner(),
         logger: DummyLogger(),
-        modulesToIgnore: []
+        modulesToIgnore: [],
+        includeIBXMLs: false
     )
 
     try File(path: modifiableFilePath).write(contents: contents)
@@ -55,7 +56,8 @@ func baseTestData(ignorePublic: Bool = false,
         logger: logger,
         dataStore: dataStore,
         namesToIgnore: namesToIgnore,
-        ignorePublic: ignorePublic
+        ignorePublic: ignorePublic,
+        modulesToIgnore: []
     )
     let delegateSpy = ObfuscatorDelegateSpy()
     obfuscator.delegate = delegateSpy

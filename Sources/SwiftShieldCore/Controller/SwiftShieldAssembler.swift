@@ -7,6 +7,7 @@ public enum SwiftSwiftAssembler {
         modulesToIgnore: Set<String>,
         namesToIgnore: Set<String>,
         ignorePublic: Bool,
+        includeIBXMLs: Bool,
         dryRun: Bool,
         verbose: Bool,
         printSourceKitQueries: Bool
@@ -23,7 +24,8 @@ public enum SwiftSwiftAssembler {
             schemeName: scheme,
             taskRunner: taskRunner,
             logger: logger,
-            modulesToIgnore: modulesToIgnore
+            modulesToIgnore: modulesToIgnore,
+            includeIBXMLs: includeIBXMLs
         )
 
         let sourceKit = SourceKit(logger: logger)
@@ -32,7 +34,8 @@ public enum SwiftSwiftAssembler {
             logger: logger,
             dataStore: .init(),
             namesToIgnore: namesToIgnore,
-            ignorePublic: ignorePublic
+            ignorePublic: ignorePublic,
+            modulesToIgnore: modulesToIgnore
         )
 
         let interactor = SwiftShieldInteractor(

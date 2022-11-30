@@ -65,7 +65,7 @@ final class SwiftShieldControllerTests: XCTestCase {
             dryRun: true
         )
 
-        let module = Module(name: "foo", sourceFiles: [], plists: [], compilerArguments: [])
+        let module = Module(name: "foo", sourceFiles: [], plists: [], ibxmls: [], compilerArguments: [])
         fakeInteractor.modulesToReturn = [module]
         let map = ConversionMap(obfuscationDictionary: ["foo": "bar"])
         fakeInteractor.conversionMapToReturn = map
